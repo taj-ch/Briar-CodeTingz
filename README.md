@@ -4,7 +4,7 @@ Briar is a special messaging app designed for everyone who needs a safe way to c
 
 This is a fork of: [Briar on GitLab](https://code.briarproject.org/akwizgran/briar)
 
-# Software Team Project (SOEN 390), Concordia Fall 2017
+# Software Team Project (SOEN 390), Concordia Winter 2018
 
 The goal of this project is to add features to an existing open source application.
 
