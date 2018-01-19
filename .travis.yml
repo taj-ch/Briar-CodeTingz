@@ -1,0 +1,47 @@
+language: android
+
+android:
+  components:
+    - tools
+    - platform-tools
+
+    # The BuildTools version
+    - build-tools-26.0.2
+
+    # The SDK version used to compile your project
+    - android-26
+
+    # Additional components
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - addon-google_apis-google-26
+
+addons:
+  apt:
+    packages:
+      - openjdk-6-jdk
+
+jdk:
+    - oraclejdk8
+
+before_install:
+    - yes | sdkmanager "platforms;android-27"
+
+before_cache:
+    - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+    - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+script:
+    - chmod +x ./gradlew
+    - ./gradlew test
+
+after_script:
+    # this file changes every time but should not be cached
+    - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+    - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
