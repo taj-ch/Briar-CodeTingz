@@ -8,7 +8,7 @@ This is a fork of: [Briar on GitLab](https://code.briarproject.org/akwizgran/bri
 
 The goal of this project is to add features to an existing open source application.
 
-### Members
+### CodeTingz Team Members
 
 | Name  | Id  | Github  |
 |---|---|---|
