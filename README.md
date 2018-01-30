@@ -1,12 +1,12 @@
 # Briar [![Build Status](https://travis-ci.com/CodeTaj/Briar.svg?token=sqXGdzNfzU7pHTYXmixg&branch=master)](https://travis-ci.com/CodeTaj/Briar)
 
-Briar is a special messaging app designed for everyone who needs a safe way to communicate.
+Briar is a very secure messaging app designed for everyone who needs a safe way to communicate.
 
 This is a fork of: [Briar on GitLab](https://code.briarproject.org/akwizgran/briar)
 
 # Software Team Project (SOEN 390), Concordia Winter 2018
 
-The goal of this project is to add features to an existing open source application.
+The goal of this project is to understand the architecture and to add features to an existing open source application.
 
 ### CodeTingz Team Members
 
