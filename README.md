@@ -10,7 +10,7 @@ The goal of this project is to understand the architecture and to add features t
 
 ### CodeTingz Team Members
 
-| Name  | Id  | Github  |
+| Name  | Id  | GitHub Username |
 |---|---|---|
 | Mira Marhaba | 27497148 | miramarhaba |
 | Roy Saliba | 27381751 | rdsaliba |
