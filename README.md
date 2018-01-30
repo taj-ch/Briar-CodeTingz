@@ -6,7 +6,7 @@ This is a fork of: [Briar on GitLab](https://code.briarproject.org/akwizgran/bri
 
 # Software Team Project (SOEN 390), Concordia Winter 2018
 
-The goal of this project is to understand the architecture and to add features to an existing open source application.
+The goal of this project is to understand the architecture and to add features to an existing open source application.;)
 
 ### CodeTingz Team Members
 
