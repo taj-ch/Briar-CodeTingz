@@ -1,4 +1,4 @@
-# Briar [![Build Status](https://travis-ci.com/CodeTaj/Briar.svg?token=sqXGdzNfzU7pHTYXmixg&branch=master)](https://travis-ci.com/CodeTaj/Briar)
+# Briar [![Build Status](https://travis-ci.com/CodeTaj/Briar-CodeTingz.svg?token=sqXGdzNfzU7pHTYXmixg&branch=master)](https://travis-ci.com/CodeTaj/Briar-CodeTingz)
 
 Briar is a very secure messaging app designed for everyone who needs a safe way to communicate. :)
 
