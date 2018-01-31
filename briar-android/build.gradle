@@ -5,6 +5,7 @@ dependencies {
 	implementation project(path: ':briar-core', configuration: 'default')
 	implementation project(path: ':bramble-core', configuration: 'default')
 	implementation project(path: ':bramble-android', configuration: 'default')
+	compile 'com.google.firebase:firebase-core:11.8.0'
 
 	def supportVersion = '27.0.1'
 	implementation "com.android.support:support-v4:$supportVersion"
@@ -230,5 +231,6 @@ android {
 		warning 'ImpliedQuantity'
 		warning 'ExtraTranslation'
 	}
+	apply plugin: 'com.google.gms.google-services'
 
 }
