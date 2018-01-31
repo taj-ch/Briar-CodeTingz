@@ -230,4 +230,5 @@ android {
 		warning 'ImpliedQuantity'
 		warning 'ExtraTranslation'
 	}
+
 }
