@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1022520330173",
+    "firebase_url": "https://briar-61651.firebaseio.com",
+    "project_id": "briar-61651",
+    "storage_bucket": "briar-61651.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022520330173:android:e31ac5cd561227e6",
+        "android_client_info": {
+          "package_name": "org.briarproject.briar.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022520330173-4t3stgcb7a02q8g1sdos493q5tss9t2r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.briarproject.briar.android",
+            "certificate_hash": "7b2e875e3885f894ba92a39432ab7a7e35c9a6bb"
+          }
+        },
+        {
+          "client_id": "1022520330173-76bl3pls9dtr8fgq7v5shn1ohi6ik5ih.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6N0T9hWqt9QFSJJ9B27Pyqx5X_jrKNiE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022520330173-76bl3pls9dtr8fgq7v5shn1ohi6ik5ih.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
