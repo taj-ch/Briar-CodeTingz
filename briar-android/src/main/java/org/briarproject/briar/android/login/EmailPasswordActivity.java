@@ -28,7 +28,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-public class PasswordActivity extends BaseActivity {
+public class EmailPasswordActivity extends BaseActivity {
 
 	@Inject
 	PasswordController passwordController;
@@ -52,8 +52,8 @@ public class PasswordActivity extends BaseActivity {
 			return;
 		}
 
-		setContentView(R.layout.activity_password);
-		signInButton = findViewById(R.id. btn_sign_in);
+		setContentView(R.layout.activity_email_password_login);
+		signInButton = findViewById(R.id.btn_sign_in);
 		progress = findViewById(R.id.progress_wheel);
 		input = findViewById(R.id.password_layout);
 		password = findViewById(R.id.edit_password);
