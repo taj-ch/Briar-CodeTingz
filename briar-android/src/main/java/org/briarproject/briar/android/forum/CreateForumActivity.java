@@ -40,7 +40,9 @@ public class CreateForumActivity extends BriarActivity {
 			Logger.getLogger(CreateForumActivity.class.getName());
 
 	private TextInputLayout nameEntryLayout;
+	private TextInputLayout descriptionEntryLayout; //added
 	private EditText nameEntry;
+	private EditText descriptionEntry; //added
 	private Button createForumButton;
 	private ProgressBar progress;
 
@@ -55,7 +57,11 @@ public class CreateForumActivity extends BriarActivity {
 		setContentView(R.layout.activity_create_forum);
 
 		nameEntryLayout = findViewById(R.id.createForumNameLayout);
+		descriptionEntryLayout = findViewById(R.id.createForumDescriptionLayout);
+
 		nameEntry = findViewById(R.id.createForumNameEntry);
+		descriptionEntry = findViewById(R.id.createForumDescriptionEntry);
+
 		nameEntry.addTextChangedListener(new TextWatcher() {
 
 			@Override
