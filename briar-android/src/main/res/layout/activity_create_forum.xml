@@ -11,7 +11,7 @@
 	<android.support.design.widget.TextInputLayout
 		android:id="@+id/createForumNameLayout"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="74dp"
 		app:errorEnabled="true">
 
 		<EditText
@@ -19,6 +19,22 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/choose_forum_hint"
+			android:inputType="text|textCapSentences"
+			android:maxLines="1"/>
+
+	</android.support.design.widget.TextInputLayout>
+
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/createForumDescriptionLayout"
+		android:layout_width="match_parent"
+		android:layout_height="74dp"
+		app:errorEnabled="true">
+
+		<EditText
+			android:id="@+id/createForumDescriptionEntry"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/choose_forum_description"
 			android:inputType="text|textCapSentences"
 			android:maxLines="1"/>
 
