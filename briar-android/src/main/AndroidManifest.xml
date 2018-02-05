@@ -62,6 +62,12 @@
 		</activity>
 
 		<activity
+			android:name="org.briarproject.briar.android.login.EmailPasswordActivity"
+			android:label="@string/app_name"
+			android:windowSoftInputMode="stateVisible">
+		</activity>
+
+		<activity
 			android:name="org.briarproject.briar.android.login.SetupActivity"
 			android:label="@string/setup_title"
 			android:windowSoftInputMode="adjustResize">
