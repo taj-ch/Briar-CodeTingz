@@ -125,4 +125,11 @@
 		<item name="android:textColor">@color/briar_button_negative</item>
 	</style>
 
+	<style name="BriarThemeDark" parent="BriarTheme">
+		<item name="android:colorBackground">?attr/colorPrimaryDark</item>
+		<item name="android:colorForeground">?android:attr/colorForegroundInverse</item>
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
+
 </resources>

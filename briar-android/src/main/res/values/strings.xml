@@ -404,4 +404,9 @@
 	<string name="permission_camera_denied_body">You have denied access to the camera, but adding contacts requires using the camera.\n\nPlease consider granting access.</string>
 	<string name="permission_camera_denied_toast">Camera permission was not granted</string>
 
+
+	<!-- Settings Notifications -->
+	<string name="appearance_settings_title">Appearance Settings</string>
+	<string name="dark_mode_setting">Dark Mode</string>
+
 </resources>
