@@ -31,6 +31,7 @@ import org.briarproject.briar.android.login.AuthorNameFragment;
 import org.briarproject.briar.android.login.ChangePasswordActivity;
 import org.briarproject.briar.android.login.DozeFragment;
 import org.briarproject.briar.android.login.PasswordActivity;
+import org.briarproject.briar.android.login.EmailPasswordActivity;
 import org.briarproject.briar.android.login.PasswordFragment;
 import org.briarproject.briar.android.login.SetupActivity;
 import org.briarproject.briar.android.navdrawer.NavDrawerActivity;
@@ -89,6 +90,8 @@ public interface ActivityComponent {
 	void inject(NavDrawerActivity activity);
 
 	void inject(PasswordActivity activity);
+
+	void inject(EmailPasswordActivity activity);
 
 	void inject(PanicResponderActivity activity);
 
