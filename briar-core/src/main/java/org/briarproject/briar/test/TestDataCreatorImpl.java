@@ -55,6 +55,7 @@ import static java.util.logging.Level.WARNING;
 import static org.briarproject.bramble.api.sync.Group.Visibility.SHARED;
 import static org.briarproject.bramble.util.StringUtils.getRandomString;
 import static org.briarproject.briar.test.TestData.AUTHOR_NAMES;
+import static org.briarproject.briar.test.TestData.GROUP_DESCS;
 import static org.briarproject.briar.test.TestData.GROUP_NAMES;
 
 public class TestDataCreatorImpl implements TestDataCreator {
@@ -335,7 +336,8 @@ public class TestDataCreatorImpl implements TestDataCreator {
 		for (int i = 0; i < NUM_FORUMS; i++) {
 			// create forum
 			String name = GROUP_NAMES[random.nextInt(GROUP_NAMES.length)];
-			Forum forum = forumManager.addForum(name);
+			String description = GROUP_DESCS[random.nextInt(GROUP_DESCS.length)];
+			Forum forum = forumManager.addForum(name, description);
 
 			// share with all contacts
 			Transaction txn = db.startTransaction(false);

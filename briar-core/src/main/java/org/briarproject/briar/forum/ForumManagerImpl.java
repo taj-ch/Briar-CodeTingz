@@ -95,8 +95,8 @@ class ForumManagerImpl extends BdfIncomingMessageHook implements ForumManager {
 	}
 
 	@Override
-	public Forum addForum(String name) throws DbException {
-		Forum f = forumFactory.createForum(name);
+	public Forum addForum(String name, String desc) throws DbException {
+		Forum f = forumFactory.createForum(name, desc);
 
 		Transaction txn = db.startTransaction(false);
 		try {
@@ -282,7 +282,7 @@ class ForumManagerImpl extends BdfIncomingMessageHook implements ForumManager {
 		byte[] descriptor = g.getDescriptor();
 		// Name, salt
 		BdfList forum = clientHelper.toList(descriptor);
-		return new Forum(g, forum.getString(0), forum.getRaw(1));
+		return new Forum(g, forum.getString(0),forum.getString(1), forum.getRaw(2));
 	}
 
 	private ForumPostHeader getForumPostHeader(Transaction txn, MessageId id,
