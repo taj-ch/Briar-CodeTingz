@@ -10,6 +10,10 @@ public interface ForumConstants {
 	int MAX_FORUM_NAME_LENGTH = 100;
 
 	/**
+	 * The maximum length of a forum's description in UTF-8 bytes.
+	 */
+	int MAX_FORUM_DESC_LEGNTH = 100; //for future use
+	/**
 	 * The length of a forum's random salt in bytes.
 	 */
 	int FORUM_SALT_LENGTH = 32;

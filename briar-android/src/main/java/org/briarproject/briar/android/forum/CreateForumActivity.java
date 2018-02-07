@@ -79,6 +79,27 @@ public class CreateForumActivity extends BriarActivity {
 			public void afterTextChanged(Editable s) {
 			}
 		});
+
+		//Description is optional
+		descriptionEntry.addTextChangedListener(new TextWatcher(){
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start,
+					int lengthBefore, int lengthAfter) {
+				enableOrDisableCreateButton();
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+
+		//Only create forum once name is set
 		nameEntry.setOnEditorActionListener((v, actionId, e) -> {
 			createForum();
 			return true;
@@ -94,6 +115,7 @@ public class CreateForumActivity extends BriarActivity {
 	public void onStart() {
 		super.onStart();
 		showSoftKeyboard(nameEntry);
+		showSoftKeyboard(descriptionEntry); //added so
 	}
 
 	@Override
@@ -120,16 +142,17 @@ public class CreateForumActivity extends BriarActivity {
 	private void createForum() {
 		if (!validateName()) return;
 		hideSoftKeyboard(nameEntry);
+		hideSoftKeyboard(descriptionEntry);
 		createForumButton.setVisibility(GONE);
 		progress.setVisibility(VISIBLE);
-		storeForum(nameEntry.getText().toString());
+		storeForum(nameEntry.getText().toString(),descriptionEntry.getText().toString()); //stores forum name/description
 	}
 
-	private void storeForum(String name) {
+	private void storeForum(String name, String description) {
 		runOnDbThread(() -> {
 			try {
 				long now = System.currentTimeMillis();
-				Forum f = forumManager.addForum(name);
+				Forum f = forumManager.addForum(name,description);//stores forum name/description
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))
 					LOG.info("Storing forum took " + duration + " ms");

@@ -37,10 +37,11 @@ class ForumSharingValidator extends SharingValidator {
 			throws FormatException {
 		checkSize(descriptor, 2);
 		String name = descriptor.getString(0);
+		String desc = descriptor.getString(1);
 		checkLength(name, 1, MAX_FORUM_NAME_LENGTH);
-		byte[] salt = descriptor.getRaw(1);
+		byte[] salt = descriptor.getRaw(2);
 		checkLength(salt, FORUM_SALT_LENGTH);
-		Forum forum = forumFactory.createForum(name, salt);
+		Forum forum = forumFactory.createForum(name, desc, salt);
 		return forum.getId();
 	}
 

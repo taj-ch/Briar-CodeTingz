@@ -65,4 +65,16 @@ public interface TestData {
 			getRandomString(MAX_FORUM_NAME_LENGTH),
 	};
 
+	String GROUP_DESCS[] = {
+			"Private Messengers",
+			"The Darknet",
+			"Bletchley Park",
+			"Acropolis",
+			"General Discussion",
+			"The Undiscovered Country",
+			"The Place to Be",
+			"Forum Romanum"
+	};
+
+
 }
