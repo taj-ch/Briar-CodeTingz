@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.briarproject.briar.android.view.BriarRecyclerView
+	android:id="@+id/profileList"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/window_background"
+	app:scrollToEnd="false">
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="163dp"
+				app:srcCompat="@android:drawable/btn_star"/>
+
+			<EditText
+				android:id="@+id/editText5"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/margin_medium"
+				android:ems="10"
+				android:inputType="textPersonName"
+				android:padding="@dimen/margin_medium"
+				android:text="First Name"/>
+
+			<EditText
+				android:id="@+id/editText4"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/margin_medium"
+				android:ems="10"
+				android:inputType="textPersonName"
+				android:padding="@dimen/margin_medium"
+				android:text="Last Name"/>
+
+			<EditText
+				android:id="@+id/editText6"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/margin_medium"
+				android:ems="10"
+				android:inputType="textPersonName"
+				android:padding="@dimen/margin_medium"
+				android:text="Nickname"/>
+
+			<EditText
+				android:id="@+id/editText7"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/margin_medium"
+				android:ems="10"
+				android:inputType="textPersonName"
+				android:padding="@dimen/margin_medium"
+				android:text="Email"/>
+
+			<EditText
+				android:id="@+id/editText8"
+				android:layout_width="match_parent"
+				android:layout_height="167dp"
+				android:layout_margin="@dimen/margin_medium"
+				android:ems="10"
+				android:inputType="textMultiLine"
+				android:padding="@dimen/margin_medium"
+				android:text="Description"/>
+
+			<Button
+				android:id="@+id/action_create_profile"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Save"/>
+
+		</LinearLayout>
+	</ScrollView>
+
+</org.briarproject.briar.android.view.BriarRecyclerView>

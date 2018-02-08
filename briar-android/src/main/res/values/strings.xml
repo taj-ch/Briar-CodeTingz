@@ -52,6 +52,7 @@
 	<string name="groups_button">Private Groups</string>
 	<string name="forums_button">Forums</string>
 	<string name="blogs_button">Blogs</string>
+	<string name="profile_button">Profile</string>
 	<string name="settings_button">Settings</string>
 	<string name="sign_out_button">Sign Out</string>
 
