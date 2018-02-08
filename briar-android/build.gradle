@@ -5,6 +5,8 @@ dependencies {
 	implementation project(path: ':briar-core', configuration: 'default')
 	implementation project(path: ':bramble-core', configuration: 'default')
 	implementation project(path: ':bramble-android', configuration: 'default')
+	compile 'com.google.firebase:firebase-core:11.8.0'
+	compile 'com.google.firebase:firebase-auth:11.8.0'
 
 	def supportVersion = '27.0.1'
 	implementation "com.android.support:support-v4:$supportVersion"
@@ -201,11 +203,15 @@ android {
 			resValue "string", "app_name", "Briar Debug"
 			shrinkResources false
 			minifyEnabled true
+			debuggable false
+			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
 		release {
 			shrinkResources true
 			minifyEnabled true
+			debuggable false
+			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
 	}
@@ -230,4 +236,8 @@ android {
 		warning 'ImpliedQuantity'
 		warning 'ExtraTranslation'
 	}
+
+
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -16,6 +16,7 @@ import org.briarproject.briar.android.controller.BriarController;
 import org.briarproject.briar.android.controller.DbController;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
 import org.briarproject.briar.android.login.PasswordActivity;
+import org.briarproject.briar.android.login.EmailPasswordActivity;
 import org.briarproject.briar.android.panic.ExitActivity;
 
 import java.util.logging.Logger;
@@ -62,7 +63,7 @@ public abstract class BriarActivity extends BaseActivity {
 	public void onStart() {
 		super.onStart();
 		if (!briarController.hasEncryptionKey() && !isFinishing()) {
-			Intent i = new Intent(this, PasswordActivity.class);
+			Intent i = new Intent(this, EmailPasswordActivity.class);
 			startActivityForResult(i, REQUEST_PASSWORD);
 		} else if (SDK_INT >= 23) {
 			briarController.hasDozed(new UiResultHandler<Boolean>(this) {
