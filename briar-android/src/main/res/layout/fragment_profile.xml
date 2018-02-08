@@ -19,49 +19,51 @@
 			android:orientation="vertical">
 
 			<ImageView
+				android:id="@+id/profilePic"
+
 				android:layout_width="match_parent"
 				android:layout_height="163dp"
 				app:srcCompat="@android:drawable/btn_star"/>
 
 			<EditText
-				android:id="@+id/editText5"
+				android:id="@+id/profile_first_name"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/margin_medium"
 				android:ems="10"
+				android:hint="First Name"
 				android:inputType="textPersonName"
-				android:padding="@dimen/margin_medium"
-				android:text="First Name"/>
+				android:padding="@dimen/margin_medium"/>
 
 			<EditText
-				android:id="@+id/editText4"
+				android:id="@+id/profile_last_name"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/margin_medium"
 				android:ems="10"
+				android:hint="Last Name"
 				android:inputType="textPersonName"
-				android:padding="@dimen/margin_medium"
-				android:text="Last Name"/>
+				android:padding="@dimen/margin_medium"/>
 
 			<EditText
-				android:id="@+id/editText6"
+				android:id="@+id/profile_nickname"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/margin_medium"
 				android:ems="10"
+				android:hint="Nickname"
 				android:inputType="textPersonName"
-				android:padding="@dimen/margin_medium"
-				android:text="Nickname"/>
+				android:padding="@dimen/margin_medium"/>
 
 			<EditText
-				android:id="@+id/editText7"
+				android:id="@+id/profile_email"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_margin="@dimen/margin_medium"
 				android:ems="10"
-				android:inputType="textPersonName"
-				android:padding="@dimen/margin_medium"
-				android:text="Email"/>
+				android:hint="Email"
+				android:inputType="textEmailAddress|textPersonName"
+				android:padding="@dimen/margin_medium"/>
 
 			<EditText
 				android:id="@+id/editText8"
@@ -69,9 +71,9 @@
 				android:layout_height="167dp"
 				android:layout_margin="@dimen/margin_medium"
 				android:ems="10"
+				android:hint="Description"
 				android:inputType="textMultiLine"
-				android:padding="@dimen/margin_medium"
-				android:text="Description"/>
+				android:padding="@dimen/margin_medium"/>
 
 			<Button
 				android:id="@+id/action_create_profile"

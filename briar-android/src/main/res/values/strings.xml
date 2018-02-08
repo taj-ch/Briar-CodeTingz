@@ -406,4 +406,13 @@
 	<string name="permission_camera_denied_body">You have denied access to the camera, but adding contacts requires using the camera.\n\nPlease consider granting access.</string>
 	<string name="permission_camera_denied_toast">Camera permission was not granted</string>
 
+	<!-- Profile Data -->
+	<string name="profile_data_file">profile_data_file</string>
+	<string name="profile_data_first_name_input">profile_data_first_name_input</string>
+	<string name="profile_data_last_name_input">profile_data_last_name_input</string>
+	<string name="profile_data_nickname_input">profile_data_nickname_input</string>
+	<string name="profile_data_email_input">profile_data_email_input</string>
+	<string name="profile_image_path_input">profile_image_path_input</string>
+
+
 </resources>
