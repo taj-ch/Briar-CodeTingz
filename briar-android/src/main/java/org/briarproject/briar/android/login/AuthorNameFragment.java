@@ -1,5 +1,7 @@
 package org.briarproject.briar.android.login;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -75,6 +77,23 @@ public class AuthorNameFragment extends SetupFragment {
 	@Override
 	public void onClick(View view) {
 		setupController.setAuthorName(authorNameInput.getText().toString());
+
+		// This will set the nickname so that the profile page can use it
+		setAuthorNameProfileHelper(authorNameInput.getText().toString());
+	}
+
+	// This is a helper method that will set the nickname of the user in a file location so that it
+	// can be used to display the user's profile name
+	private void setAuthorNameProfileHelper(String author) {
+		SharedPreferences sharedPref;
+		SharedPreferences.Editor editor;
+
+		// Use SharedPreferences to store and retrieve profile information in Key-Value Sets
+		sharedPref = getActivity().getSharedPreferences(
+				getString(R.string.profile_data_file), Context.MODE_PRIVATE);
+		editor = sharedPref.edit();
+		editor.putString(getString(R.string.profile_data_nickname_input), author);
+		editor.commit();
 	}
 
 }
