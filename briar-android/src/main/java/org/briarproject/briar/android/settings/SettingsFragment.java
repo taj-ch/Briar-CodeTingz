@@ -305,6 +305,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			Settings s = new Settings();
 			s.putBoolean(PREF_DARK_MODE, (Boolean) o);
 			storeSettings(s);
+			Intent i = getActivity().getBaseContext().getPackageManager()
+					.getLaunchIntentForPackage( getActivity().getBaseContext().getPackageName() );
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
 		}
 		return true;
 	}
