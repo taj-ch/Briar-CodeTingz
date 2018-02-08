@@ -53,6 +53,7 @@ import org.briarproject.briar.android.privategroup.memberlist.GroupMemberModule;
 import org.briarproject.briar.android.privategroup.reveal.GroupRevealModule;
 import org.briarproject.briar.android.privategroup.reveal.RevealContactsActivity;
 import org.briarproject.briar.android.privategroup.reveal.RevealContactsFragment;
+import org.briarproject.briar.android.profile.ProfileActivity;
 import org.briarproject.briar.android.settings.SettingsActivity;
 import org.briarproject.briar.android.settings.SettingsFragment;
 import org.briarproject.briar.android.sharing.BlogInvitationActivity;
@@ -67,6 +68,8 @@ import org.briarproject.briar.android.sharing.ShareForumFragment;
 import org.briarproject.briar.android.sharing.ShareForumMessageFragment;
 import org.briarproject.briar.android.sharing.SharingModule;
 import org.briarproject.briar.android.splash.SplashScreenActivity;
+import org.briarproject.briar.android.profile.ProfileFragment;
+
 
 import dagger.Component;
 
@@ -188,5 +191,9 @@ public interface ActivityComponent {
 	void inject(IntroductionMessageFragment fragment);
 
 	void inject(SettingsFragment fragment);
+
+	void inject(ProfileFragment fragment);
+
+	void inject(ProfileActivity fragment);
 
 }
