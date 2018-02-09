@@ -21,7 +21,7 @@
 			android:title="@string/blogs_button"/>
 		<item
 			android:id="@+id/nav_btn_profile"
-			android:icon="@drawable/blogs"
+			android:icon="@drawable/ic_perm_identity_24px"
 			android:title="@string/profile_button"/>
 	</group>
 

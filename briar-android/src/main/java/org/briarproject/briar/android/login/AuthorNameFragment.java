@@ -13,6 +13,7 @@ import android.widget.Button;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.profile.ProfileDb;
 
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
@@ -80,10 +81,11 @@ public class AuthorNameFragment extends SetupFragment {
 
 		// This will set the nickname so that the profile page can use it
 		setAuthorNameProfileHelper(authorNameInput.getText().toString());
+		ProfileDb profileDb = new ProfileDb(getActivity());
+		profileDb.setProfileAuthorName(authorNameInput.getText().toString());
 	}
 
-	// This is a helper method that will set the nickname of the user in a file location so that it
-	// can be used to display the user's profile name
+
 	private void setAuthorNameProfileHelper(String author) {
 		SharedPreferences sharedPref;
 		SharedPreferences.Editor editor;

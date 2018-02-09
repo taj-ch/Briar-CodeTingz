@@ -204,11 +204,15 @@ android {
 			shrinkResources false
 			minifyEnabled true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+			debuggable true
+			useProguard true
 		}
 		release {
 			shrinkResources true
 			minifyEnabled true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+			debuggable false
+			useProguard true
 		}
 	}
 
