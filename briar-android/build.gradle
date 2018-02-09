@@ -203,7 +203,7 @@ android {
 			resValue "string", "app_name", "Briar Debug"
 			shrinkResources false
 			minifyEnabled true
-			debuggable false
+			debuggable true
 			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
