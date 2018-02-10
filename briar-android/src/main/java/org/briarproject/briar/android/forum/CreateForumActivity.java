@@ -171,6 +171,7 @@ public class CreateForumActivity extends BriarActivity {
 					ForumActivity.class);
 			i.putExtra(GROUP_ID, f.getId().getBytes());
 			i.putExtra(GROUP_NAME, f.getName());
+			i.putExtra(GROUP_DESC, f.getDesc());
 			startActivity(i);
 			Toast.makeText(CreateForumActivity.this,
 					R.string.forum_created_toast, LENGTH_LONG).show();

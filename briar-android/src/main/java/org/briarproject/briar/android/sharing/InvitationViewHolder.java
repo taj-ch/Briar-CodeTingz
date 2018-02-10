@@ -21,6 +21,7 @@ public class InvitationViewHolder<I extends InvitationItem>
 
 	private final TextAvatarView avatar;
 	private final TextView name;
+	private final TextView desc;
 	protected final TextView sharedBy;
 	private final TextView subscribed;
 	private final Button accept;
@@ -31,6 +32,7 @@ public class InvitationViewHolder<I extends InvitationItem>
 
 		avatar = v.findViewById(R.id.avatarView);
 		name = v.findViewById(R.id.forumNameView);
+		desc = v.findViewById(R.id.forumDescView);
 		sharedBy = v.findViewById(R.id.sharedByView);
 		subscribed = v.findViewById(R.id.forumSubscribedView);
 		accept = v.findViewById(R.id.acceptButton);
@@ -45,6 +47,7 @@ public class InvitationViewHolder<I extends InvitationItem>
 		avatar.setBackgroundBytes(item.getShareable().getId().getBytes());
 
 		name.setText(item.getShareable().getName());
+		//desc.setText(item.getForum().getDesc());
 
 		if (item.isSubscribed()) {
 			subscribed.setVisibility(VISIBLE);
