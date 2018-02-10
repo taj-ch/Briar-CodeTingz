@@ -1,17 +1,27 @@
 package org.briarproject.briar.android.login;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.activity.BaseActivity;
 import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.regex.Matcher;
@@ -38,6 +48,8 @@ public class AuthorNameFragment extends SetupFragment {
 	private StrengthMeter strengthMeter;
 	private Button signInButton;
 
+	private FirebaseAuth mAuth;
+
 
 	public static AuthorNameFragment newInstance() {
 		return new AuthorNameFragment();
@@ -61,6 +73,8 @@ public class AuthorNameFragment extends SetupFragment {
 		authorNameInput.addTextChangedListener(this);
 		passwordInput.addTextChangedListener(this);
 		signInButton.setOnClickListener(this);
+
+		mAuth = FirebaseAuth.getInstance();
 
 		return v;
 	}
@@ -117,12 +131,14 @@ public class AuthorNameFragment extends SetupFragment {
 
 	@Override
 	public void onClick(View view) {
+		String email = authorNameInput.getText().toString();
+		String password = passwordInput.getText().toString();
+		createAccount(email, password);
 		setupController.setAuthorName(authorNameInput.getText().toString());
 		setupController.setPassword(passwordInput.getText().toString());
 		if (!setupController.needToShowDozeFragment()) {
 			signInButton.setVisibility(INVISIBLE);
 		}
-		String password = passwordInput.getText().toString();
 		setupController.setPassword(password);
 		setupController.showDozeOrCreateAccount();
 	}
@@ -132,6 +148,10 @@ public class AuthorNameFragment extends SetupFragment {
 		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(email);
 		return matcher.matches();
+	}
+
+	public void createAccount(String email, String password) {
+		mAuth.createUserWithEmailAndPassword(email, password);
 	}
 
 }
