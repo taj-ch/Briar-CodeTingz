@@ -75,6 +75,7 @@ public class AuthorNameFragment extends SetupFragment {
 		signInButton.setOnClickListener(this);
 
 		mAuth = FirebaseAuth.getInstance();
+		FirebaseUser currentUser = mAuth.getCurrentUser();
 
 		return v;
 	}
@@ -134,6 +135,7 @@ public class AuthorNameFragment extends SetupFragment {
 		String email = authorNameInput.getText().toString();
 		String password = passwordInput.getText().toString();
 		createAccount(email, password);
+		FirebaseUser currentUser = mAuth.getCurrentUser();
 		setupController.setAuthorName(authorNameInput.getText().toString());
 		setupController.setPassword(passwordInput.getText().toString());
 		if (!setupController.needToShowDozeFragment()) {
