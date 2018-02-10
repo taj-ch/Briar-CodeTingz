@@ -13,6 +13,9 @@
 		<!-- These fix a long-standing UI bug in the support preference library -->
 		<item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
 		<item name="android:listSeparatorTextViewStyle">@style/BriarTheme.ListSeparatorTextView</item>
+
+		<item name="splashScreen">@drawable/splash_screen</item>
+		<item name="splashBackground">@color/window_background</item>
 	</style>
 
 	<style name="BriarTheme.NoActionBar" parent="BriarTheme">

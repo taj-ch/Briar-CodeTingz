@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
 	<style name="BriarToolbar" parent="Widget.AppCompat.Toolbar">
 		<item name="android:background">?colorPrimary</item>
 		<item name="android:textColorPrimary">@color/briar_text_primary_inverse</item>
@@ -126,8 +125,9 @@
 	</style>
 
 	<style name="BriarThemeDark" parent="BriarTheme">
-		<item name="android:colorBackground">?attr/colorPrimaryDark</item>
-		<item name="android:colorForeground">?android:attr/colorForegroundInverse</item>
+		<item name="splashScreen">@drawable/splash_screen_white</item>
+		<item name="splashBackground">@color/briar_blue_dark</item>
+
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 	</style>

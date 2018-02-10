@@ -34,4 +34,9 @@
 		</attr>
 	</declare-styleable>
 
+	<declare-styleable name="customAttrs">
+		<attr name="splashScreen" format="reference" />
+		<attr name="splashBackground" format="color" />
+	</declare-styleable>
+
 </resources>
