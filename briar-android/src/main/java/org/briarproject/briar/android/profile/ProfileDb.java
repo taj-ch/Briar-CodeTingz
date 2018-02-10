@@ -42,7 +42,7 @@ public class ProfileDb {
 	}
 
 	public void setProfileAuthorName(String nickname){
-		editor.putString(profile_data_description_input, nickname);
+		editor.putString(profile_data_nickname_input, nickname);
 		editor.commit();
 	}
 

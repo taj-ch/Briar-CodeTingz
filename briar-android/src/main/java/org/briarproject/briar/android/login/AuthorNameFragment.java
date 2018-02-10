@@ -80,22 +80,7 @@ public class AuthorNameFragment extends SetupFragment {
 		setupController.setAuthorName(authorNameInput.getText().toString());
 
 		// This will set the nickname so that the profile page can use it
-		setAuthorNameProfileHelper(authorNameInput.getText().toString());
 		ProfileDb profileDb = new ProfileDb(getActivity());
 		profileDb.setProfileAuthorName(authorNameInput.getText().toString());
 	}
-
-
-	private void setAuthorNameProfileHelper(String author) {
-		SharedPreferences sharedPref;
-		SharedPreferences.Editor editor;
-
-		// Use SharedPreferences to store and retrieve profile information in Key-Value Sets
-		sharedPref = getActivity().getSharedPreferences(
-				getString(R.string.profile_data_file), Context.MODE_PRIVATE);
-		editor = sharedPref.edit();
-		editor.putString(getString(R.string.profile_data_nickname_input), author);
-		editor.commit();
-	}
-
 }

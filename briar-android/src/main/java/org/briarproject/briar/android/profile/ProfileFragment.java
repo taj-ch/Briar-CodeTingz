@@ -118,9 +118,6 @@ public class ProfileFragment extends BaseFragment implements
 
 		if(bitmap != null) {
 			selectedImage.setImageBitmap(bitmap);
-		} else{
-			Toast.makeText(getActivity(), "No profile picture selected!!",
-					Toast.LENGTH_LONG).show();
 		}
 
 		return profileView;
