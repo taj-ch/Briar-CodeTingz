@@ -86,7 +86,7 @@ public class AuthorNameFragment extends SetupFragment {
 		boolean error = isEmailValid(email);
 		boolean enabled = error;
 		UiUtils.setError(authorNameWrapper, "Not a valid email",
-				email.length() > 0);
+				email.length() > 0 && !error);
 
 		authorNameInput
 				.setImeOptions(enabled ? IME_ACTION_NEXT : IME_ACTION_NONE);
@@ -94,13 +94,13 @@ public class AuthorNameFragment extends SetupFragment {
 
 		String password1 = passwordInput.getText().toString();
 		String password2 = passwordConfirm.getText().toString();
+		boolean passwordsMatch = password1.equals(password2);
 
 		strengthMeter
 				.setVisibility(password1.length() > 0 ? VISIBLE : INVISIBLE);
 		float strength = setupController.estimatePasswordStrength(password1);
 		strengthMeter.setStrength(strength);
 		boolean strongEnough = strength >= QUITE_WEAK;
-		boolean passwordsMatch = password1.equals(password2);
 
 		UiUtils.setError(passwordWrapper,
 				getString(R.string.password_too_weak),
@@ -109,9 +109,10 @@ public class AuthorNameFragment extends SetupFragment {
 				getString(R.string.passwords_do_not_match),
 				password2.length() > 0 && !passwordsMatch);
 
-		boolean enabled2 = passwordsMatch && strongEnough;
-		passwordConfirm.setOnEditorActionListener(enabled2 ? this : null);
+		boolean enabled2 = strongEnough && passwordsMatch;
 		signInButton.setEnabled(enabled2 && enabled);
+		passwordConfirm.setOnEditorActionListener(enabled2 ? this : null);
+
 	}
 
 	@Override
