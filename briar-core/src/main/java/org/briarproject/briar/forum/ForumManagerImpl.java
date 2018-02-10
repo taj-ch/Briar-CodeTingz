@@ -101,6 +101,7 @@ class ForumManagerImpl extends BdfIncomingMessageHook implements ForumManager {
 		Transaction txn = db.startTransaction(false);
 		try {
 			db.addGroup(txn, f.getGroup());
+
 			db.commitTransaction(txn);
 		} finally {
 			db.endTransaction(txn);

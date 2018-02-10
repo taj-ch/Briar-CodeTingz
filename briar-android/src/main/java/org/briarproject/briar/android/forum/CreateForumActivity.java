@@ -146,13 +146,14 @@ public class CreateForumActivity extends BriarActivity {
 		createForumButton.setVisibility(GONE);
 		progress.setVisibility(VISIBLE);
 		storeForum(nameEntry.getText().toString(),descriptionEntry.getText().toString()); //stores forum name/description
+		
 	}
 
-	private void storeForum(String name, String description) {
+	private void storeForum(String name, String desc) {
 		runOnDbThread(() -> {
 			try {
 				long now = System.currentTimeMillis();
-				Forum f = forumManager.addForum(name,description);//stores forum name/description
+				Forum f = forumManager.addForum(name, desc);//stores forum name/description
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))
 					LOG.info("Storing forum took " + duration + " ms");

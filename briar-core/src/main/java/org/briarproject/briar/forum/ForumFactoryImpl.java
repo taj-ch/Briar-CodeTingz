@@ -51,7 +51,7 @@ class ForumFactoryImpl implements ForumFactory {
 	@Override
 	public Forum createForum(String name, String desc, byte[] salt) {
 		try {
-			BdfList forum = BdfList.of(name, salt);
+			BdfList forum = BdfList.of(name, desc, salt);
 			byte[] descriptor = clientHelper.toByteArray(forum);
 			Group g = groupFactory.createGroup(CLIENT_ID, CLIENT_VERSION,
 					descriptor);
