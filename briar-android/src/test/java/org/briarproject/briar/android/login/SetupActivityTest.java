@@ -53,7 +53,7 @@ public class SetupActivityTest {
 	@Test
 	public void testNicknameUI() {
 		Assert.assertNotNull(setupActivity);
-		String longNick = "test@email");
+		String longNick = "test@email";
 		nicknameEntry.setText(longNick);
 		// Nickname should be too long
 		assertEquals(nicknameEntryWrapper.getError(),
