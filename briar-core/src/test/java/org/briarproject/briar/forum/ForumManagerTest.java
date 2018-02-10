@@ -9,7 +9,7 @@ import org.briarproject.briar.api.forum.ForumPostHeader;
 import org.briarproject.briar.api.forum.ForumSharingManager;
 import org.briarproject.briar.test.BriarIntegrationTest;
 import org.briarproject.briar.test.BriarIntegrationTestComponent;
-import org.briarproject.briar.test.BriarIntegrationTestComponent;
+import org.briarproject.briar.test.DaggerBriarIntegrationTestComponent;
 import org.junit.Before;
 import org.junit.Test;
 
