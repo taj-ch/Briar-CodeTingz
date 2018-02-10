@@ -3,6 +3,7 @@ package org.briarproject.briar.android.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -38,8 +41,12 @@ public class EmailPasswordActivity extends BaseActivity {
 
 	private Button signInButton;
 	private ProgressBar progress;
-	private TextInputLayout input;
+	private TextInputLayout emailInput;
+	private EditText email;
+	private TextInputLayout passwordInput;
 	private EditText password;
+
+	private FirebaseAuth mAuth;
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -52,10 +59,14 @@ public class EmailPasswordActivity extends BaseActivity {
 			return;
 		}
 
+		mAuth = FirebaseAuth.getInstance();
+
 		setContentView(R.layout.activity_email_password_login);
 		signInButton = findViewById(R.id.btn_sign_in);
 		progress = findViewById(R.id.progress_wheel);
-		input = findViewById(R.id.password_layout);
+		emailInput = findViewById(R.id.email_layout);
+		email = findViewById(R.id.edit_email);
+		passwordInput = findViewById(R.id.password_layout);
 		password = findViewById(R.id.edit_password);
 		password.setOnEditorActionListener((v, actionId, event) -> {
 			validatePassword();
@@ -71,7 +82,7 @@ public class EmailPasswordActivity extends BaseActivity {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				if (count > 0) UiUtils.setError(input, null, false);
+				if (count > 0) UiUtils.setError(passwordInput, null, false);
 			}
 
 			@Override
@@ -112,6 +123,9 @@ public class EmailPasswordActivity extends BaseActivity {
 	}
 
 	public void onSignInClick(View v) {
+		String email1 = email.getText().toString();
+		String password1 = password.getText().toString();
+		mAuth.signInWithEmailAndPassword(email1, password1);
 		validatePassword();
 	}
 
@@ -151,7 +165,7 @@ public class EmailPasswordActivity extends BaseActivity {
 	}
 
 	private void tryAgain() {
-		UiUtils.setError(input, getString(R.string.try_again), true);
+		UiUtils.setError(passwordInput, getString(R.string.try_again), true);
 		signInButton.setVisibility(VISIBLE);
 		progress.setVisibility(INVISIBLE);
 		password.setText("");
