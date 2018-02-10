@@ -12,6 +12,8 @@ import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
 import static org.briarproject.bramble.api.identity.AuthorConstants.MAX_AUTHOR_NAME_LENGTH;
@@ -23,6 +25,8 @@ public class AuthorNameFragment extends SetupFragment {
 
 	private TextInputLayout authorNameWrapper;
 	private TextInputEditText authorNameInput;
+	private TextInputLayout passwordWrapper;
+	private TextInputEditText passwordInput;
 	private Button nextButton;
 
 	public static AuthorNameFragment newInstance() {
@@ -33,13 +37,16 @@ public class AuthorNameFragment extends SetupFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		getActivity().setTitle(getString(R.string.setup_title));
-		View v = inflater.inflate(R.layout.fragment_setup_author_name,
+		View v = inflater.inflate(R.layout.activity_email_password_create,
 				container, false);
-		authorNameWrapper = v.findViewById(R.id.nickname_entry_wrapper);
-		authorNameInput = v.findViewById(R.id.nickname_entry);
+		authorNameWrapper = v.findViewById(R.id.email_entry_wrapper);
+		authorNameInput = v.findViewById(R.id.email_entry);
+		passwordWrapper = v.findViewById(R.id.password_entry_wrapper);
+		passwordInput = v.findViewById(R.id.password_entry);
 		nextButton = v.findViewById(R.id.next);
 
 		authorNameInput.addTextChangedListener(this);
+		passwordInput.addTextChangedListener(this);
 		nextButton.setOnClickListener(this);
 
 		return v;
@@ -75,6 +82,13 @@ public class AuthorNameFragment extends SetupFragment {
 	@Override
 	public void onClick(View view) {
 		setupController.setAuthorName(authorNameInput.getText().toString());
+		setupController.setPassword(passwordInput.getText().toString());
+		if (!setupController.needToShowDozeFragment()) {
+			nextButton.setVisibility(INVISIBLE);
+		}
+		String password = passwordInput.getText().toString();
+		setupController.setPassword(password);
+		setupController.showDozeOrCreateAccount();
 	}
 
 }
