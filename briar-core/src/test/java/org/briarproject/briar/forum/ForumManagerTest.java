@@ -9,7 +9,7 @@ import org.briarproject.briar.api.forum.ForumPostHeader;
 import org.briarproject.briar.api.forum.ForumSharingManager;
 import org.briarproject.briar.test.BriarIntegrationTest;
 import org.briarproject.briar.test.BriarIntegrationTestComponent;
-import org.briarproject.briar.test.DaggerBriarIntegrationTestComponent;
+import org.briarproject.briar.test.BriarIntegrationTestComponent;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,7 +42,7 @@ public class ForumManagerTest
 		forumSharingManager1 = c1.getForumSharingManager();
 
 
-		forum0 = forumManager0.addForum("Test Forum");
+		forum0 = forumManager0.addForum("Test Forum","Test Forum Description");
 		groupId0 = forum0.getId();
 		// share forum
 		forumSharingManager0.sendInvitation(groupId0, contactId1From0, null,
@@ -188,7 +188,7 @@ public class ForumManagerTest
 	@Test
 	public void testForumPostWithParentInOtherGroup() throws Exception {
 		// share a second forum
-		Forum forum1 = forumManager0.addForum("Test Forum1");
+		Forum forum1 = forumManager0.addForum("Test Forum1","Test Forum Description");
 		GroupId g1 = forum1.getId();
 		forumSharingManager0.sendInvitation(g1, contactId1From0, null,
 				clock.currentTimeMillis());

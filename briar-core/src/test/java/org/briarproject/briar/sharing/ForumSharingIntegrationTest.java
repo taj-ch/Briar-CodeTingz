@@ -103,7 +103,7 @@ public class ForumSharingIntegrationTest
 	}
 
 	private void addForumForSharer() throws DbException {
-		forum0 = forumManager0.addForum("Test Forum");
+		forum0 = forumManager0.addForum("Test Forum", "Test Forum Description");
 	}
 
 	@Test
