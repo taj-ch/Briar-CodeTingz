@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.UiThread;
 import android.view.View.OnClickListener;
 
 import android.view.LayoutInflater;
@@ -18,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.briarproject.bramble.api.nullsafety.MethodsNotNullByDefault;
-import org.briarproject.bramble.api.nullsafety.ParametersNotNullByDefault;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 
@@ -34,9 +31,7 @@ This class can create and store profile page information. It uses SharedPreferen
 key value pairs to save the information. In addition, it uses FileInputStream/FileOutputStream
 to read and write the image the user selected.
  */
-@UiThread
-@MethodsNotNullByDefault
-@ParametersNotNullByDefault
+
 public class ProfileFragment extends BaseFragment implements
 		OnClickListener {
 

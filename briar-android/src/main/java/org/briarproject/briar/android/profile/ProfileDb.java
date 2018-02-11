@@ -24,7 +24,7 @@ public class ProfileDb {
 
 	private SharedPreferences sharedPref;
 	private SharedPreferences.Editor editor;
-	private Activity activity;
+	private Context context;
 
 	private String profile_image_file = "profile_picture_final";
 	private String profile_data_file = "profile_data_file";
@@ -34,9 +34,9 @@ public class ProfileDb {
 	private String profile_data_email_input = "profile_data_email_input";
 	private String profile_data_description_input = "profile_data_description_input";
 
-	public ProfileDb(Activity activity){
-		this.activity = activity;
-		sharedPref = this.activity.getSharedPreferences(profile_data_file, Context.MODE_PRIVATE);
+	public ProfileDb(Context context){
+		this.context = context;
+		sharedPref = this.context.getSharedPreferences(profile_data_file, Context.MODE_PRIVATE);
 		editor = sharedPref.edit();
 
 	}
@@ -70,15 +70,15 @@ public class ProfileDb {
 		FileOutputStream outputStream = null;
 			try {
 				// Convert the image to a png so its lossless and takes less space and store in file
-				outputStream = activity.openFileOutput(profile_image_file, Context.MODE_PRIVATE);
+				outputStream = context.openFileOutput(profile_image_file, Context.MODE_PRIVATE);
 				currentImage.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-				Toast.makeText(activity, "There was an error while opening image location!",
+				Toast.makeText(context, "There was an error while opening image location!",
 						Toast.LENGTH_LONG).show();
 			} catch (Exception e) {
 				e.printStackTrace();
-				Toast.makeText(activity, "There was an error while saving your image!",
+				Toast.makeText(context, "There was an error while saving your image!",
 						Toast.LENGTH_LONG).show();
 			} finally {
 				// Close stream
@@ -88,7 +88,7 @@ public class ProfileDb {
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
-					Toast.makeText(activity, "There was an error while closing a file!",
+					Toast.makeText(context, "There was an error while closing a file!",
 							Toast.LENGTH_LONG).show();
 				}
 			}
@@ -100,7 +100,7 @@ public class ProfileDb {
 		try {
 			// Going to see if a image exists with our file name.
 			// If it does exist set the profile pic
-			inputStream = activity.openFileInput(profile_image_file);
+			inputStream = context.openFileInput(profile_image_file);
 			bitmap = BitmapFactory.decodeStream(inputStream);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
