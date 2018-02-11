@@ -27,6 +27,7 @@ import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BaseActivity;
 import org.briarproject.briar.android.controller.BriarController;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
+import org.briarproject.briar.android.navdrawer.NavDrawerActivity;
 import org.briarproject.briar.android.util.UiUtils;
 
 import javax.inject.Inject;
@@ -55,7 +56,7 @@ public class EmailPasswordActivity extends BaseActivity {
 	private EditText password;
 
 	private FirebaseAuth mAuth;
-	private boolean successfulTask;
+	//private boolean successfulTask;
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -184,17 +185,43 @@ public class EmailPasswordActivity extends BaseActivity {
 						//the mAuth state listener will be notified and logic to handle the
 						//signed in user can be handled in the listener.
 						progress.setVisibility(INVISIBLE);
-						if (!task.isSuccessful()){
-							//there was an error
-							successfulTask = false;
-							tryAgain();
-						} else {
+						if (task.isSuccessful()){
 							//sign in successful
+							//successfulTask = true;
+							//supportFinishAfterTransition();  //Puts an end to the activity
+							// don't show closing animation,
+							// but one for opening NavDrawerActivity
+							//overridePendingTransition(R.anim.screen_new_in,
+							//		R.anim.screen_old_out);
+							//briarController.startAndBindService();
 
-							//setResult(RESULT_OK);
+							passwordController.validatePassword(inputPassword,
+									new UiResultHandler<Boolean>(EmailPasswordActivity.this) {
+										@Override
+										public void onResultUi(@NonNull Boolean result) {
+											if (result) {
+												setResult(RESULT_OK);
+												supportFinishAfterTransition();
+												// don't show closing animation,
+												// but one for opening NavDrawerActivity
+												overridePendingTransition(R.anim.screen_new_in,
+														R.anim.screen_old_out);
+											} else {
+												tryAgain();
+											}
+										}
+									});
+
+							//Intent i = new Intent(EmailPasswordActivity.this, NavDrawerActivity.class);
+							//i.setFlags(FLAG_ACTIVITY_NEW_TASK);
+							//startActivity(i);
 							//supportFinishAfterTransition();
 							//overridePendingTransition(R.anim.screen_new_in, R.anim.screen_old_out);
-							//briarController.startAndBindService();
+
+						} else {
+							//there was an error
+							//successfulTask = false;
+							tryAgain();
 						}
 					}
 				});
