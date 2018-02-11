@@ -56,7 +56,6 @@ public class EmailPasswordActivity extends BaseActivity {
 	private EditText password;
 
 	private FirebaseAuth mAuth;
-	//private boolean successfulTask;
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -187,14 +186,6 @@ public class EmailPasswordActivity extends BaseActivity {
 						progress.setVisibility(INVISIBLE);
 						if (task.isSuccessful()){
 							//sign in successful
-							//successfulTask = true;
-							//supportFinishAfterTransition();  //Puts an end to the activity
-							// don't show closing animation,
-							// but one for opening NavDrawerActivity
-							//overridePendingTransition(R.anim.screen_new_in,
-							//		R.anim.screen_old_out);
-							//briarController.startAndBindService();
-
 							passwordController.validatePassword(inputPassword,
 									new UiResultHandler<Boolean>(EmailPasswordActivity.this) {
 										@Override
@@ -211,16 +202,8 @@ public class EmailPasswordActivity extends BaseActivity {
 											}
 										}
 									});
-
-							//Intent i = new Intent(EmailPasswordActivity.this, NavDrawerActivity.class);
-							//i.setFlags(FLAG_ACTIVITY_NEW_TASK);
-							//startActivity(i);
-							//supportFinishAfterTransition();
-							//overridePendingTransition(R.anim.screen_new_in, R.anim.screen_old_out);
-
 						} else {
 							//there was an error
-							//successfulTask = false;
 							tryAgain();
 						}
 					}
