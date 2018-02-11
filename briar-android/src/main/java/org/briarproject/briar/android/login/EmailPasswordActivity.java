@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+//import com.google.firebase.auth.FirebaseUser;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -54,6 +55,7 @@ public class EmailPasswordActivity extends BaseActivity {
 	private EditText password;
 
 	private FirebaseAuth mAuth;
+	private boolean successfulTask;
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -67,6 +69,12 @@ public class EmailPasswordActivity extends BaseActivity {
 		}
 
 		mAuth = FirebaseAuth.getInstance();
+
+		//if the user is already signed in
+		if (mAuth.getCurrentUser() != null){
+			//startActivity(new Intent(EmailPasswordActivity.this, some main activity))
+			//finish();
+		}
 
 		setContentView(R.layout.activity_email_password_login);
 		signInButton = findViewById(R.id.btn_sign_in);
@@ -134,9 +142,15 @@ public class EmailPasswordActivity extends BaseActivity {
 	}
 
 	public void onSignInClick(View v) {
-		String email1 = email.getText().toString();
-		String password1 = password.getText().toString();
-		mAuth.signInWithEmailAndPassword(email1, password1);
+		String inputEmail = email.getText().toString();
+		String inputPassword = password.getText().toString();
+
+		if (TextUtils.isEmpty(inputEmail)){
+			tryAgain();
+		} else {
+			validateLogin();
+		}
+
 		//validatePassword();
 	}
 
@@ -153,6 +167,41 @@ public class EmailPasswordActivity extends BaseActivity {
 		dialog.show();
 	}
 
+	private void validateLogin(){
+		String inputEmail = email.getText().toString();
+		String inputPassword = password.getText().toString();
+		hideSoftKeyboard(password);
+		signInButton.setVisibility(INVISIBLE);
+		progress.setVisibility(VISIBLE);
+
+		//authenticate user
+		mAuth.signInWithEmailAndPassword(inputEmail, inputPassword).addOnCompleteListener(
+				EmailPasswordActivity.this,
+				new OnCompleteListener<AuthResult>() {
+					@Override
+					public void onComplete(@NonNull Task<AuthResult> task) {
+						//if sign in fails, display a message to the user. If sign in succeeds
+						//the mAuth state listener will be notified and logic to handle the
+						//signed in user can be handled in the listener.
+						progress.setVisibility(INVISIBLE);
+						if (!task.isSuccessful()){
+							//there was an error
+							successfulTask = false;
+							tryAgain();
+						} else {
+							//sign in successful
+
+							//setResult(RESULT_OK);
+							//supportFinishAfterTransition();
+							//overridePendingTransition(R.anim.screen_new_in, R.anim.screen_old_out);
+							//briarController.startAndBindService();
+						}
+					}
+				});
+	}
+
+
+	//used for original app, we are using validateLogin() for our adjustments instead
 	private void validatePassword() {
 		hideSoftKeyboard(password);
 		signInButton.setVisibility(INVISIBLE);

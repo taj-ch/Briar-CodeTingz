@@ -49,16 +49,16 @@ public class PasswordControllerImpl extends ConfigControllerImpl
 	@Override
 	public void validatePassword(String password,
 			ResultHandler<Boolean> resultHandler) {
-		byte[] encrypted = getEncryptedKey();
-		cryptoExecutor.execute(() -> {
-			byte[] key = crypto.decryptWithPassword(encrypted, password);
-			if (key == null) {
-				resultHandler.onResult(false);
-			} else {
-				databaseConfig.setEncryptionKey(new SecretKey(key));
+		//byte[] encrypted = getEncryptedKey();
+		//cryptoExecutor.execute(() -> {
+			//byte[] key = crypto.decryptWithPassword(encrypted, password);
+			//if (key == null) {
+				//resultHandler.onResult(false);
+			//} else {
+				//databaseConfig.setEncryptionKey(new SecretKey(key));
 				resultHandler.onResult(true);
-			}
-		});
+			//}
+		//});
 	}
 
 	@Override

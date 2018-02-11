@@ -29,7 +29,7 @@
 
 	<!-- Login -->
 	<string name="enter_password">Enter your password:</string>
-	<string name="try_again">Wrong password, try again</string>
+	<string name="try_again">Wrong username or password, try again</string>
 	<string name="sign_in_button">Sign In</string>
 	<string name="forgotten_password">I have forgotten my password</string>
 	<string name="dialog_title_lost_password">Lost Password</string>
