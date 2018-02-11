@@ -53,6 +53,8 @@ import org.briarproject.briar.api.sharing.event.InvitationResponseReceivedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -166,6 +168,9 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						new Intent(getContext(), KeyAgreementActivity.class);
 				startActivity(intent);
 				return true;
+			case R.id.action_sort_contact_alpha:
+				loadContactsSortedAlpha();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -189,6 +194,44 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		list.showProgressBar();
 		list.stopPeriodicUpdate();
 	}
+	private void loadContactsSortedAlpha(){
+		int revision = adapter.getRevision();
+		listener.runOnDbThread(() -> {
+			try {
+				long now = System.currentTimeMillis();
+				List<ContactListItem> contacts = new ArrayList<>();
+				for (Contact c : contactManager.getActiveContacts()) {
+					try {
+						ContactId id = c.getId();
+						GroupCount count =
+								conversationManager.getGroupCount(id);
+						boolean connected =
+								connectionRegistry.isConnected(c.getId());
+						contacts.add(new ContactListItem(c, connected, count));
+					} catch (NoSuchContactException e) {
+						// Continue
+					}
+				}
+				long duration = System.currentTimeMillis() - now;
+				if (LOG.isLoggable(INFO))
+					LOG.info("Full load took " + duration + " ms");
+				sortContactAlpha(contacts);
+				displaySortedContacts(revision, contacts);
+			} catch (DbException e) {
+				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+			}
+		});
+	}
+
+	private void sortContactAlpha(List<ContactListItem> contacts){
+		Collections.sort(contacts, new Comparator<ContactListItem>() {
+			public int compare(ContactListItem t0, ContactListItem t1) {
+				return t0.getContact().getAuthor().getName().compareTo(t1.getContact().getAuthor().getName());
+			}
+		});
+	}
+
+
 
 	private void loadContacts() {
 		int revision = adapter.getRevision();
@@ -227,6 +270,19 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			} else {
 				LOG.info("Concurrent update, reloading");
 				loadContacts();
+			}
+		});
+	}
+
+	private void displaySortedContacts(int revision, List<ContactListItem> contacts) {
+		runOnUiThreadUnlessDestroyed(() -> {
+			if (revision == adapter.getRevision()) {
+				adapter.incrementRevision();
+				if (contacts.isEmpty()) list.showData();
+				else adapter.addAll(contacts);
+			} else {
+				LOG.info("Concurrent update, reloading");
+				loadContactsSortedAlpha();
 			}
 		});
 	}

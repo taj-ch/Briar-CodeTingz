@@ -112,6 +112,8 @@
 	<string name="dialog_title_delete_contact">Confirm Contact Deletion</string>
 	<string name="dialog_message_delete_contact">Are you sure that you want to remove this contact and all messages exchanged with this contact?</string>
 	<string name="contact_deleted_toast">Contact deleted</string>
+	<string name="sort_contact_alphabetically">Sort Alphabetically</string>
+	<string name="sort_contact_recent">Sort Recent</string>
 
 	<!-- Adding Contacts -->
 	<string name="add_contact_title">Add a Contact</string>
