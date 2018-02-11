@@ -11,6 +11,7 @@
 	<string name="setup_doze_intro">To receive messages, Briar needs to stay connected in the background.</string>
 	<string name="setup_doze_explanation">To receive messages, Briar needs to stay connected in the background. Please disable battery optimizations so Briar can stay connected.</string>
 	<string name="setup_doze_button">Allow Connections</string>
+	<string name="not_valid_email">Not a valid email</string>
 	<string name="enter_email">Enter your email address</string>
 	<string name="choose_nickname">Choose your nickname</string>
 	<string name="choose_password">Choose your password</string>

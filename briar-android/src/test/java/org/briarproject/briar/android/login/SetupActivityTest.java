@@ -46,17 +46,17 @@ public class SetupActivityTest {
 		MockitoAnnotations.initMocks(this);
 		setupActivity = Robolectric.setupActivity(SetupActivity.class);
 		nicknameEntryWrapper =
-				setupActivity.findViewById(R.id.nickname_entry_wrapper);
-		nicknameEntry = setupActivity.findViewById(R.id.nickname_entry);
+				setupActivity.findViewById(R.id.email_entry_wrapper);
+		nicknameEntry = setupActivity.findViewById(R.id.email_entry);
 	}
 
 	@Test
 	public void testNicknameUI() {
 		Assert.assertNotNull(setupActivity);
-		String longNick = "test@email";
+		String longNick = getRandomString(MAX_AUTHOR_NAME_LENGTH + 1);
 		nicknameEntry.setText(longNick);
 		// Nickname should be too long
 		assertEquals(nicknameEntryWrapper.getError(),
-				setupActivity.getString(R.string.name_too_long));
+				setupActivity.getString(R.string.not_valid_email));
 	}
 }

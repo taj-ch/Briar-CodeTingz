@@ -72,6 +72,7 @@ public class AuthorNameFragment extends SetupFragment {
 
 		authorNameInput.addTextChangedListener(this);
 		passwordInput.addTextChangedListener(this);
+		passwordConfirm.addTextChangedListener(this);
 		signInButton.setOnClickListener(this);
 
 		mAuth = FirebaseAuth.getInstance();
@@ -109,7 +110,7 @@ public class AuthorNameFragment extends SetupFragment {
 
 		String password1 = passwordInput.getText().toString();
 		String password2 = passwordConfirm.getText().toString();
-		boolean passwordsMatch = password1.equals(password2);
+		boolean passwordsMatch = password2.equals(password1);
 
 		strengthMeter
 				.setVisibility(password1.length() > 0 ? VISIBLE : INVISIBLE);
@@ -125,7 +126,8 @@ public class AuthorNameFragment extends SetupFragment {
 				password2.length() > 0 && !passwordsMatch);
 
 		boolean enabled2 = strongEnough && passwordsMatch;
-		signInButton.setEnabled(enabled2 && enabled);
+		boolean enableButton = enabled && enabled2;
+		signInButton.setEnabled(enableButton);
 		passwordConfirm.setOnEditorActionListener(enabled2 ? this : null);
 
 	}
