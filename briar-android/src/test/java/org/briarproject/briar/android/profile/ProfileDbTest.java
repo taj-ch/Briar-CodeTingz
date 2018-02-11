@@ -1,10 +1,11 @@
 package org.briarproject.briar.android.profile;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import org.briarproject.briar.android.TestBriarApplication;
-
+import org.briarproject.briar.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.io.File;
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
@@ -49,11 +49,8 @@ public class ProfileDbTest {
 	// Test profile upload works and image can be retrieved
 	@Test
 	public void testProfileImageUpload() {
-		File profileImageFile = new  File("briar-android/src/test/testImage.jpg");
-		if(profileImageFile.exists()){
-			Bitmap bitmap = BitmapFactory.decodeFile(profileImageFile.getAbsolutePath());
-			profileDb.writeProfileImage(bitmap);
-		}
+		Bitmap profileBitmap = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.test_image);
+		profileDb.writeProfileImage(profileBitmap);
 		assertNotNull(profileDb.readProfileImage());
 	}
 }
