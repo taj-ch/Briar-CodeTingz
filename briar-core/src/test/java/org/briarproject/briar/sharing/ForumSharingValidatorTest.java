@@ -20,7 +20,7 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 	private final String forumDesc = StringUtils.getRandomString(MAX_FORUM_NAME_LENGTH);
 	private final byte[] salt = TestUtils.getRandomBytes(FORUM_SALT_LENGTH);
 	private final Forum forum = new Forum(group, forumName,forumDesc, salt);
-	private final BdfList descriptor = BdfList.of(forumName, salt);
+	private final BdfList descriptor = BdfList.of(forumName, forumDesc, salt);
 	private final String content =
 			StringUtils.getRandomString(MAX_INVITATION_MESSAGE_LENGTH);
 
@@ -86,7 +86,7 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 	public void testAcceptsMinLengthForumName() throws Exception {
 		String shortForumName = StringUtils.getRandomString(1);
 		String shortForumDesc = StringUtils.getRandomString(1);
-		BdfList validDescriptor = BdfList.of(shortForumName, salt);
+		BdfList validDescriptor = BdfList.of(shortForumName, shortForumDesc, salt);
 		expectCreateForum(shortForumName, shortForumDesc );
 		expectEncodeMetadata(INVITE);
 		BdfMessageContext messageContext = v.validateMessage(message, group,
