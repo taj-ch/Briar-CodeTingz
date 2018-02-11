@@ -22,12 +22,16 @@ import java.util.Map;
 
 public class ProfileDb {
 
+	// Store profile info as key value pairs
 	private SharedPreferences sharedPref;
 	private SharedPreferences.Editor editor;
 	private Context context;
 
+	// File Names
 	private String profile_image_file = "profile_picture_final";
 	private String profile_data_file = "profile_data_file";
+
+	// Key values to write user info
 	private String profile_data_first_name_input = "profile_data_first_name_input";
 	private String profile_data_last_name_input = "profile_data_last_name_input";
 	private String profile_data_nickname_input = "profile_data_nickname_input";
@@ -41,11 +45,13 @@ public class ProfileDb {
 
 	}
 
+	// Sets the authors name in file
 	public void setProfileAuthorName(String nickname){
 		editor.putString(profile_data_nickname_input, nickname);
 		editor.commit();
 	}
 
+	// Store the users profile info into file
 	public void writeProfileInfo(String firstName, String lastName, String email, String description){
 		editor.putString(profile_data_first_name_input, firstName);
 		editor.putString(profile_data_last_name_input, lastName);
@@ -54,6 +60,7 @@ public class ProfileDb {
 		editor.commit();
 	}
 
+	// Read the users profile info from file and store in hash map
 	public Map readProfileInfo(){
 		Map<String, String> map = new HashMap<>();
 		// Retrieve profile information from file, or null by default
@@ -66,6 +73,7 @@ public class ProfileDb {
 		return map;
 	}
 
+	// Store the users profile image into file
 	public void writeProfileImage(Bitmap currentImage){
 		FileOutputStream outputStream = null;
 			try {
@@ -94,6 +102,7 @@ public class ProfileDb {
 			}
 	}
 
+	// Read the users profile image from file and return as bitmap
 	public Bitmap readProfileImage(){
 		FileInputStream inputStream = null;
 		Bitmap bitmap = null;
