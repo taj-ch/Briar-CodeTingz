@@ -75,8 +75,12 @@ public class EmailPasswordActivity extends BaseActivity {
 		email = findViewById(R.id.edit_email);
 		passwordInput = findViewById(R.id.password_layout);
 		password = findViewById(R.id.edit_password);
+
 		password.setOnEditorActionListener((v, actionId, event) -> {
-			validatePassword();
+			String email1 = email.getText().toString();
+			String password1 = password.getText().toString();
+			mAuth.signInWithEmailAndPassword(email1, password1);
+			//validatePassword();
 			return true;
 		});
 		password.addTextChangedListener(new TextWatcher() {
@@ -133,8 +137,7 @@ public class EmailPasswordActivity extends BaseActivity {
 		String email1 = email.getText().toString();
 		String password1 = password.getText().toString();
 		mAuth.signInWithEmailAndPassword(email1, password1);
-		createAccount(email1, password1);
-		validatePassword();
+		//validatePassword();
 	}
 
 	public void onForgottenPasswordClick(View v) {
@@ -182,25 +185,4 @@ public class EmailPasswordActivity extends BaseActivity {
 		showSoftKeyboard(password);
 	}
 
-	private void createAccount(String email, String password) {
-		Log.d(TAG, "createAccount:" + email);
-
-		// [START create_user_with_email]
-		mAuth.createUserWithEmailAndPassword(email, password)
-				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-					@Override
-					public void onComplete(@NonNull Task<AuthResult> task) {
-						if (task.isSuccessful()) {
-							// Sign in success, update UI with the signed-in user's information
-							Log.d(TAG, "createUserWithEmail:success");
-							FirebaseUser user = mAuth.getCurrentUser();
-						} else {
-							// If sign in fails, display a message to the user.
-							Log.w(TAG, "createUserWithEmail:failure", task.getException());
-							Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-									Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-	}
 }
