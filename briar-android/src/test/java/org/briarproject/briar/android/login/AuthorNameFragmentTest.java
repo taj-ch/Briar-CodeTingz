@@ -1,6 +1,7 @@
 package org.briarproject.briar.android.login;
 
 import android.app.Activity;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +42,7 @@ public class AuthorNameFragmentTest {
 	private TextInputLayout passwordConfirmationWrapper;
 	private StrengthMeter strengthMeter;
 	private Button createAccountButton;
+	private EditText authorNameInput;
 
 
 	@Mock
@@ -59,11 +61,13 @@ public class AuthorNameFragmentTest {
 				v.findViewById(R.id.password_confirm_wrapper);
 		strengthMeter = v.findViewById(R.id.strength_meter);
 		createAccountButton = v.findViewById(R.id.next);
+		authorNameInput = v.findViewById(R.id.email_entry);
 	}
 
 	@Test
 	public void testCreateAccountUI() {
-		/*String safePass = "really.safe.password";
+		String safePass = "really.safe.password";
+		String testEmail = "test@gmail.com";
 
 		authorNameFragment.setupController = setupController;
 		when(setupController.needToShowDozeFragment()).thenReturn(false);
@@ -72,13 +76,15 @@ public class AuthorNameFragmentTest {
 
 		passwordEntry.setText(safePass);
 		passwordConfirmation.setText(safePass);
+		authorNameInput.setText(testEmail);
 		// Confirm that the create account button is clickable
 		assertEquals(createAccountButton.isEnabled(), true);
-		createAccountButton.performClick();
 
-		// assert controller has been called properly
-		verify(setupController, times(1)).setPassword(safePass);
-		verify(setupController, times(1)).showDozeOrCreateAccount();*/
+		//createAccountButton.performClick();
+		//
+		//// assert controller has been called properly
+		//verify(setupController, times(1)).setPassword(safePass);
+		//verify(setupController, times(1)).showDozeOrCreateAccount();
 	}
 
 	@Test
