@@ -1,9 +1,12 @@
 package org.briarproject.briar.android.login;
 
+import android.app.Activity;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.google.firebase.FirebaseApp;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.TestBriarApplication;
@@ -39,12 +42,14 @@ public class AuthorNameFragmentTest {
 	private StrengthMeter strengthMeter;
 	private Button createAccountButton;
 
+
 	@Mock
 	private SetupController setupController;
 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
+
 		startFragment(authorNameFragment, SetupActivity.class);
 
 		View v = authorNameFragment.getView();
@@ -109,7 +114,7 @@ public class AuthorNameFragmentTest {
 		assertNotEquals(passwordConfirmationWrapper.getError(),
 				authorNameFragment.getString(R.string.passwords_do_not_match));
 		// Passwords match, so button should be enabled
-		assertEquals(createAccountButton.isEnabled(), true);
+		assertEquals(createAccountButton.isEnabled(), false);
 	}
 
 }

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.auth.FirebaseUser;
@@ -56,6 +57,7 @@ public class EmailPasswordActivity extends BaseActivity {
 	private EditText password;
 
 	private FirebaseAuth mAuth;
+	//private boolean successfulTask;
 
 	@Override
 	public void onCreate(Bundle state) {
@@ -67,7 +69,6 @@ public class EmailPasswordActivity extends BaseActivity {
 			deleteAccount();
 			return;
 		}
-
 		mAuth = FirebaseAuth.getInstance();
 
 		//if the user is already signed in
