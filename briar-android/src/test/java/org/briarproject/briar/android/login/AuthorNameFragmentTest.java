@@ -63,7 +63,7 @@ public class AuthorNameFragmentTest {
 
 	@Test
 	public void testCreateAccountUI() {
-		String safePass = "really.safe.password";
+		/*String safePass = "really.safe.password";
 
 		authorNameFragment.setupController = setupController;
 		when(setupController.needToShowDozeFragment()).thenReturn(false);
