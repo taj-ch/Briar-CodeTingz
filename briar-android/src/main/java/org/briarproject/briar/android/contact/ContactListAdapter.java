@@ -37,13 +37,13 @@ public class ContactListAdapter extends
 		return c1.isConnected() == c2.isConnected();
 	}
 
-	@Override
-	public int compare(ContactListItem c1, ContactListItem c2) {
-		long time1 = c1.getTimestamp();
-		long time2 = c2.getTimestamp();
-		if (time1 < time2) return 1;
-		if (time1 > time2) return -1;
-		return 0;
-	}
+//	@Override
+//	public int compare(ContactListItem c1, ContactListItem c2) {
+//		long time1 = c1.getTimestamp();
+//		long time2 = c2.getTimestamp();
+//		if (time1 < time2) return 1;
+//		if (time1 > time2) return -1;
+//		return 0;
+//	}
 
 }

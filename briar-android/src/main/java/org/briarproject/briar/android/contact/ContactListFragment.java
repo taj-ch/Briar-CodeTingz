@@ -216,7 +216,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				if (LOG.isLoggable(INFO))
 					LOG.info("Full load took " + duration + " ms");
 				sortContactAlpha(contacts);
-				displaySortedContacts(revision, contacts);
+				displayContacts(revision, contacts);
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 			}
@@ -225,13 +225,23 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 	private void sortContactAlpha(List<ContactListItem> contacts){
 		Collections.sort(contacts, new Comparator<ContactListItem>() {
-			public int compare(ContactListItem t0, ContactListItem t1) {
-				return t0.getContact().getAuthor().getName().compareTo(t1.getContact().getAuthor().getName());
+			public int compare(ContactListItem c1, ContactListItem c2) {
+				return c1.getContact().getAuthor().getName().compareTo(c2.getContact().getAuthor().getName());
 			}
 		});
 	}
 
-
+	private void sortContactTime(List<ContactListItem> contacts){
+		Collections.sort(contacts, new Comparator<ContactListItem>() {
+			public int compare(ContactListItem c1, ContactListItem c2) {
+				long time1 = c1.getTimestamp();
+				long time2 = c2.getTimestamp();
+				if (time1 < time2) return 1;
+				if (time1 > time2) return -1;
+				return 0;
+			}
+		});
+	}
 
 	private void loadContacts() {
 		int revision = adapter.getRevision();
@@ -254,6 +264,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))
 					LOG.info("Full load took " + duration + " ms");
+				sortContactTime(contacts);
 				displayContacts(revision, contacts);
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
@@ -270,19 +281,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			} else {
 				LOG.info("Concurrent update, reloading");
 				loadContacts();
-			}
-		});
-	}
-
-	private void displaySortedContacts(int revision, List<ContactListItem> contacts) {
-		runOnUiThreadUnlessDestroyed(() -> {
-			if (revision == adapter.getRevision()) {
-				adapter.incrementRevision();
-				if (contacts.isEmpty()) list.showData();
-				else adapter.addAll(contacts);
-			} else {
-				LOG.info("Concurrent update, reloading");
-				loadContactsSortedAlpha();
 			}
 		});
 	}
