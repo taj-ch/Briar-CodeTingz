@@ -54,6 +54,7 @@
 	<string name="groups_button">Private Groups</string>
 	<string name="forums_button">Forums</string>
 	<string name="blogs_button">Blogs</string>
+	<string name="profile_button">Profile</string>
 	<string name="settings_button">Settings</string>
 	<string name="sign_out_button">Sign Out</string>
 
@@ -406,5 +407,15 @@
 	<string name="permission_camera_request_body">To scan the QR code, Briar needs access to the camera.</string>
 	<string name="permission_camera_denied_body">You have denied access to the camera, but adding contacts requires using the camera.\n\nPlease consider granting access.</string>
 	<string name="permission_camera_denied_toast">Camera permission was not granted</string>
+
+	<!-- Profile Data -->
+	<string name="profile_data_file">profile_data_file</string>
+	<string name="profile_data_first_name_input">profile_data_first_name_input</string>
+	<string name="profile_data_last_name_input">profile_data_last_name_input</string>
+	<string name="profile_data_nickname_input">profile_data_nickname_input</string>
+	<string name="profile_data_email_input">profile_data_email_input</string>
+	<string name="profile_image_path_input">profile_image_path_input</string>
+	<string name="profile_data_description_input">profile_data_description_input</string>
+
 
 </resources>
