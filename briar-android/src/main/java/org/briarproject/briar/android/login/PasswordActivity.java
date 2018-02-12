@@ -132,8 +132,7 @@ public class PasswordActivity extends BaseActivity {
 		hideSoftKeyboard(password);
 		signInButton.setVisibility(INVISIBLE);
 		progress.setVisibility(VISIBLE);
-		passwordController.validatePassword(password.getText().toString(),
-				new UiResultHandler<Boolean>(this) {
+		passwordController.validatePassword(password.getText().toString(), new UiResultHandler<Boolean>(this) {
 					@Override
 					public void onResultUi(@NonNull Boolean result) {
 						if (result) {

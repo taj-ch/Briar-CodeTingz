@@ -50,7 +50,7 @@ public class SetupControllerImplTest extends BrambleMockTestCase {
 	public void testCreateAccount() {
 		context.checking(new Expectations() {{
 			// Setting the author name shows the password fragment
-			oneOf(setupActivity).showPasswordFragment();
+			// oneOf(setupActivity).showPasswordFragment(); *this is not called anymore*
 			// Generate a database key
 			oneOf(crypto).generateSecretKey();
 			will(returnValue(key));
