@@ -195,52 +195,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		list.stopPeriodicUpdate();
 	}
 	private void loadContactsSortedAlpha(){
-		int revision = adapter.getRevision();
-		listener.runOnDbThread(() -> {
-			try {
-				long now = System.currentTimeMillis();
-				List<ContactListItem> contacts = new ArrayList<>();
-				for (Contact c : contactManager.getActiveContacts()) {
-					try {
-						ContactId id = c.getId();
-						GroupCount count =
-								conversationManager.getGroupCount(id);
-						boolean connected =
-								connectionRegistry.isConnected(c.getId());
-						contacts.add(new ContactListItem(c, connected, count));
-					} catch (NoSuchContactException e) {
-						// Continue
-					}
-				}
-				long duration = System.currentTimeMillis() - now;
-				if (LOG.isLoggable(INFO))
-					LOG.info("Full load took " + duration + " ms");
-				sortContactAlpha(contacts);
-				displayContacts(revision, contacts);
-			} catch (DbException e) {
-				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
-			}
-		});
-	}
-
-	private void sortContactAlpha(List<ContactListItem> contacts){
-		Collections.sort(contacts, new Comparator<ContactListItem>() {
-			public int compare(ContactListItem c1, ContactListItem c2) {
-				return c1.getContact().getAuthor().getName().compareTo(c2.getContact().getAuthor().getName());
-			}
-		});
-	}
-
-	private void sortContactTime(List<ContactListItem> contacts){
-		Collections.sort(contacts, new Comparator<ContactListItem>() {
-			public int compare(ContactListItem c1, ContactListItem c2) {
-				long time1 = c1.getTimestamp();
-				long time2 = c2.getTimestamp();
-				if (time1 < time2) return 1;
-				if (time1 > time2) return -1;
-				return 0;
-			}
-		});
+		adapter.setSort("ALPHA");
+		loadContacts();
 	}
 
 	private void loadContacts() {
@@ -264,7 +220,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))
 					LOG.info("Full load took " + duration + " ms");
-				sortContactTime(contacts);
 				displayContacts(revision, contacts);
 			} catch (DbException e) {
 				if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
@@ -277,7 +232,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			if (revision == adapter.getRevision()) {
 				adapter.incrementRevision();
 				if (contacts.isEmpty()) list.showData();
-				else adapter.addAll(contacts);
+				else adapter.setItems(contacts);
 			} else {
 				LOG.info("Concurrent update, reloading");
 				loadContacts();
