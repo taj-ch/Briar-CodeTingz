@@ -163,10 +163,9 @@ public class AuthorNameFragment extends SetupFragment {
 
 	public void createAccount(String email, String password) {
 		mAuth.createUserWithEmailAndPassword(email, password);
-	}
 
 		// This will set the nickname so that the profile page can use it
 		ProfileDb profileDb = new ProfileDb(getActivity());
-		profileDb.setProfileAuthorName(authorNameInput.getText().toString());
+		profileDb.setProfileAuthorName(email);
 	}
 }
