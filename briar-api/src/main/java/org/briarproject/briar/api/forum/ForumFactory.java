@@ -6,13 +6,15 @@ import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 public interface ForumFactory {
 
 	/**
-	 * Creates a forum with the given name.
+	 * Creates a forum with the given name and description
 	 */
-	Forum createForum(String name);
+	Forum createForum(String name, String desc);
 
 	/**
-	 * Creates a forum with the given name and salt.
+	 * Creates a forum with the given name, description, and salt.
 	 */
-	Forum createForum(String name, byte[] salt);
+	Forum createForum(String name, String desc, byte[] salt);
+
+
 
 }

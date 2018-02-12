@@ -38,24 +38,24 @@ class ForumFactoryImpl implements ForumFactory {
 	}
 
 	@Override
-	public Forum createForum(String name) {
+	public Forum createForum(String name, String desc) {
 		int length = StringUtils.toUtf8(name).length;
 		if (length == 0) throw new IllegalArgumentException();
 		if (length > MAX_FORUM_NAME_LENGTH)
 			throw new IllegalArgumentException();
 		byte[] salt = new byte[FORUM_SALT_LENGTH];
 		random.nextBytes(salt);
-		return createForum(name, salt);
+		return createForum(name, desc, salt);
 	}
 
 	@Override
-	public Forum createForum(String name, byte[] salt) {
+	public Forum createForum(String name, String desc, byte[] salt) {
 		try {
-			BdfList forum = BdfList.of(name, salt);
+			BdfList forum = BdfList.of(name, desc, salt);
 			byte[] descriptor = clientHelper.toByteArray(forum);
 			Group g = groupFactory.createGroup(CLIENT_ID, CLIENT_VERSION,
 					descriptor);
-			return new Forum(g, name, salt);
+			return new Forum(g, name, desc, salt);
 		} catch (FormatException e) {
 			throw new AssertionError(e);
 		}

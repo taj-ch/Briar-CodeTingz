@@ -40,7 +40,9 @@ public class CreateForumActivity extends BriarActivity {
 			Logger.getLogger(CreateForumActivity.class.getName());
 
 	private TextInputLayout nameEntryLayout;
+	private TextInputLayout descriptionEntryLayout; //added
 	private EditText nameEntry;
+	private EditText descriptionEntry; //added
 	private Button createForumButton;
 	private ProgressBar progress;
 
@@ -55,7 +57,11 @@ public class CreateForumActivity extends BriarActivity {
 		setContentView(R.layout.activity_create_forum);
 
 		nameEntryLayout = findViewById(R.id.createForumNameLayout);
+		descriptionEntryLayout = findViewById(R.id.createForumDescriptionLayout);
+
 		nameEntry = findViewById(R.id.createForumNameEntry);
+		descriptionEntry = findViewById(R.id.createForumDescriptionEntry);
+
 		nameEntry.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -73,6 +79,27 @@ public class CreateForumActivity extends BriarActivity {
 			public void afterTextChanged(Editable s) {
 			}
 		});
+
+		//Description is optional
+		descriptionEntry.addTextChangedListener(new TextWatcher(){
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start,
+					int lengthBefore, int lengthAfter) {
+				enableOrDisableCreateButton();
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+
+		//Only create forum once name is set
 		nameEntry.setOnEditorActionListener((v, actionId, e) -> {
 			createForum();
 			return true;
@@ -88,6 +115,7 @@ public class CreateForumActivity extends BriarActivity {
 	public void onStart() {
 		super.onStart();
 		showSoftKeyboard(nameEntry);
+		showSoftKeyboard(descriptionEntry); //added so
 	}
 
 	@Override
@@ -114,16 +142,18 @@ public class CreateForumActivity extends BriarActivity {
 	private void createForum() {
 		if (!validateName()) return;
 		hideSoftKeyboard(nameEntry);
+		hideSoftKeyboard(descriptionEntry);
 		createForumButton.setVisibility(GONE);
 		progress.setVisibility(VISIBLE);
-		storeForum(nameEntry.getText().toString());
+		storeForum(nameEntry.getText().toString(),descriptionEntry.getText().toString()); //stores forum name/description
+		
 	}
 
-	private void storeForum(String name) {
+	private void storeForum(String name, String desc) {
 		runOnDbThread(() -> {
 			try {
 				long now = System.currentTimeMillis();
-				Forum f = forumManager.addForum(name);
+				Forum f = forumManager.addForum(name, desc);//stores forum name/description
 				long duration = System.currentTimeMillis() - now;
 				if (LOG.isLoggable(INFO))
 					LOG.info("Storing forum took " + duration + " ms");
@@ -141,6 +171,7 @@ public class CreateForumActivity extends BriarActivity {
 					ForumActivity.class);
 			i.putExtra(GROUP_ID, f.getId().getBytes());
 			i.putExtra(GROUP_NAME, f.getName());
+			i.putExtra(GROUP_DESC, f.getDesc());
 			startActivity(i);
 			Toast.makeText(CreateForumActivity.this,
 					R.string.forum_created_toast, LENGTH_LONG).show();

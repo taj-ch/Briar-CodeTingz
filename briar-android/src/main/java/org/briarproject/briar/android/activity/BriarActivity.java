@@ -15,7 +15,6 @@ import org.briarproject.briar.R;
 import org.briarproject.briar.android.controller.BriarController;
 import org.briarproject.briar.android.controller.DbController;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
-import org.briarproject.briar.android.login.PasswordActivity;
 import org.briarproject.briar.android.login.EmailPasswordActivity;
 import org.briarproject.briar.android.panic.ExitActivity;
 
@@ -39,6 +38,7 @@ public abstract class BriarActivity extends BaseActivity {
 
 	public static final String GROUP_ID = "briar.GROUP_ID";
 	public static final String GROUP_NAME = "briar.GROUP_NAME";
+	public static final String GROUP_DESC = "briar.GROUP_DESC";
 
 	private static final Logger LOG =
 			Logger.getLogger(BriarActivity.class.getName());

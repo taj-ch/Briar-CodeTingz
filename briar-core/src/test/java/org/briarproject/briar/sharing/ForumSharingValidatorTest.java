@@ -16,11 +16,11 @@ import static org.briarproject.briar.sharing.MessageType.INVITE;
 
 public class ForumSharingValidatorTest extends SharingValidatorTest {
 
-	private final String forumName =
-			StringUtils.getRandomString(MAX_FORUM_NAME_LENGTH);
+	private final String forumName = StringUtils.getRandomString(MAX_FORUM_NAME_LENGTH);
+	private final String forumDesc = StringUtils.getRandomString(MAX_FORUM_NAME_LENGTH);
 	private final byte[] salt = TestUtils.getRandomBytes(FORUM_SALT_LENGTH);
-	private final Forum forum = new Forum(group, forumName, salt);
-	private final BdfList descriptor = BdfList.of(forumName, salt);
+	private final Forum forum = new Forum(group, forumName,forumDesc, salt);
+	private final BdfList descriptor = BdfList.of(forumName, forumDesc, salt);
 	private final String content =
 			StringUtils.getRandomString(MAX_INVITATION_MESSAGE_LENGTH);
 
@@ -32,7 +32,7 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 
 	@Test
 	public void testAcceptsInvitationWithContent() throws Exception {
-		expectCreateForum(forumName);
+		expectCreateForum(forumName, forumDesc);
 		expectEncodeMetadata(INVITE);
 		BdfMessageContext messageContext = v.validateMessage(message, group,
 				BdfList.of(INVITE.getValue(), previousMsgId, descriptor,
@@ -42,7 +42,7 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 
 	@Test
 	public void testAcceptsInvitationWithNullContent() throws Exception {
-		expectCreateForum(forumName);
+		expectCreateForum(forumName, forumDesc);
 		expectEncodeMetadata(INVITE);
 		BdfMessageContext messageContext = v.validateMessage(message, group,
 				BdfList.of(INVITE.getValue(), previousMsgId, descriptor, null));
@@ -51,7 +51,7 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 
 	@Test
 	public void testAcceptsInvitationWithNullPreviousMsgId() throws Exception {
-		expectCreateForum(forumName);
+		expectCreateForum(forumName, forumDesc);
 		expectEncodeMetadata(INVITE);
 		BdfMessageContext messageContext = v.validateMessage(message, group,
 				BdfList.of(INVITE.getValue(), null, descriptor, null));
@@ -85,8 +85,9 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 	@Test
 	public void testAcceptsMinLengthForumName() throws Exception {
 		String shortForumName = StringUtils.getRandomString(1);
-		BdfList validDescriptor = BdfList.of(shortForumName, salt);
-		expectCreateForum(shortForumName);
+		String shortForumDesc = StringUtils.getRandomString(1);
+		BdfList validDescriptor = BdfList.of(shortForumName, shortForumDesc, salt);
+		expectCreateForum(shortForumName, shortForumDesc );
 		expectEncodeMetadata(INVITE);
 		BdfMessageContext messageContext = v.validateMessage(message, group,
 				BdfList.of(INVITE.getValue(), previousMsgId, validDescriptor,
@@ -140,7 +141,7 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 
 	@Test(expected = FormatException.class)
 	public void testRejectsNonStringContent() throws Exception {
-		expectCreateForum(forumName);
+		expectCreateForum(forumName, forumDesc);
 		v.validateMessage(message, group,
 				BdfList.of(INVITE.getValue(), previousMsgId, descriptor,
 						123));
@@ -148,7 +149,7 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 
 	@Test
 	public void testAcceptsMinLengthContent() throws Exception {
-		expectCreateForum(forumName);
+		expectCreateForum(forumName, forumDesc);
 		expectEncodeMetadata(INVITE);
 		BdfMessageContext messageContext = v.validateMessage(message, group,
 				BdfList.of(INVITE.getValue(), previousMsgId, descriptor, "1"));
@@ -159,15 +160,15 @@ public class ForumSharingValidatorTest extends SharingValidatorTest {
 	public void testRejectsTooLongContent() throws Exception {
 		String invalidContent =
 				StringUtils.getRandomString(MAX_INVITATION_MESSAGE_LENGTH + 1);
-		expectCreateForum(forumName);
+		expectCreateForum(forumName, forumDesc);
 		v.validateMessage(message, group,
 				BdfList.of(INVITE.getValue(), previousMsgId, descriptor,
 						invalidContent));
 	}
 
-	private void expectCreateForum(String name) {
+	private void expectCreateForum(String name, String desc) {
 		context.checking(new Expectations() {{
-			oneOf(forumFactory).createForum(name, salt);
+			oneOf(forumFactory).createForum(name, desc, salt);
 			will(returnValue(forum));
 		}});
 	}

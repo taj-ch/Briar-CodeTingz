@@ -49,6 +49,9 @@ class ForumListAdapter
 		// Forum Name
 		ui.name.setText(item.getForum().getName());
 
+		//Forum description
+		ui.desc.setText(item.getForum().getDesc());
+
 		// Post Count
 		int postCount = item.getPostCount();
 		if (postCount > 0) {
@@ -128,6 +131,7 @@ class ForumListAdapter
 		private final TextView name;
 		private final TextView postCount;
 		private final TextView date;
+		private final TextView desc;
 
 		private ForumViewHolder(View v) {
 			super(v);
@@ -135,6 +139,7 @@ class ForumListAdapter
 			layout = (ViewGroup) v;
 			avatar = v.findViewById(R.id.avatarView);
 			name = v.findViewById(R.id.forumNameView);
+			desc = v.findViewById(R.id.forumDescView);
 			postCount = v.findViewById(R.id.postCountView);
 			date = v.findViewById(R.id.dateView);
 		}
