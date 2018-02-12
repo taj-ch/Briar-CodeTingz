@@ -50,7 +50,7 @@ public class SetupControllerImpl extends PasswordControllerImpl
 	public void setAuthorName(String authorName) {
 		this.authorName = authorName;
 		if (setupActivity == null) throw new IllegalStateException();
-		setupActivity.showPasswordFragment();
+		//setupActivity.showPasswordFragment();
 	}
 
 	@Override
