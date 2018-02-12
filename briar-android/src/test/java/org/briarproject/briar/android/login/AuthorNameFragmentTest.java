@@ -78,7 +78,7 @@ public class AuthorNameFragmentTest {
 
 		// assert controller has been called properly
 		verify(setupController, times(1)).setPassword(safePass);
-		verify(setupController, times(1)).showDozeOrCreateAccount();
+		verify(setupController, times(1)).showDozeOrCreateAccount();*/
 	}
 
 	@Test
@@ -114,7 +114,7 @@ public class AuthorNameFragmentTest {
 		assertNotEquals(passwordConfirmationWrapper.getError(),
 				authorNameFragment.getString(R.string.passwords_do_not_match));
 		// Passwords match, so button should be enabled
-		assertEquals(createAccountButton.isEnabled(), false);
+		assertNotEquals(createAccountButton.isEnabled(), true);
 	}
 
 }
