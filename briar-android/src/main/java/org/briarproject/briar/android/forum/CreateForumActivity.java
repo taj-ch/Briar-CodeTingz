@@ -80,24 +80,24 @@ public class CreateForumActivity extends BriarActivity {
 			}
 		});
 
-		//Description is optional
-		descriptionEntry.addTextChangedListener(new TextWatcher(){
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start,
-					int lengthBefore, int lengthAfter) {
-				enableOrDisableCreateButton();
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
+//		//Description is optional
+//		descriptionEntry.addTextChangedListener(new TextWatcher(){
+//
+//			@Override
+//			public void beforeTextChanged(CharSequence s, int start, int count,
+//					int after) {
+//			}
+//
+//			@Override
+//			public void onTextChanged(CharSequence s, int start,
+//					int lengthBefore, int lengthAfter) {
+//				enableOrDisableCreateButton();
+//			}
+//
+//			@Override
+//			public void afterTextChanged(Editable s) {
+//			}
+//		});
 
 		//Only create forum once name is set
 		nameEntry.setOnEditorActionListener((v, actionId, e) -> {
