@@ -27,8 +27,9 @@ class ForumMessageParserImpl extends MessageParserImpl<Forum> {
 	protected Forum createShareable(BdfList descriptor)
 			throws FormatException {
 		String name = descriptor.getString(0);
-		byte[] salt = descriptor.getRaw(1);
-		return forumFactory.createForum(name, salt);
+		String description = descriptor.getString(1);
+		byte[] salt = descriptor.getRaw(2);
+		return forumFactory.createForum(name,description, salt);
 	}
 
 }

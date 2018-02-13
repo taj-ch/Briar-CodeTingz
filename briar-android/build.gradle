@@ -188,8 +188,8 @@ android {
 	defaultConfig {
 		minSdkVersion 14
 		targetSdkVersion 26
-		versionCode 1700
-		versionName "0.17.0"
+		versionCode 1900
+		versionName "0.19.0"
 		applicationId "org.briarproject.briar.android"
 		resValue "string", "app_package", "org.briarproject.briar.android"
 		resValue "string", "app_name", "Briar"
@@ -198,19 +198,21 @@ android {
 
 	buildTypes {
 		debug {
+			debuggable true
+			useProguard true
 			applicationIdSuffix ".debug"
 			resValue "string", "app_package", "org.briarproject.briar.android.debug"
 			resValue "string", "app_name", "Briar Debug"
 			shrinkResources false
 			minifyEnabled true
-			debuggable true
 			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
 		release {
+			debuggable false
+			useProguard true
 			shrinkResources true
 			minifyEnabled true
-			debuggable false
 			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}

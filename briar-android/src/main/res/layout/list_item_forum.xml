@@ -30,9 +30,8 @@
 		android:textColor="@color/briar_text_primary"
 		android:textSize="@dimen/text_size_medium"
 		tools:text="This is a name of a forum"/>
-
 	<TextView
-		android:id="@+id/postCountView"
+		android:id="@+id/forumDescView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/forumNameView"
@@ -42,17 +41,32 @@
 		android:paddingTop="@dimen/margin_medium"
 		android:textColor="@color/briar_text_secondary"
 		android:textSize="@dimen/text_size_small"
+		tools:text="This is the description"/>
+
+	<TextView
+		android:id="@+id/postCountView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/avatarView"
+		android:layout_toEndOf="@+id/avatarView"
+		android:layout_toRightOf="@+id/avatarView"
+		android:paddingBottom="@dimen/listitem_horizontal_margin"
+		android:paddingTop="@dimen/margin_medium"
+		android:textColor="@color/briar_text_secondary"
+		android:textSize="@dimen/text_size_small"
 		tools:text="1337 posts"/>
+
+
 
 	<TextView
 		android:id="@+id/dateView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_above="@+id/view"
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentRight="true"
-		android:layout_below="@+id/forumNameView"
-		android:layout_marginEnd="@dimen/listitem_horizontal_margin"
-		android:layout_marginRight="@dimen/listitem_horizontal_margin"
+		android:layout_marginEnd="15dp"
+		android:layout_marginRight="15dp"
 		android:paddingBottom="@dimen/listitem_horizontal_margin"
 		android:paddingTop="@dimen/margin_medium"
 		android:textColor="@color/briar_text_secondary"
@@ -60,10 +74,11 @@
 		tools:text="Dec 24"/>
 
 	<View
+		android:id="@+id/view"
 		style="@style/Divider.ThreadItem"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
-		android:layout_below="@+id/postCountView"/>
+		/>
 
 </RelativeLayout>
 

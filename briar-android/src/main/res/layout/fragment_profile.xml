@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.briarproject.briar.android.view.BriarRecyclerView
+	android:id="@+id/profileList"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/window_background"
+	app:scrollToEnd="false">
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+			android:layout_margin="@dimen/margin_medium"
+			android:ems="10"
+			android:padding="@dimen/margin_medium"
+
+			<ImageView
+				android:id="@+id/profilePic"
+
+				android:layout_width="match_parent"
+				android:layout_height="163dp"
+				app:srcCompat="@android:drawable/btn_star"/>
+
+
+			<TextView
+				android:id="@+id/profile_nickname"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/margin_medium"
+				android:text="TextView"
+				android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
+
+			<TextView
+				android:id="@+id/profile_first_name_tag"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="First Name"
+				android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+			<EditText
+				android:id="@+id/profile_first_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="First Name"
+				android:inputType="textPersonName"
+				android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+			<TextView
+				android:id="@+id/profile_last_name_tag"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Last Name"
+				android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+			<EditText
+				android:id="@+id/profile_last_name"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="Last Name"
+				android:inputType="textPersonName"/>
+
+			<TextView
+				android:id="@+id/profile_email_tag"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Personal Email:"
+				android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+			<EditText
+				android:id="@+id/profile_email"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="Email"
+				android:inputType="textEmailAddress|textPersonName"/>
+
+			<TextView
+				android:id="@+id/profile_description_tag"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Description: "
+				android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+			<EditText
+				android:id="@+id/profile_description"
+				android:layout_width="match_parent"
+				android:layout_height="167dp"
+				android:gravity="start"
+				android:hint="Description"
+				android:inputType="textMultiLine"
+				android:textAlignment="textStart"/>
+
+			<Button
+				android:id="@+id/action_create_profile"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Save"/>
+
+		</LinearLayout>
+	</ScrollView>
+
+</org.briarproject.briar.android.view.BriarRecyclerView>

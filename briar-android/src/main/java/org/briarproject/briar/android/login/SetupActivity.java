@@ -39,7 +39,7 @@ public class SetupActivity extends BaseActivity
 	}
 
 	public void showPasswordFragment() {
-		showNextFragment(PasswordFragment.newInstance());
+		showNextFragment(AuthorNameFragment.newInstance());
 	}
 
 	@TargetApi(23)

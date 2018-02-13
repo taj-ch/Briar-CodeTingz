@@ -9,6 +9,7 @@ import org.briarproject.briar.R;
 
 public class ContactListAdapter extends
 		BaseContactListAdapter<ContactListItem, ContactListItemViewHolder> {
+	private String SORT = "TIME";
 
 	public ContactListAdapter(Context context,
 			OnContactClickListener<ContactListItem> listener) {
@@ -39,11 +40,19 @@ public class ContactListAdapter extends
 
 	@Override
 	public int compare(ContactListItem c1, ContactListItem c2) {
-		long time1 = c1.getTimestamp();
-		long time2 = c2.getTimestamp();
-		if (time1 < time2) return 1;
-		if (time1 > time2) return -1;
-		return 0;
+		if (SORT == "ALPHA") {
+			return c1.getContact().getAuthor().getName()
+					.compareTo(c2.getContact().getAuthor().getName());
+		} else {
+			long time1 = c1.getTimestamp();
+			long time2 = c2.getTimestamp();
+			if (time1 < time2) return 1;
+			if (time1 > time2) return -1;
+			return 0;
+		}
 	}
 
+	public void setSort(String s) {
+		this.SORT = s;
+	}
 }

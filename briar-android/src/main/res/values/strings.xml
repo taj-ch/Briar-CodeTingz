@@ -4,13 +4,14 @@
 	<!-- Setup -->
 	<string name="setup_title">Welcome to Briar</string>
 	<string name="setup_name_explanation">Your nickname will be shown next to any content you post. You can\'t change it after creating your account.</string>
-	<string name="setup_next">Next</string>
+	<string name="setup_next">Sign-Up</string>
 	<string name="setup_password_intro">Choose a Password</string>
 	<string name="setup_password_explanation">Your Briar account is stored encrypted on your device, not in the cloud. If you forget your password or uninstall Briar, there\'s no way to recover your account.\n\nChoose a long password that\'s hard to guess, such as four random words, or ten random letters, numbers and symbols.</string>
 	<string name="setup_doze_title">Background Connections</string>
 	<string name="setup_doze_intro">To receive messages, Briar needs to stay connected in the background.</string>
 	<string name="setup_doze_explanation">To receive messages, Briar needs to stay connected in the background. Please disable battery optimizations so Briar can stay connected.</string>
 	<string name="setup_doze_button">Allow Connections</string>
+	<string name="not_valid_email">Not a valid email</string>
 	<string name="enter_email">Enter your email address</string>
 	<string name="choose_nickname">Choose your nickname</string>
 	<string name="choose_password">Choose your password</string>
@@ -29,7 +30,7 @@
 
 	<!-- Login -->
 	<string name="enter_password">Enter your password:</string>
-	<string name="try_again">Wrong password, try again</string>
+	<string name="try_again">Wrong username or password, try again</string>
 	<string name="sign_in_button">Sign In</string>
 	<string name="forgotten_password">I have forgotten my password</string>
 	<string name="dialog_title_lost_password">Lost Password</string>
@@ -53,6 +54,7 @@
 	<string name="groups_button">Private Groups</string>
 	<string name="forums_button">Forums</string>
 	<string name="blogs_button">Blogs</string>
+	<string name="profile_button">Profile</string>
 	<string name="settings_button">Settings</string>
 	<string name="sign_out_button">Sign Out</string>
 
@@ -113,6 +115,8 @@
 	<string name="dialog_title_delete_contact">Confirm Contact Deletion</string>
 	<string name="dialog_message_delete_contact">Are you sure that you want to remove this contact and all messages exchanged with this contact?</string>
 	<string name="contact_deleted_toast">Contact deleted</string>
+	<string name="sort_contact_alphabetically">Sort Alphabetically</string>
+	<string name="sort_contact_recent">Recent</string>
 
 	<!-- Adding Contacts -->
 	<string name="add_contact_title">Add a Contact</string>
@@ -216,6 +220,7 @@
 	<string name="no_forums">You don\'t have any forums yet.\n\nWhy don\'t you create a new one yourself by tapping the + icon at the top?\n\nYou can also ask your contacts to share forums with you.</string>
 	<string name="create_forum_title">Create Forum</string>
 	<string name="choose_forum_hint">Choose a name for your forum</string>
+	<string name="choose_forum_description">Choose a description for your forum</string>
 	<string name="create_forum_button">Create Forum</string>
 	<string name="forum_created_toast">Forum created</string>
 	<string name="no_forum_posts">This forum is empty.\n\nUse the pen icon at the top to compose the first post.\n\nFeeling lonely here? Share this forum with more of your contacts!</string>
@@ -409,5 +414,15 @@
 	<!-- Settings Notifications -->
 	<string name="appearance_settings_title">Appearance Settings</string>
 	<string name="dark_mode_setting">Dark Mode</string>
+
+	<!-- Profile Data -->
+	<string name="profile_data_file">profile_data_file</string>
+	<string name="profile_data_first_name_input">profile_data_first_name_input</string>
+	<string name="profile_data_last_name_input">profile_data_last_name_input</string>
+	<string name="profile_data_nickname_input">profile_data_nickname_input</string>
+	<string name="profile_data_email_input">profile_data_email_input</string>
+	<string name="profile_image_path_input">profile_image_path_input</string>
+	<string name="profile_data_description_input">profile_data_description_input</string>
+
 
 </resources>

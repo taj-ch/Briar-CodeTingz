@@ -30,7 +30,7 @@ public interface ForumManager {
 	/**
 	 * Subscribes to a forum.
 	 */
-	Forum addForum(String name) throws DbException;
+	Forum addForum(String name, String desc) throws DbException;
 
 	/**
 	 * Subscribes to a forum within the given {@link Transaction}.
