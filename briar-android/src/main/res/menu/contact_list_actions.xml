@@ -10,8 +10,13 @@
 		app:showAsAction="ifRoom"/>
 
 	<item
-		android:id="@+id/action_sort_contact_alpha"
-		android:title="@string/sort_contact_alphabetically"
+	android:id="@+id/action_sort_contact_alpha"
+	android:title="@string/sort_contact_alphabetically"
+	app:showAsAction="never"/>
+
+	<item
+		android:id="@+id/action_sort_contact_recent"
+		android:title="@string/sort_contact_recent"
 		app:showAsAction="never"/>
 
 </menu>

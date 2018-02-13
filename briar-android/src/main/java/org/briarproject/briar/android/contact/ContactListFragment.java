@@ -171,6 +171,9 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			case R.id.action_sort_contact_alpha:
 				loadContactsSortedAlpha();
 				return true;
+			case R.id.action_sort_contact_recent:
+				loadContactsSortedRecent();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -196,6 +199,11 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	}
 	private void loadContactsSortedAlpha(){
 		adapter.setSort("ALPHA");
+		loadContacts();
+	}
+
+	private void loadContactsSortedRecent(){
+		adapter.setSort("RECENT");
 		loadContacts();
 	}
 
