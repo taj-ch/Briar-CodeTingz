@@ -53,6 +53,8 @@ import org.briarproject.briar.api.sharing.event.InvitationResponseReceivedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -166,6 +168,12 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						new Intent(getContext(), KeyAgreementActivity.class);
 				startActivity(intent);
 				return true;
+			case R.id.action_sort_contact_alpha:
+				loadContactsSortedAlpha();
+				return true;
+			case R.id.action_sort_contact_recent:
+				loadContactsSortedRecent();
+				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -188,6 +196,15 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		adapter.clear();
 		list.showProgressBar();
 		list.stopPeriodicUpdate();
+	}
+	private void loadContactsSortedAlpha(){
+		adapter.setSort("ALPHA");
+		loadContacts();
+	}
+
+	private void loadContactsSortedRecent(){
+		adapter.setSort("RECENT");
+		loadContacts();
 	}
 
 	private void loadContacts() {
@@ -223,7 +240,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			if (revision == adapter.getRevision()) {
 				adapter.incrementRevision();
 				if (contacts.isEmpty()) list.showData();
-				else adapter.addAll(contacts);
+				else adapter.setItems(contacts);
 			} else {
 				LOG.info("Concurrent update, reloading");
 				loadContacts();
