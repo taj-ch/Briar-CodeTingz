@@ -29,6 +29,15 @@
 		android:theme="@style/BriarTheme">
 
 		<service
+			android:name=".MyFirebaseInstanceIDService"
+			android:exported="true"
+			android:permission="bindservice()">
+			<intent-filter>
+				<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+			</intent-filter>
+		</service>
+
+		<service
 			android:name="org.briarproject.briar.android.BriarService"
 			android:exported="false">
 			<intent-filter>
@@ -383,4 +392,6 @@
 		</activity>
 
 	</application>
+
+
 </manifest>
