@@ -52,7 +52,7 @@
 		android:layout_toRightOf="@+id/avatarView"
 		android:paddingBottom="@dimen/listitem_horizontal_margin"
 		android:paddingTop="@dimen/margin_medium"
-		android:textColor="@color/briar_text_secondary"
+		android:textColor="?attr/briar_text_secondary"
 		android:textSize="@dimen/text_size_small"
 		tools:text="1337 posts"/>
 

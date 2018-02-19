@@ -25,6 +25,11 @@
 		<item name="briar_text_tertiary">@color/briar_text_tertiary</item>
 		<item name="menu_background">@color/menu_background</item>
 		<item name="icons_color">@color/briar_primary</item>
+		<item name="android_primary">@android:color/white</item>
+		<item name="textBodySize">@dimen/text_size_small</item>
+		<item name="textBodyColor">@android:color/primary_text_light</item>
+		<item name="qr_code_explanation">@drawable/qr_code_explanation</item>
+		<item name="qr_code_intro">@drawable/qr_code_intro</item>
 	</style>
 
 	<style name="BriarTheme.NoActionBar" parent="BriarTheme">

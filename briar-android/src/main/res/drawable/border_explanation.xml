@@ -8,6 +8,6 @@
 
 	<stroke
 		android:width="2dp"
-		android:color="@color/briar_text_primary"/>
+		android:color="?attr/briar_text_primary"/>
 
 </shape>

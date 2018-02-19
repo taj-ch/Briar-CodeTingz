@@ -42,7 +42,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/margin_small"
 					android:gravity="center"
-					android:textColor="@color/briar_text_primary"
+					android:textColor="?attr/briar_text_primary"
 					android:textSize="@dimen/text_size_small"
 					tools:text="Contact 1"/>
 
@@ -78,7 +78,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/margin_small"
 					android:gravity="center"
-					android:textColor="@color/briar_text_primary"
+					android:textColor="?attr/briar_text_primary"
 					android:textSize="@dimen/text_size_small"
 					tools:text="Contact 2"/>
 
