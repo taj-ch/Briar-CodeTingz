@@ -53,7 +53,8 @@
 				android:layout_width="@dimen/listitem_picture_size"
 				android:layout_height="@dimen/listitem_picture_size"
 				android:src="@drawable/ic_contact_introduction"
-				tools:ignore="ContentDescription"/>
+				tools:ignore="ContentDescription"
+				android:tint="?attr/icons_color"/>
 
 			<LinearLayout
 				android:layout_width="wrap_content"

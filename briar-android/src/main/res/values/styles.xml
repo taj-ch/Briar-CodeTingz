@@ -24,6 +24,7 @@
 
 	<style name="BriarButton.Default">
 		<item name="android:textAllCaps">true</item>
+		<item name="android:background">@color/briar_accent</item>
 	</style>
 
 	<style name="BriarButton" parent="Widget.AppCompat.Button.Colored">
@@ -127,7 +128,7 @@
 	<style name="BriarThemeDark" parent="BriarTheme">
 		<item name="colorPrimary">@color/briar_primary</item>
 		<item name="colorPrimaryDark">@color/briar_primary_dark</item>
-		<item name="colorAccent">@color/briar_accent</item>
+		<item name="colorAccent">@color/briar_text_secondary_inverse</item>
 		<item name="colorControlNormal">@color/control_normal_light</item>
 		<item name="android:textColorLink">@color/briar_text_link</item>
 		<item name="android:windowBackground">@color/briar_blue_dark</item>
@@ -135,6 +136,7 @@
 		<item name="android:editTextColor">@color/briar_text_primary_inverse</item>
 		<item name="android:textColorHint">@color/briar_text_primary_inverse</item>
 		<item name="android:itemBackground">@color/briar_blue_dark</item>
+		<item name="android:textColorSecondary">@color/briar_text_secondary_inverse</item>
 
 		<item name="splashScreen">@drawable/splash_screen_white</item>
 		<item name="splashBackground">@color/briar_blue_dark</item>
@@ -152,6 +154,10 @@
 		<item name="textBodyColor">@android:color/primary_text_dark</item>
 		<item name="qr_code_explanation">@drawable/qr_code_explanation_white</item>
 		<item name="qr_code_intro">@drawable/qr_code_intro_white</item>
+		<item name="contact_disconnected">@drawable/contact_disconnected_white</item>
+		<item name="ic_info">@drawable/ic_info_white</item>
+		<item name="ic_repeat">@drawable/ic_repeat_white</item>
+		<item name="card_background">@color/briar_accent</item>
 
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
