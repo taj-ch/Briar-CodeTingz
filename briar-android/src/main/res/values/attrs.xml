@@ -37,6 +37,15 @@
 	<declare-styleable name="customAttrs">
 		<attr name="splashScreen" format="reference" />
 		<attr name="splashBackground" format="color" />
+		<attr name="textTitleSize" format="dimension" />
+		<attr name="textTitleColor" format="color" />
+		<attr name="window_background" format="color" />
+		<attr name="button_bar_background" format="color" />
+		<attr name="briar_text_primary" format="color" />
+		<attr name="briar_text_secondary" format="color" />
+		<attr name="briar_text_tertiary" format="color" />
+		<attr name="menu_background" format="color" />
+		<attr name="icons_color" format="color" />
 	</declare-styleable>
 
 </resources>

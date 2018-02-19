@@ -32,7 +32,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_toRightOf="@+id/avatarView"
-			android:textColor="@color/briar_text_primary"
+			android:textColor="?attr/briar_text_primary"
 			android:textSize="@dimen/text_size_large"
 			tools:text="Revealable Contact"/>
 
@@ -55,7 +55,7 @@
 			android:layout_toRightOf="@+id/visibilityView"
 			android:gravity="center_vertical"
 			android:text="@string/groups_reveal_visible"
-			android:textColor="@color/briar_text_tertiary"
+			android:textColor="?attr/briar_text_tertiary"
 			android:textSize="@dimen/text_size_small"
 			tools:visibility="visible"/>
 

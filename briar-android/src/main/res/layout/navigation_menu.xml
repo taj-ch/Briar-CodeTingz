@@ -17,11 +17,11 @@
 			android:id="@+id/navigation"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:background="@color/menu_background"
+			android:background="?attr/menu_background"
 			app:elevation="0dp"
 			app:headerLayout="@layout/navigation_header"
-			app:itemIconTint="@color/briar_text_primary"
-			app:itemTextColor="@color/briar_text_primary"
+			app:itemIconTint="?attr/briar_text_primary"
+			app:itemTextColor="?attr/briar_text_primary"
 			app:menu="@menu/navigation_drawer"/>
 
 		<View

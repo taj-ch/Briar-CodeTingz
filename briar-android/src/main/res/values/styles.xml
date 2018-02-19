@@ -125,8 +125,26 @@
 	</style>
 
 	<style name="BriarThemeDark" parent="BriarTheme">
+		<item name="colorPrimary">@color/briar_primary</item>
+		<item name="colorPrimaryDark">@color/briar_primary_dark</item>
+		<item name="colorAccent">@color/briar_accent</item>
+		<item name="colorControlNormal">@color/control_normal_light</item>
+		<item name="android:textColorLink">@color/briar_text_link</item>
+		<item name="android:windowBackground">@color/briar_blue_dark</item>
+		<item name="android:editTextColor">@color/briar_text_primary_inverse</item>
+		<item name="android:textColorHint">@color/briar_text_primary_inverse</item>
+
 		<item name="splashScreen">@drawable/splash_screen_white</item>
 		<item name="splashBackground">@color/briar_blue_dark</item>
+		<item name="textTitleSize">@dimen/text_size_medium</item>
+		<item name="textTitleColor">@android:color/primary_text_dark</item>
+		<item name="window_background">@color/briar_blue_dark</item>
+		<item name="button_bar_background">@color/briar_blue_dark</item>
+		<item name="briar_text_primary">@color/briar_text_primary_inverse</item>
+		<item name="briar_text_secondary">@color/briar_text_secondary_inverse</item>
+		<item name="briar_text_tertiary">@color/briar_text_tertiary_inverse</item>
+		<item name="menu_background">@color/briar_blue_dark</item>
+		<item name="icons_color">@android:color/primary_text_dark</item>
 
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
