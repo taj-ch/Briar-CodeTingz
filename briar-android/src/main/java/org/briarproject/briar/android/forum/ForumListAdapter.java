@@ -2,7 +2,6 @@ package org.briarproject.briar.android.forum;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import org.briarproject.briar.android.util.BriarAdapter;
 import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.android.view.TextAvatarView;
 import org.briarproject.briar.api.forum.Forum;
+import org.briarproject.briar.android.Theme;
 
 import static android.support.v7.util.SortedList.INVALID_POSITION;
 import static android.view.View.GONE;
@@ -28,6 +28,8 @@ class ForumListAdapter
 	ForumListAdapter(Context ctx) {
 		super(ctx, ForumListItem.class);
 	}
+	private int briar_text_secondary = Theme.getAttributeColor(ctx, R.attr.briar_text_secondary);
+	private int briar_text_tertiary = Theme.getAttributeColor(ctx, R.attr.briar_text_tertiary);
 
 	@Override
 	public ForumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,15 +61,12 @@ class ForumListAdapter
 			ui.postCount.setText(ctx.getResources()
 					.getQuantityString(R.plurals.posts, postCount,
 							postCount));
-			ui.postCount.setTextColor(
-					ContextCompat
-							.getColor(ctx, R.color.briar_text_secondary));
+			ui.postCount.setTextColor(briar_text_secondary);
+
 		} else {
 			ui.avatar.setProblem(true);
 			ui.postCount.setText(ctx.getString(R.string.no_posts));
-			ui.postCount.setTextColor(
-					ContextCompat
-							.getColor(ctx, R.color.briar_text_tertiary));
+			ui.postCount.setTextColor(briar_text_tertiary);
 		}
 
 		// Date
@@ -143,5 +142,6 @@ class ForumListAdapter
 			postCount = v.findViewById(R.id.postCountView);
 			date = v.findViewById(R.id.dateView);
 		}
+
 	}
 }

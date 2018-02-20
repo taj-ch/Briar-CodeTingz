@@ -154,6 +154,7 @@
 		<item name="textBodyColor">@android:color/primary_text_dark</item>
 		<item name="qr_code_explanation">@drawable/qr_code_explanation_white</item>
 		<item name="qr_code_intro">@drawable/qr_code_intro_white</item>
+		<item name="contact_connected">@drawable/contact_connected_white</item>
 		<item name="contact_disconnected">@drawable/contact_disconnected_white</item>
 		<item name="ic_info">@drawable/ic_info_white</item>
 		<item name="ic_repeat">@drawable/ic_repeat_white</item>
