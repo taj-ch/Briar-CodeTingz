@@ -158,6 +158,9 @@
 		<item name="ic_info">@drawable/ic_info_white</item>
 		<item name="ic_repeat">@drawable/ic_repeat_white</item>
 		<item name="card_background">@color/briar_accent</item>
+		<item name="msg_in">@drawable/msg_in_dark</item>
+		<item name="msg_in_top">@drawable/msg_in_top_dark</item>
+		<item name="private_message_date">@color/private_message_date_inverse</item>
 
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>

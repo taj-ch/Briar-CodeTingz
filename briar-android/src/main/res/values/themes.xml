@@ -34,6 +34,9 @@
 		<item name="ic_info">@drawable/ic_info</item>
 		<item name="ic_repeat">@drawable/ic_repeat</item>
 		<item name="card_background">@android:color/white</item>
+		<item name="msg_in">@drawable/msg_in</item>
+		<item name="msg_in_top">@drawable/msg_in_top</item>
+		<item name="private_message_date">@color/private_message_date</item>
 	</style>
 
 	<style name="BriarTheme.NoActionBar" parent="BriarTheme">
