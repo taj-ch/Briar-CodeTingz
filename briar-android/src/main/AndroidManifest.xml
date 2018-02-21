@@ -29,9 +29,14 @@
 		android:theme="@style/BriarTheme">
 
 		<service
-			android:name=".MyFirebaseInstanceIDService"
-			android:exported="true"
-			android:permission="bindservice()">
+			android:name="org.briarproject.briar.android.fcm.FcmMessageService">
+			<intent-filter>
+				<action android:name="com.google.firebase.MESSAGING_EVENT"/>
+			</intent-filter>
+		</service>
+
+		<service
+			android:name="org.briarproject.briar.android.fcm.FcmInstanceIdService">
 			<intent-filter>
 				<action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
 			</intent-filter>
