@@ -156,6 +156,8 @@ public interface ActivityComponent {
 
 	void inject(RssFeedManageActivity activity);
 
+	void inject(ProfileActivity activity);
+
 	// Fragments
 	void inject(AuthorNameFragment fragment);
 	void inject(PasswordFragment fragment);
@@ -196,7 +198,5 @@ public interface ActivityComponent {
 	void inject(SettingsFragment fragment);
 
 	void inject(ProfileFragment fragment);
-
-	void inject(ProfileActivity fragment);
 
 }
