@@ -172,8 +172,12 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			new SearchView.OnQueryTextListener() {
 				@Override
 				public boolean onQueryTextChange (String newText) {
-					return false;
+					if (TextUtils.isEmpty(newText)) {
+						filter("");
+					}
+					return true;
 				}
+
 				@Override
 				public boolean onQueryTextSubmit(String query) {
 					filter(query);
