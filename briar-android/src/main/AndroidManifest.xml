@@ -31,7 +31,7 @@
 		<service
 			android:name="org.briarproject.briar.android.fcm.FcmMessageService">
 			<intent-filter>
-				<action android:name="com.google.firebase.MESSAGING_EVENT"/>
+				<action android:name="com.google.cfirebase.MESSAGING_EVENT"/>
 			</intent-filter>
 		</service>
 
