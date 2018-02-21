@@ -8,7 +8,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -162,9 +162,12 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.contact_list_actions, menu);
 		super.onCreateOptionsMenu(menu, inflater);
-		MenuItem searchItem = menu.findItem(R.id.action_search_contacts);
-		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-		EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+
+		SearchView searchView = (SearchView) menu.findItem(R.id.action_search_contacts).getActionView();
+		int id = searchView.getContext()
+				.getResources()
+				.getIdentifier("android:id/search_src_text", null, null);
+		EditText searchEditText = (EditText) searchView.findViewById(id);
 		searchEditText.setTextColor(getResources().getColor(R.color.briar_text_primary_inverse));
 		searchEditText.setHintTextColor(getResources().getColor(R.color.briar_text_primary_inverse));
 
