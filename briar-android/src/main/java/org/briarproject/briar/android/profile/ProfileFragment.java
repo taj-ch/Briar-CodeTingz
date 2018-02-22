@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View.OnClickListener;
 
 import android.view.LayoutInflater;
@@ -17,6 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.briarproject.bramble.api.db.DbException;
+import org.briarproject.bramble.api.identity.IdentityManager;
+import org.briarproject.bramble.api.identity.LocalAuthor;
+import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 
@@ -24,6 +30,8 @@ import org.briarproject.briar.android.fragment.BaseFragment;
 
 import java.io.IOException;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
 /*
@@ -55,6 +63,13 @@ public class ProfileFragment extends BaseFragment implements
 	private String nicknameInput;
 	private String emailInput;
 	private String descriptionInput;
+	private String userId;
+
+	private Button profileButton;
+
+	@Inject
+	volatile IdentityManager identityManager;
+
 
 	// The request code for choosing profile picture
 	static final int PICK_PROFILE_PICTURE_REQUEST = 1;
@@ -78,22 +93,8 @@ public class ProfileFragment extends BaseFragment implements
 		getActivity().setTitle(R.string.profile_button);
 
 		// Find the save information button and image
-		Button profileButton = (Button) profileView.findViewById(R.id.action_create_profile);
+		profileButton = (Button) profileView.findViewById(R.id.action_create_profile);
 		selectedImage = (ImageView) profileView.findViewById(R.id.profilePic);
-
-		// Set the listeners
-		profileButton.setOnClickListener(this);
-		selectedImage.setOnClickListener(this);
-
-		profileDb = new ProfileDb(getActivity());
-		Map<String, String> map = profileDb.readProfileInfo();
-
-		// Retrieve profile information from file, or null by default
-		firstNameInput = map.get("firstName");
-		lastNameInput = map.get("lastName");
-		nicknameInput = map.get("nickname");
-		emailInput = map.get("email");
-		descriptionInput = map.get("description");
 
 		// Find the input boxes in the fragment layout
 		firstName   = (EditText)profileView.findViewById(R.id.profile_first_name);
@@ -102,12 +103,44 @@ public class ProfileFragment extends BaseFragment implements
 		email   = (EditText)profileView.findViewById(R.id.profile_email);
 		description   = (EditText)profileView.findViewById(R.id.profile_description);
 
-		// Update the fragment with the users data
-		firstName.setText(firstNameInput);
-		lastName.setText(lastNameInput);
-		nickname.setText("Nickname: " + nicknameInput);
-		email.setText(emailInput);
-		description.setText(descriptionInput);
+
+		return profileView;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// Set the listeners
+		profileButton.setOnClickListener(this);
+		selectedImage.setOnClickListener(this);
+		Map<String, String> map=null;
+		try {
+			LocalAuthor author = identityManager.getLocalAuthor();
+			userId = StringUtils.toHexString(author.getId().getBytes());
+			profileDb = new ProfileDb(getActivity());
+			map = profileDb.readProfileInfo(userId);
+		} catch (DbException e) {
+
+
+		}
+
+		if(map!=null || !map.isEmpty()) {
+			// Retrieve profile information from file, or null by default
+			firstNameInput = map.get("firstName");
+			lastNameInput = map.get("lastName");
+			nicknameInput = map.get("nickname");
+			emailInput = map.get("email");
+			descriptionInput = map.get("description");
+
+
+			// Update the fragment with the users data
+			firstName.setText(firstNameInput);
+			lastName.setText(lastNameInput);
+			nickname.setText("Nickname: " + nicknameInput);
+			email.setText(emailInput);
+			description.setText(descriptionInput);
+		}
 
 		Bitmap bitmap = profileDb.readProfileImage();
 
@@ -115,7 +148,13 @@ public class ProfileFragment extends BaseFragment implements
 			selectedImage.setImageBitmap(bitmap);
 		}
 
-		return profileView;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+
 	}
 
 	@Override
@@ -130,8 +169,16 @@ public class ProfileFragment extends BaseFragment implements
 				break;
 			// If the user clicks the save button
 			case R.id.action_create_profile:
-				profileDb.writeProfileInfo(firstName.getText().toString(), lastName.getText().toString(),
-						email.getText().toString(), description.getText().toString());
+
+				try {
+					LocalAuthor author = identityManager.getLocalAuthor();
+					String userId = StringUtils.toHexString(author.getId().getBytes());
+					profileDb.writeProfileInfo(userId, firstName.getText().toString(), lastName.getText().toString(),
+							email.getText().toString(), description.getText().toString());
+				} catch (DbException e) {
+
+
+				}
 				Toast.makeText(getActivity(), "Your profile information has been saved",
 						Toast.LENGTH_LONG).show();
 				break;

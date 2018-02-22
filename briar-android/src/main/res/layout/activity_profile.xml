@@ -23,11 +23,9 @@
 
 			<ImageView
 				android:id="@+id/view_profile_pic"
-
 				android:layout_width="match_parent"
 				android:layout_height="163dp"
 				app:srcCompat="@android:drawable/btn_star"/>
-
 
 			<TextView
 				android:id="@+id/view_profile_nickname"
@@ -90,5 +88,4 @@
 				android:textAlignment="textStart"/>
 		</LinearLayout>
 	</ScrollView>
-
 </org.briarproject.briar.android.view.BriarRecyclerView>

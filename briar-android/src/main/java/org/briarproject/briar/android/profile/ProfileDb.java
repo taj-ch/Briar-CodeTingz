@@ -6,15 +6,30 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.Toast;
 
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.briarproject.bramble.api.db.DbException;
+import org.briarproject.bramble.api.identity.IdentityManager;
+import org.briarproject.bramble.api.identity.LocalAuthor;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Created by Laxman on 2/8/2018.
@@ -51,28 +66,6 @@ public class ProfileDb {
 		editor.commit();
 	}
 
-	// Store the users profile info into file
-	public void writeProfileInfo(String firstName, String lastName, String email, String description){
-		editor.putString(profile_data_first_name_input, firstName);
-		editor.putString(profile_data_last_name_input, lastName);
-		editor.putString(profile_data_email_input, email);
-		editor.putString(profile_data_description_input, description);
-		editor.commit();
-	}
-
-	// Read the users profile info from file and store in hash map
-	public Map readProfileInfo(){
-		Map<String, String> map = new HashMap<>();
-		// Retrieve profile information from file, or null by default
-		map.put("firstName", sharedPref.getString(profile_data_first_name_input, null));
-		map.put("lastName", sharedPref.getString(profile_data_last_name_input, null));
-		map.put("nickname", sharedPref.getString(profile_data_nickname_input, null));
-		map.put("email", sharedPref.getString(profile_data_email_input, null));
-		map.put("description", sharedPref.getString(profile_data_description_input, null));
-
-		return map;
-	}
-
 	// Store the users profile image into file
 	public void writeProfileImage(Bitmap currentImage){
 		FileOutputStream outputStream = null;
@@ -101,30 +94,51 @@ public class ProfileDb {
 				}
 			}
 	}
+	private static final String TAG = "ProfileDb";
 
-	// Read the users profile image from file and return as bitmap
-	public Bitmap readProfileImage(){
-		FileInputStream inputStream = null;
-		Bitmap bitmap = null;
-		try {
-			// Going to see if a image exists with our file name.
-			// If it does exist set the profile pic
-			inputStream = context.openFileInput(profile_image_file);
-			bitmap = BitmapFactory.decodeStream(inputStream);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// Close stream
-			try {
-				if (inputStream != null) {
-					inputStream.close();
+	private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+	private LocalAuthor localAuthor;
+	private DatabaseReference mPostReference;
+
+
+	public void writeProfileInfo(String userId, String firstName, String lastName,
+			String email, String description) {
+			User user = new User("test", firstName, lastName, email, description);
+			mDatabase.child("Profile").child(userId).setValue(user);
+	}
+
+	// Read the users profile info from file and store in hash map
+	public Map readProfileInfo(String userId){
+		Map<String, String> map = new HashMap<>();
+
+		mPostReference = FirebaseDatabase.getInstance().getReference()
+				.child("Profile").child(userId);
+
+		ValueEventListener postListener = new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				// Get Post object and use the values to update the UI
+				User user = dataSnapshot.getValue(User.class);
+
+				if(user!=null) {
+					// Retrieve profile information from file, or null by default
+					map.put("firstName", user.getFirstName());
+					map.put("lastName", user.getLastName());
+					map.put("nickname", user.getNickname());
+					map.put("email", user.getEmail());
+					map.put("description", user.getDescription());
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-		}
-		return bitmap;
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+				// Getting Post failed, log a message
+				Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+				// ...
+			}
+		};
+		mPostReference.addValueEventListener(postListener);
+
+		return map;
 	}
 }
