@@ -1,6 +1,7 @@
 package org.briarproject.briar.android.profile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,6 +14,8 @@ import org.briarproject.bramble.api.contact.ContactManager;
 import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.bramble.api.db.NoSuchContactException;
 import org.briarproject.bramble.api.identity.AuthorId;
+import org.briarproject.bramble.api.identity.LocalAuthor;
+import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -20,6 +23,7 @@ import org.briarproject.briar.android.activity.BriarActivity;
 import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.fragment.BaseFragment;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
@@ -36,6 +40,17 @@ public class ProfileActivity extends BriarActivity {
 	private TextView nickname;
 	private TextView email;
 	private TextView description;
+
+	private ProfileDb profileDb;
+
+	// Variables to write profile information from file
+	private Bitmap currentImage;
+	private String firstNameInput;
+	private String lastNameInput;
+	private String nicknameInput;
+	private String emailInput;
+	private String descriptionInput;
+	private String userId;
 
 	private volatile ContactId contactId;
 	@Nullable
@@ -74,6 +89,29 @@ public class ProfileActivity extends BriarActivity {
 				contactName = contact.getAuthor().getName();
 				contactAuthorId = contact.getAuthor().getId();
 			}
+
+			Map<String, String> map=null;
+			userId = StringUtils.toHexString(contactAuthorId.getBytes());
+			profileDb = new ProfileDb(this);
+			map = profileDb.readProfileInfo(userId);
+
+			if(map!=null || !map.isEmpty()) {
+				// Retrieve profile information from file, or null by default
+				firstNameInput = map.get("firstName");
+				lastNameInput = map.get("lastName");
+				nicknameInput = map.get("nickname");
+				emailInput = map.get("email");
+				descriptionInput = map.get("description");
+
+				// Update the fragment with the users data
+				firstName.setText(firstNameInput);
+				lastName.setText(lastNameInput);
+				nickname.setText("Nickname/Email: " + nicknameInput);
+				email.setText(emailInput);
+				description.setText(descriptionInput);
+			}
+
+
 		} catch (DbException e) {
 			if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 		}

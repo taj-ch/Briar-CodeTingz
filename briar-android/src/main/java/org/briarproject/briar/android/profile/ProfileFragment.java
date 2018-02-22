@@ -2,6 +2,7 @@ package org.briarproject.briar.android.profile;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +19,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
+import com.google.firebase.storage.StorageReference;
 
 import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.bramble.api.identity.IdentityManager;
@@ -141,12 +148,32 @@ public class ProfileFragment extends BaseFragment implements
 			email.setText(emailInput);
 			description.setText(descriptionInput);
 		}
+		FirebaseStorage storage = FirebaseStorage.getInstance();
 
-		Bitmap bitmap = profileDb.readProfileImage();
+		// Create a storage reference from our app
+		StorageReference storageRef = storage.getReference();
 
-		if(bitmap != null) {
-			selectedImage.setImageBitmap(bitmap);
-		}
+		StorageReference profileRef = storageRef.child("profile/images/"+userId+"/profile.jpg");
+
+
+		final long ONE_MEGABYTE = 1024 * 1024;
+		profileRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+			@Override
+			public void onSuccess(byte[] bytes) {
+				Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+				if(bitmap != null) {
+					selectedImage.setImageBitmap(bitmap);
+				}
+			}
+		}).addOnFailureListener(new OnFailureListener() {
+			@Override
+			public void onFailure(@NonNull Exception exception) {
+				// Handle any errors
+				int errorCode = ((StorageException) exception).getErrorCode();
+				String errorMessage = exception.getMessage();
+				// test the errorCode and errorMessage, and handle accordingly
+			}
+		});
 
 	}
 
@@ -205,7 +232,7 @@ public class ProfileFragment extends BaseFragment implements
 								this.getActivity().getContentResolver(), profileUri);
 						selectedImage.setImageBitmap(currentImage);
 
-						profileDb.writeProfileImage(currentImage);
+						profileDb.writeProfileImage(currentImage, userId);
 
 					} catch (IOException e) {
 						e.printStackTrace();
