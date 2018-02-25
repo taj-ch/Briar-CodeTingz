@@ -295,8 +295,6 @@ public class ProfileFragment extends BaseFragment implements
 				if (LOG.isLoggable(INFO)) {
 					LOG.info("Error getting profile image from Firebase");
 				}
-				Toast.makeText(getActivity(), "There was a error retrieving your profile image.",
-						Toast.LENGTH_LONG).show();
 			}
 		});
 	}
@@ -304,6 +302,8 @@ public class ProfileFragment extends BaseFragment implements
 			String email, String description) {
 		User user = new User(nickname, firstName, lastName, email, description);
 		profileInfoDbRef.setValue(user);
+		Toast.makeText(getActivity(), "Profile information has been saved.",
+				Toast.LENGTH_LONG).show();
 	}
 
 	// Read the users profile info from file and store in hash map
@@ -336,6 +336,12 @@ public class ProfileFragment extends BaseFragment implements
 				Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
 				Toast.makeText(getActivity(), "There was a error retrieving your profile info.",
 						Toast.LENGTH_LONG).show();
+				if (LOG.isLoggable(WARNING)) {
+					LOG.log(WARNING, databaseError.toString(), databaseError);
+				}
+				if (LOG.isLoggable(INFO)) {
+					LOG.info("Error getting profile info from Firebase");
+				}
 			}
 		};
 		profileInfoDbRef.addValueEventListener(postListener);
