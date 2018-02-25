@@ -61,10 +61,10 @@ public class ProfileFragmentTest {
         description.setText("I am a journalist.");
 
         // Validate that the inputs set are correct
-        assertEquals(firstName.getText(), "John");
-        assertEquals(lastName.getText(), "Doe");
-        assertEquals(description.getText(), "I am a journalist.");
-        assertEquals(nickname.getText(), "JD");
+        assertEquals(firstName.getText().toString(), "John");
+        assertEquals(lastName.getText().toString(), "Doe");
+        assertEquals(description.getText().toString(), "I am a journalist.");
+        assertEquals(nickname.getText().toString(), "JD");
 
         // Make sure the profile image is clickable to update image
         createProfileAccount.isClickable();
