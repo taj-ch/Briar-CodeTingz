@@ -20,6 +20,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
@@ -167,5 +168,7 @@ public class AuthorNameFragment extends SetupFragment {
 		// This will set the nickname so that the profile page can use it
 		ProfileDb profileDb = new ProfileDb(getActivity());
 		profileDb.setProfileAuthorName(email);
+		String tkn = FirebaseInstanceId.getInstance().getToken();
+		Log.d("TOKEN_REFRESH_create", tkn);
 	}
 }

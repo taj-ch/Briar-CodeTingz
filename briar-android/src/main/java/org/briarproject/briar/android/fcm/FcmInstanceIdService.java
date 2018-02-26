@@ -17,4 +17,5 @@ public class FcmInstanceIdService extends FirebaseInstanceIdService {
 	private void sendFcmTokenToServer(String token){
 		//implement code to send the token to the server
 	}
+
 }

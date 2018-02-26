@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.iid.FirebaseInstanceId;
 //import com.google.firebase.auth.FirebaseUser;
 
 import org.briarproject.briar.R;
@@ -203,6 +204,8 @@ public class EmailPasswordActivity extends BaseActivity {
 											}
 										}
 									});
+							String tkn = FirebaseInstanceId.getInstance().getToken();
+							Log.d("TOKEN_REFRESH_login", tkn);
 						} else {
 							//there was an error
 							tryAgain();
