@@ -28,6 +28,7 @@ import org.briarproject.briar.android.keyagreement.IntroFragment;
 import org.briarproject.briar.android.keyagreement.KeyAgreementActivity;
 import org.briarproject.briar.android.keyagreement.ShowQrCodeFragment;
 import org.briarproject.briar.android.login.AuthorNameFragment;
+import org.briarproject.briar.android.login.SignInFragment;
 import org.briarproject.briar.android.login.ChangePasswordActivity;
 import org.briarproject.briar.android.login.DozeFragment;
 import org.briarproject.briar.android.login.PasswordActivity;
@@ -158,6 +159,7 @@ public interface ActivityComponent {
 
 	// Fragments
 	void inject(AuthorNameFragment fragment);
+	void inject(SignInFragment fragment);
 	void inject(PasswordFragment fragment);
 	void inject(DozeFragment fragment);
 

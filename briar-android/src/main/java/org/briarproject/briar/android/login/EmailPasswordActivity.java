@@ -65,12 +65,12 @@ public class EmailPasswordActivity extends BaseActivity {
 		super.onCreate(state);
 		// fade-in after splash screen instead of default animation
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-		if (!passwordController.accountExists()) {
+// THIS IS TO ENSURE THAT ANY DATA ON THE DEVICE WILL ALWAYS BE DELETED UPON APP STARTUP
+		//if (!passwordController.accountExists()) {
 			deleteAccount();
 			return;
-		}
-		mAuth = FirebaseAuth.getInstance();
+		//}
+		/*mAuth = FirebaseAuth.getInstance();
 
 		//if the user is already signed in
 		if (mAuth.getCurrentUser() != null){
@@ -109,7 +109,7 @@ public class EmailPasswordActivity extends BaseActivity {
 			@Override
 			public void afterTextChanged(Editable s) {
 			}
-		});
+		});*/
 	}
 
 	@Override
@@ -156,17 +156,18 @@ public class EmailPasswordActivity extends BaseActivity {
 		//validatePassword();
 	}
 
-	public void onForgottenPasswordClick(View v) {
+	public void onCreateAccountClick(View v) {
 		// TODO Encapsulate the dialog in a re-usable fragment
-		AlertDialog.Builder builder = new AlertDialog.Builder(this,
-				R.style.BriarDialogTheme);
-		builder.setTitle(R.string.dialog_title_lost_password);
-		builder.setMessage(R.string.dialog_message_lost_password);
-		builder.setPositiveButton(R.string.cancel, null);
-		builder.setNegativeButton(R.string.delete,
-				(dialog, which) -> deleteAccount());
-		AlertDialog dialog = builder.create();
-		dialog.show();
+		//AlertDialog.Builder builder = new AlertDialog.Builder(this,
+				//R.style.BriarDialogTheme);
+		//builder.setTitle(R.string.dialog_title_lost_password);
+		//builder.setMessage(R.string.dialog_message_lost_password);
+		//builder.setPositiveButton(R.string.cancel, null);
+		//builder.setNegativeButton(R.string.delete,
+				//(dialog, which) -> deleteAccount());
+		//AlertDialog dialog = builder.create();
+		//dialog.show();
+
 	}
 
 	private void validateLogin(){

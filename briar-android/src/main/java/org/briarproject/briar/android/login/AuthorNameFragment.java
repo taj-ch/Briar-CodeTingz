@@ -53,7 +53,8 @@ public class AuthorNameFragment extends SetupFragment {
 	private TextInputEditText passwordInput;
 	private TextInputEditText passwordConfirm;
 	private StrengthMeter strengthMeter;
-	private Button signInButton;
+	private Button signUpButton;
+	private Button logInButton;
 
 	private FirebaseAuth mAuth;
 
@@ -74,13 +75,15 @@ public class AuthorNameFragment extends SetupFragment {
 		passwordConfirmWrapper = v.findViewById(R.id.password_confirm_wrapper);
 		passwordInput = v.findViewById(R.id.password_entry);
 		passwordConfirm = v.findViewById(R.id.password_confirm);
-		signInButton = v.findViewById(R.id.next);
+		signUpButton = v.findViewById(R.id.next);
+		logInButton = v.findViewById(R.id.btn_log_in);
 		strengthMeter = v.findViewById(R.id.strength_meter);
 
 		authorNameInput.addTextChangedListener(this);
 		passwordInput.addTextChangedListener(this);
 		passwordConfirm.addTextChangedListener(this);
-		signInButton.setOnClickListener(this);
+		signUpButton.setOnClickListener(this);
+		logInButton.setOnClickListener(this);
 		FirebaseApp.initializeApp(this.getContext());
 		mAuth = FirebaseAuth.getInstance();
 		FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -134,25 +137,31 @@ public class AuthorNameFragment extends SetupFragment {
 
 		boolean enabled2 = strongEnough && passwordsMatch;
 		boolean enableButton = enabled && enabled2;
-		signInButton.setEnabled(enableButton);
+		signUpButton.setEnabled(enableButton);
 		passwordConfirm.setOnEditorActionListener(enabled2 ? this : null);
 
 	}
 
 	@Override
 	public void onClick(View view) {
-		String email = authorNameInput.getText().toString();
-		String password = passwordInput.getText().toString();
-		createAccount(email, password);
-		FirebaseUser currentUser = mAuth.getCurrentUser();
-		setupController.setAuthorName(authorNameInput.getText().toString());
-    
-		setupController.setPassword(passwordInput.getText().toString());
-		if (!setupController.needToShowDozeFragment()) {
-			signInButton.setVisibility(INVISIBLE);
+		switch(view.getId()) {
+			case R.id.next:
+				String email = authorNameInput.getText().toString();
+				String password = passwordInput.getText().toString();
+				createAccount(email, password);
+				FirebaseUser currentUser = mAuth.getCurrentUser();
+				setupController
+						.setAuthorName(authorNameInput.getText().toString());
+
+				setupController.setPassword(passwordInput.getText().toString());
+				if (!setupController.needToShowDozeFragment()) {
+					signUpButton.setVisibility(INVISIBLE);
+				}
+				setupController.setPassword(password);
+				setupController.showDozeOrCreateAccount();
+			case R.id.btn_log_in:
+				onLogInClick();
 		}
-		setupController.setPassword(password);
-		setupController.showDozeOrCreateAccount();
 	}
 
 	public static boolean isEmailValid(String email) {
@@ -170,5 +179,11 @@ public class AuthorNameFragment extends SetupFragment {
 		profileDb.setProfileAuthorName(email);
 		String tkn = FirebaseInstanceId.getInstance().getToken();
 		Log.d("TOKEN_REFRESH_create", tkn);
+	}
+
+	public void onLogInClick() {
+		//go to the Log In page (SignInFragment.java)
+		showNextFragment(SignInFragment.newInstance());
+
 	}
 }
