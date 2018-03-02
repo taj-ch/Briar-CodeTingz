@@ -366,9 +366,9 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 	private void filter(String charText) {
 		int revision = adapter.getRevision();
-		final String charTextLower = charText.toLowerCase(Locale.getDefault());
+		final String CHAR_TEXT_LOWER = charText.toLowerCase(Locale.getDefault());
 		listener.runOnDbThread(() -> {
-			if (charTextLower.length() == 0) {
+			if (CHAR_TEXT_LOWER.length() == 0) {
 				loadContacts();
 			} else {
 				try {
@@ -381,7 +381,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 									conversationManager.getGroupCount(id);
 							boolean connected =
 									connectionRegistry.isConnected(c.getId());
-							if (c.getAuthor().getName().toLowerCase(Locale.getDefault()).contains(charTextLower)) {
+							if (c.getAuthor().getName().toLowerCase(Locale.getDefault()).contains(CHAR_TEXT_LOWER)) {
 								contacts.add(new ContactListItem(c, connected, count));
 							}
 						} catch (NoSuchContactException e) {

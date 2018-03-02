@@ -12,10 +12,10 @@ public class TestableContactListFragment extends ContactListFragment {
 
 	public List<ContactListItem> filter(String charText, List<ContactListItem> contactsListItems) {
 		List<ContactListItem> contacts = new ArrayList<>();
-		final String charTextLower = charText.toLowerCase(Locale.getDefault());
+		final String CHAR_TEXT_LOWER = charText.toLowerCase(Locale.getDefault());
 		for (ContactListItem c : contactsListItems) {
 			if (c.getContact().getAuthor().getName().toLowerCase(Locale.getDefault())
-					.contains(charTextLower)) {
+					.contains(CHAR_TEXT_LOWER)) {
 				contacts.add(c);
 			}
 		}
