@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.widget.SearchView;
 import android.text.TextUtils;
@@ -58,8 +57,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
-import java.util.Collections;
-import java.util.Comparator;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -98,6 +95,10 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		ContactListFragment fragment = new ContactListFragment();
 		fragment.setArguments(args);
 		return fragment;
+	}
+
+	public ContactListAdapter getAdapter() {
+		return adapter;
 	}
 
 	@Override
@@ -363,7 +364,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		});
 	}
 
-	public void filter(String charText) {
+	private void filter(String charText) {
 		int revision = adapter.getRevision();
 		final String charTextLower = charText.toLowerCase(Locale.getDefault());
 		listener.runOnDbThread(() -> {
