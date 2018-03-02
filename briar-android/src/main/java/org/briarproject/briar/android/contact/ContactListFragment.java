@@ -7,12 +7,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
+import android.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
@@ -52,9 +55,8 @@ import org.briarproject.briar.api.sharing.event.InvitationResponseReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
-import java.util.Collections;
-import java.util.Comparator;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -93,6 +95,10 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		ContactListFragment fragment = new ContactListFragment();
 		fragment.setArguments(args);
 		return fragment;
+	}
+
+	public ContactListAdapter getAdapter() {
+		return adapter;
 	}
 
 	@Override
@@ -157,6 +163,32 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.contact_list_actions, menu);
 		super.onCreateOptionsMenu(menu, inflater);
+
+		SearchView searchView = (SearchView) menu.findItem(R.id.action_search_contacts).getActionView();
+		int id = searchView.getContext()
+				.getResources()
+				.getIdentifier("android:id/search_src_text", null, null);
+		EditText searchEditText = (EditText) searchView.findViewById(id);
+		searchEditText.setTextColor(getResources().getColor(R.color.briar_text_primary_inverse));
+		searchEditText.setHintTextColor(getResources().getColor(R.color.briar_text_primary_inverse));
+
+		searchView.setOnQueryTextListener(
+			new SearchView.OnQueryTextListener() {
+				@Override
+				public boolean onQueryTextChange (String newText) {
+					if (TextUtils.isEmpty(newText)) {
+						filter("");
+					}
+					return true;
+				}
+
+				@Override
+				public boolean onQueryTextSubmit(String query) {
+					filter(query);
+					return true;
+				}
+			}
+		);
 	}
 
 	@Override
@@ -332,4 +364,38 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		});
 	}
 
+	private void filter(String charText) {
+		int revision = adapter.getRevision();
+		final String CHAR_TEXT_LOWER = charText.toLowerCase(Locale.getDefault());
+		listener.runOnDbThread(() -> {
+			if (CHAR_TEXT_LOWER.length() == 0) {
+				loadContacts();
+			} else {
+				try {
+					long now = System.currentTimeMillis();
+					List<ContactListItem> contacts = new ArrayList<>();
+					for (Contact c : contactManager.getActiveContacts()) {
+						try {
+							ContactId id = c.getId();
+							GroupCount count =
+									conversationManager.getGroupCount(id);
+							boolean connected =
+									connectionRegistry.isConnected(c.getId());
+							if (c.getAuthor().getName().toLowerCase(Locale.getDefault()).contains(CHAR_TEXT_LOWER)) {
+								contacts.add(new ContactListItem(c, connected, count));
+							}
+						} catch (NoSuchContactException e) {
+							// Continue
+						}
+					}
+					long duration = System.currentTimeMillis() - now;
+					if (LOG.isLoggable(INFO))
+						LOG.info("Full load took " + duration + " ms");
+					displayContacts(revision, contacts);
+				} catch (DbException e) {
+					if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+				}
+			}
+		});
+	}
 }
