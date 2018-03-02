@@ -53,6 +53,8 @@ import org.briarproject.briar.android.contact.ConversationAdapter.ConversationLi
 import org.briarproject.briar.android.forum.ForumActivity;
 import org.briarproject.briar.android.introduction.IntroductionActivity;
 import org.briarproject.briar.android.privategroup.conversation.GroupActivity;
+import org.briarproject.briar.android.profile.ProfileActivity;
+import org.briarproject.briar.android.profile.ProfileFragment;
 import org.briarproject.briar.android.view.BriarRecyclerView;
 import org.briarproject.briar.android.view.TextInputView;
 import org.briarproject.briar.android.view.TextInputView.TextInputListener;
@@ -107,6 +109,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 import static org.briarproject.briar.android.settings.SettingsFragment.SETTINGS_NAMESPACE;
 import static org.briarproject.briar.android.util.UiUtils.getAvatarTransitionName;
 import static org.briarproject.briar.android.util.UiUtils.getBulbTransitionName;
@@ -281,6 +284,12 @@ public class ConversationActivity extends BriarActivity
 				return true;
 			case R.id.action_social_remove_person:
 				askToRemoveContact();
+				return true;
+			case R.id.action_view_profile:
+				if (contactId == null) return false;
+				Intent profileIntent = new Intent(this, ProfileActivity.class);
+				profileIntent.putExtra(CONTACT_ID, contactId.getInt());
+				startActivityForResult(profileIntent, REQUEST_PROFILE);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

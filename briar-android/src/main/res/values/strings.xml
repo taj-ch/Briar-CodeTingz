@@ -423,6 +423,8 @@
 	<string name="profile_data_email_input">profile_data_email_input</string>
 	<string name="profile_image_path_input">profile_image_path_input</string>
 	<string name="profile_data_description_input">profile_data_description_input</string>
+	<string name="view_profile">View Profile</string>
+
 
 
 </resources>
