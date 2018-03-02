@@ -56,6 +56,11 @@
 		</service>
 
 		<activity
+			android:name="org.briarproject.briar.android.contact.ChatActivity"
+			android:label="@string/app_name">
+		</activity>
+
+		<activity
 			android:name="org.briarproject.briar.android.reporting.DevReportActivity"
 			android:excludeFromRecents="true"
 			android:exported="false"

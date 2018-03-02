@@ -26,6 +26,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.inject.Inject;
 
 import static java.util.logging.Level.WARNING;
@@ -147,5 +157,7 @@ public class ContactChooserFragment extends BaseFragment {
 						.newInstance(c1.getId().getInt(), c2.getId().getInt());
 		showNextFragment(messageFragment);
 	}
+
+
 
 }
