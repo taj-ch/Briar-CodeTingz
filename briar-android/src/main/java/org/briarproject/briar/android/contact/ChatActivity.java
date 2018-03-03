@@ -1,5 +1,6 @@
 package org.briarproject.briar.android.contact;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -31,15 +32,11 @@ import java.util.logging.Logger;
 
 
 public class ChatActivity extends AppCompatActivity {
-	private static final String TAG = "";
 	private LinearLayout layout;
-	private RelativeLayout layout_2;
 	private ImageView sendButton;
 	private EditText messageArea;
 	private ScrollView scrollView;
-	private Firebase reference1, reference2;
-	private int message = 0;
-
+	private Firebase reference1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,31 +44,31 @@ public class ChatActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_chat);
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
-		layout_2 = (RelativeLayout)findViewById(R.id.layout2);
 		sendButton = (ImageView)findViewById(R.id.sendButton);
 		messageArea = (EditText)findViewById(R.id.messageArea);
 		scrollView = (ScrollView)findViewById(R.id.scrollView);
 
 		Firebase.setAndroidContext(this);
-		reference1 = new Firebase("https://briar-61651.firebaseio.com//messages/" + UserDetails.username + "_" + UserDetails.chatWith);
-		reference2 = new Firebase("https://briar-61651.firebaseio.com//messages/" + UserDetails.chatWith + "_" + UserDetails.username);
+		reference1 = new Firebase("https://briar-61651.firebaseio.com//messages/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith);
 
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String messageText = messageArea.getText().toString();
+				Long tsLong = System.currentTimeMillis()/1000;
+				String ts = tsLong.toString();
 
 				// Write a message to the database
 				FirebaseDatabase database = FirebaseDatabase.getInstance();
-				DatabaseReference myRef = database.getReference("/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "_" + message);
-				DatabaseReference destRef = database.getReference("messages/" + UserDetails.chatWith + "_" + UserDetails.username + "_" + message);
+				DatabaseReference myRef = database.getReference("/messages/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith + " " + ts);
+				DatabaseReference destRef = database.getReference("messages/" + "To: " + UserDetails.chatWith + " From:  " + UserDetails.username + " " + ts);
 
 
 				if(!messageText.equals("")){
 					myRef.setValue(messageText);
 					destRef.setValue(messageText);
+					addMessageBox("You:-\n" + messageText, 1);
 					messageArea.setText("");
-					message++;
 				}
 			}
 		});
@@ -122,11 +119,11 @@ public class ChatActivity extends AppCompatActivity {
 
 		if(type == 1) {
 			lp2.gravity = Gravity.LEFT;
-			textView.setBackgroundResource(R.drawable.bubble);
+			textView.setBackgroundResource(R.drawable.msg_in);
 		}
 		else{
 			lp2.gravity = Gravity.RIGHT;
-			textView.setBackgroundResource(R.drawable.bubble_white);
+			textView.setBackgroundResource(R.drawable.msg_out);
 		}
 		textView.setLayoutParams(lp2);
 		layout.addView(textView);
