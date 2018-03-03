@@ -29,8 +29,8 @@ public class ContactItemViewHolder<I extends ContactItem>
 	protected final TextView name;
 	@Nullable
 	protected final ImageView bulb;
-	private int contact_connected;
-	private int contact_disconnected;
+	private int contactConnected;
+	private int contactDisconnected;
 
 	public ContactItemViewHolder(View v) {
 		super(v);
@@ -43,8 +43,8 @@ public class ContactItemViewHolder<I extends ContactItem>
 	}
 
 	protected void bind(I item, @Nullable OnContactClickListener<I> listener) {
-		contact_connected = Theme.getAttributeDrawableInt(bulb.getContext(), R.attr.contact_connected);
-		contact_disconnected = Theme.getAttributeDrawableInt(bulb.getContext(), R.attr.contact_disconnected);
+		contactConnected = Theme.getAttributeDrawableInt(bulb.getContext(), R.attr.contact_connected);
+		contactDisconnected = Theme.getAttributeDrawableInt(bulb.getContext(), R.attr.contact_disconnected);
 
 		Author author = item.getContact().getAuthor();
 
@@ -56,9 +56,9 @@ public class ContactItemViewHolder<I extends ContactItem>
 		if (bulb != null) {
 			// online/offline
 			if (item.isConnected()) {
-				bulb.setImageResource(contact_connected);
+				bulb.setImageResource(contactConnected);
 			} else {
-				bulb.setImageResource(contact_disconnected);
+				bulb.setImageResource(contactDisconnected);
 			}
 		}
 

@@ -28,8 +28,8 @@ class ForumListAdapter
 	ForumListAdapter(Context ctx) {
 		super(ctx, ForumListItem.class);
 	}
-	private int briar_text_secondary = Theme.getAttributeColor(ctx, R.attr.briar_text_secondary);
-	private int briar_text_tertiary = Theme.getAttributeColor(ctx, R.attr.briar_text_tertiary);
+	private int briarTextSecondary = Theme.getAttributeColor(ctx, R.attr.briar_text_secondary);
+	private int briarTextTertiary = Theme.getAttributeColor(ctx, R.attr.briar_text_tertiary);
 
 	@Override
 	public ForumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -61,12 +61,12 @@ class ForumListAdapter
 			ui.postCount.setText(ctx.getResources()
 					.getQuantityString(R.plurals.posts, postCount,
 							postCount));
-			ui.postCount.setTextColor(briar_text_secondary);
+			ui.postCount.setTextColor(briarTextSecondary);
 
 		} else {
 			ui.avatar.setProblem(true);
 			ui.postCount.setText(ctx.getString(R.string.no_posts));
-			ui.postCount.setTextColor(briar_text_tertiary);
+			ui.postCount.setTextColor(briarTextTertiary);
 		}
 
 		// Date

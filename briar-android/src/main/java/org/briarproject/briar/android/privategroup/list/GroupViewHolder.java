@@ -36,7 +36,7 @@ class GroupViewHolder extends RecyclerView.ViewHolder {
 	private final TextView date;
 	private final TextView status;
 	private final Button remove;
-	private int briar_text_secondary;
+	private int briarTextSecondary;
 
 	GroupViewHolder(View v) {
 		super(v);
@@ -53,7 +53,7 @@ class GroupViewHolder extends RecyclerView.ViewHolder {
 
 	void bindView(Context ctx, GroupItem group,
 			OnGroupRemoveClickListener listener) {
-		briar_text_secondary = Theme.getAttributeColor(ctx, R.attr.briar_text_secondary);
+		briarTextSecondary = Theme.getAttributeColor(ctx, R.attr.briar_text_secondary);
 
 		// Avatar
 		avatar.setText(group.getName().substring(0, 1));
@@ -88,7 +88,7 @@ class GroupViewHolder extends RecyclerView.ViewHolder {
 				postCount.setText(ctx.getResources()
 						.getQuantityString(R.plurals.messages, messageCount,
 								messageCount));
-				postCount.setTextColor(briar_text_secondary);
+				postCount.setTextColor(briarTextSecondary);
 
 				long lastUpdate = group.getTimestamp();
 				date.setText(UiUtils.formatDate(ctx, lastUpdate));
