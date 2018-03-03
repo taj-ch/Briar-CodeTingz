@@ -34,4 +34,31 @@
 		</attr>
 	</declare-styleable>
 
+	<declare-styleable name="customAttrs">
+		<attr name="splashScreen" format="reference"/>
+		<attr name="splashBackground" format="color"/>
+		<attr name="textTitleSize" format="dimension"/>
+		<attr name="textTitleColor" format="color"/>
+		<attr name="window_background" format="color"/>
+		<attr name="button_bar_background" format="color"/>
+		<attr name="briar_text_primary" format="color"/>
+		<attr name="briar_text_secondary" format="color"/>
+		<attr name="briar_text_tertiary" format="color"/>
+		<attr name="menu_background" format="color"/>
+		<attr name="icons_color" format="color"/>
+		<attr name="android_primary" format="color"/>
+		<attr name="textBodySize" format="dimension"/>
+		<attr name="textBodyColor" format="color"/>
+		<attr name="qr_code_explanation" format="reference"/>
+		<attr name="qr_code_intro" format="reference"/>
+		<attr name="contact_connected" format="reference"/>
+		<attr name="contact_disconnected" format="reference"/>
+		<attr name="ic_info" format="reference"/>
+		<attr name="ic_repeat" format="reference"/>
+		<attr name="card_background" format="reference"/>
+		<attr name="msg_in" format="reference"/>
+		<attr name="msg_in_top" format="reference"/>
+		<attr name="private_message_date" format="color"/>
+	</declare-styleable>
+
 </resources>

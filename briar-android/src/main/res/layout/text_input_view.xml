@@ -31,8 +31,8 @@
 			android:inputType="textMultiLine|textCapSentences"
 			android:maxLines="3"
 			android:minHeight="@dimen/text_input_height"
-			android:textColor="@color/briar_text_primary"
-			android:textColorHint="@color/briar_text_tertiary"/>
+			android:textColor="?attr/briar_text_primary"
+			android:textColorHint="?attr/briar_text_tertiary"/>
 
 		<ImageButton
 			android:id="@+id/btn_send"

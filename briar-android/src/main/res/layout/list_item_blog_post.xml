@@ -12,7 +12,8 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical">
+		android:orientation="vertical"
+		android:background="?attr/card_background">
 
 		<RelativeLayout
 			android:layout_width="match_parent"
@@ -48,14 +49,14 @@
 				android:clickable="true"
 				android:contentDescription="@string/blogs_reblog_comment_hint"
 				android:padding="@dimen/margin_small"
-				android:src="@drawable/ic_repeat"/>
+				android:src="?attr/ic_repeat"/>
 
 			<org.thoughtcrime.securesms.components.emoji.EmojiTextView
 				android:id="@+id/bodyView"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_below="@+id/authorView"
-				android:textColor="@color/briar_text_secondary"
+				android:textColor="?attr/briar_text_secondary"
 				android:textSize="@dimen/text_size_medium"
 				tools:text="This is a body text that shows the content of a blog post.\n\nThis one is not short, but it is also not too long."/>
 

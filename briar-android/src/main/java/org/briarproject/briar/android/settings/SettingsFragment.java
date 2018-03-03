@@ -11,6 +11,7 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.widget.Toast;
 
 import org.acra.ACRA;
@@ -73,6 +74,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	public static final String SETTINGS_NAMESPACE = "android-ui";
 	public static final String BT_NAMESPACE = BluetoothConstants.ID.getString();
 	public static final String TOR_NAMESPACE = TorConstants.ID.getString();
+	public static final String PREF_DARK_MODE = "darkMode";
 
 	private static final Logger LOG =
 			Logger.getLogger(SettingsFragment.class.getName());
@@ -88,6 +90,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 	private CheckBoxPreference notifyLockscreen;
 
 	private Preference notifySound;
+
+	private SwitchPreferenceCompat darkMode;
 
 	// Fields that are accessed from background threads must be volatile
 	volatile Settings settings;
@@ -129,6 +133,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		notifyLockscreen = (CheckBoxPreference) findPreference(
 				"pref_key_notify_lock_screen");
 		notifySound = findPreference("pref_key_notify_sound");
+		darkMode = (SwitchPreferenceCompat) findPreference("pref_key_dark_mode");
 
 		enableBluetooth.setOnPreferenceChangeListener(this);
 		torNetwork.setOnPreferenceChangeListener(this);
@@ -137,6 +142,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
 		notifyForumPosts.setOnPreferenceChangeListener(this);
 		notifyBlogPosts.setOnPreferenceChangeListener(this);
 		notifyVibration.setOnPreferenceChangeListener(this);
+		darkMode.setOnPreferenceChangeListener(this);
+
 		if (Build.VERSION.SDK_INT >= 21) {
 			notifyLockscreen.setVisible(true);
 			notifyLockscreen.setOnPreferenceChangeListener(this);
@@ -238,6 +245,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			notifyLockscreen.setChecked(settings.getBoolean(
 					PREF_NOTIFY_LOCK_SCREEN, false));
 
+			darkMode.setChecked(settings.getBoolean(
+					PREF_DARK_MODE, false));
+
 			String text;
 			if (settings.getBoolean(PREF_NOTIFY_SOUND, true)) {
 				String ringtoneName = settings.get(PREF_NOTIFY_RINGTONE_NAME);
@@ -291,6 +301,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
 			Settings s = new Settings();
 			s.putBoolean(PREF_NOTIFY_LOCK_SCREEN, (Boolean) o);
 			storeSettings(s);
+		} else if (preference == darkMode) {
+			Settings s = new Settings();
+			s.putBoolean(PREF_DARK_MODE, (Boolean) o);
+			storeSettings(s);
+			Intent i = getActivity().getBaseContext().getPackageManager()
+					.getLaunchIntentForPackage( getActivity().getBaseContext().getPackageName() );
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
 		}
 		return true;
 	}

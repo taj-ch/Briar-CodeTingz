@@ -125,5 +125,13 @@
 	<Preference
 		android:key="pref_key_test_data"
 		android:title="Create Test Data"/>
+	<PreferenceCategory
+		android:title="@string/appearance_settings_title">
+
+		<android.support.v7.preference.SwitchPreferenceCompat
+			android:defaultValue="false"
+			android:key="pref_key_dark_mode"
+			android:title="@string/dark_mode_setting"/>
+	</PreferenceCategory>
 
 </PreferenceScreen>

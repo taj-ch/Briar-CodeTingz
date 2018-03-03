@@ -1,5 +1,7 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import org.briarproject.bramble.api.identity.Author;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.Theme;
 import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactClickListener;
 
 import javax.annotation.Nullable;
@@ -26,6 +29,8 @@ public class ContactItemViewHolder<I extends ContactItem>
 	protected final TextView name;
 	@Nullable
 	protected final ImageView bulb;
+	private int contactConnected;
+	private int contactDisconnected;
 
 	public ContactItemViewHolder(View v) {
 		super(v);
@@ -38,7 +43,11 @@ public class ContactItemViewHolder<I extends ContactItem>
 	}
 
 	protected void bind(I item, @Nullable OnContactClickListener<I> listener) {
+		contactConnected = Theme.getAttributeDrawableInt(bulb.getContext(), R.attr.contact_connected);
+		contactDisconnected = Theme.getAttributeDrawableInt(bulb.getContext(), R.attr.contact_disconnected);
+
 		Author author = item.getContact().getAuthor();
+
 		avatar.setImageDrawable(
 				new IdenticonDrawable(author.getId().getBytes()));
 		String contactName = author.getName();
@@ -47,9 +56,9 @@ public class ContactItemViewHolder<I extends ContactItem>
 		if (bulb != null) {
 			// online/offline
 			if (item.isConnected()) {
-				bulb.setImageResource(R.drawable.contact_connected);
+				bulb.setImageResource(contactConnected);
 			} else {
-				bulb.setImageResource(R.drawable.contact_disconnected);
+				bulb.setImageResource(contactDisconnected);
 			}
 		}
 
