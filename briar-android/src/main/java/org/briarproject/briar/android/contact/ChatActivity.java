@@ -3,6 +3,7 @@ package org.briarproject.briar.android.contact;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,28 +18,38 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.briarproject.briar.R;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 public class ChatActivity extends AppCompatActivity {
-	LinearLayout layout;
-	ImageView sendButton;
-	EditText messageArea;
-	ScrollView scrollView;
-	Firebase reference1, reference2;
+	private static final String TAG = "";
+	private LinearLayout layout;
+	private RelativeLayout layout_2;
+	private ImageView sendButton;
+	private EditText messageArea;
+	private ScrollView scrollView;
+	private Firebase reference1, reference2;
+	private int message = 0;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_conversation);
+		setContentView(R.layout.activity_chat);
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
-		sendButton = (ImageView)findViewById(R.id.btn_send);
-		messageArea = (EditText)findViewById(R.id.input_text);
+		layout_2 = (RelativeLayout)findViewById(R.id.layout2);
+		sendButton = (ImageView)findViewById(R.id.sendButton);
+		messageArea = (EditText)findViewById(R.id.messageArea);
 		scrollView = (ScrollView)findViewById(R.id.scrollView);
 
 		Firebase.setAndroidContext(this);
@@ -50,13 +61,17 @@ public class ChatActivity extends AppCompatActivity {
 			public void onClick(View v) {
 				String messageText = messageArea.getText().toString();
 
+				// Write a message to the database
+				FirebaseDatabase database = FirebaseDatabase.getInstance();
+				DatabaseReference myRef = database.getReference("/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "_" + message);
+				DatabaseReference destRef = database.getReference("messages/" + UserDetails.chatWith + "_" + UserDetails.username + "_" + message);
+
+
 				if(!messageText.equals("")){
-					Map<String, String> map = new HashMap<String, String>();
-					map.put("message", messageText);
-					map.put("user", UserDetails.username);
-					reference1.push().setValue(map);
-					reference2.push().setValue(map);
+					myRef.setValue(messageText);
+					destRef.setValue(messageText);
 					messageArea.setText("");
+					message++;
 				}
 			}
 		});

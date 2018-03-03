@@ -2,7 +2,7 @@ package org.briarproject.briar.android.contact;
 
 
 public class UserDetails {
-	static String username = "";
+	static String username = "Alex";
 	static String password = "";
-	static String chatWith = "";
+	static String chatWith = "Mira";
 }

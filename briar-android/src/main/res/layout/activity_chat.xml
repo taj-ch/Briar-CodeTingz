@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	              xmlns:tools="http://schemas.android.com/tools"
+	              android:layout_width="match_parent"
+	              android:layout_height="match_parent"
+	              android:orientation="vertical"
+	              tools:context=".android.contact.ChatActivityActivity">
+
+		<ScrollView
+			android:layout_width="match_parent"
+			android:layout_weight="20"
+			android:layout_height="wrap_content"
+			android:id="@+id/scrollView">
+			<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			                android:id="@+id/layout2"
+			                android:layout_width="match_parent"
+			                android:layout_height="wrap_content">
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="vertical"
+					android:id="@+id/layout1">
+				</LinearLayout>
+			</RelativeLayout>
+		</ScrollView>
+		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		              android:layout_width="match_parent"
+		              android:layout_height="match_parent"
+		              android:gravity="bottom"
+		              android:orientation="horizontal">
+
+			<EditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:textColorHint="#000000"
+				android:textColor="#000000"
+				android:hint="Write a message..."
+				android:id="@+id/messageArea"
+				android:maxHeight="80dp"
+				/>
+
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_weight="4"
+				android:padding="4dp"
+				android:src="@android:drawable/ic_menu_send"
+				android:id="@+id/sendButton"/>
+		</LinearLayout>
+	</LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

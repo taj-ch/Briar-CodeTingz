@@ -118,10 +118,12 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		OnContactClickListener<ContactListItem> onContactClickListener =
 				(view, item) -> {
 					Intent i = new Intent(getActivity(),
-							ConversationActivity.class);
+							ChatActivity.class);
 					ContactId contactId = item.getContact().getId();
 					i.putExtra(CONTACT_ID, contactId.getInt());
 
+					startActivity(i);
+					/*
 					if (Build.VERSION.SDK_INT >= 23) {
 						ContactListItemViewHolder holder =
 								(ContactListItemViewHolder) list
@@ -142,7 +144,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					} else {
 						// work-around for android bug #224270
 						startActivity(i);
-					}
+					}*/
 				};
 		adapter = new ContactListAdapter(getContext(), onContactClickListener);
 		list = contentView.findViewById(R.id.list);
