@@ -20,7 +20,7 @@ android:
 addons:
   apt:
     packages:
-      - openjdk-6-jdk
+      - openjdk-7-jdk
 
 jdk:
     - oraclejdk8
@@ -37,9 +37,28 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-script:
-    - chmod +x ./gradlew
-    - ./gradlew test
+jobs:
+    - stage: build
+      script:
+        chmod +x ./gradlew;
+        ./gradlew build
+    - stage: device instrumentation check
+      script:
+        chmod +x ./gradlew;
+        ./gradlew deviceAndroidTest
+    - stage: device check
+      script:
+        chmod +x ./gradlew;
+        ./gradlew deviceCheck
+    - stage: test with oracle
+      script: 
+        chmod +x ./gradlew;
+        ./gradlew test
+    - stage: test with openjdk
+      script:
+        jdk_switcher use openjdk7;
+        chmod +x ./gradlew;
+        ./gradlew test
 
 after_script:
     # this file changes every time but should not be cached
