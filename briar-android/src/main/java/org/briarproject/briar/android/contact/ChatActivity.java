@@ -36,7 +36,7 @@ public class ChatActivity extends AppCompatActivity {
 	private ImageView sendButton;
 	private EditText messageArea;
 	private ScrollView scrollView;
-	private Firebase reference1;
+	private Firebase reference;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
 		scrollView = (ScrollView)findViewById(R.id.scrollView);
 
 		Firebase.setAndroidContext(this);
-		reference1 = new Firebase("https://briar-61651.firebaseio.com//messages/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith);
+		reference = new Firebase("https://briar-61651.firebaseio.com//messages/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith);
 
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -60,20 +60,40 @@ public class ChatActivity extends AppCompatActivity {
 
 				// Write a message to the database
 				FirebaseDatabase database = FirebaseDatabase.getInstance();
-				DatabaseReference myRef = database.getReference("/messages/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith + " " + ts);
-				DatabaseReference destRef = database.getReference("messages/" + "To: " + UserDetails.chatWith + " From:  " + UserDetails.username + " " + ts);
-
+				DatabaseReference myRef = database.getReference("/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith);
+				//DatabaseReference destRef = database.getReference("messages/" + "To: " + UserDetails.chatWith + " From:  " + UserDetails.username + " " + ts);
 
 				if(!messageText.equals("")){
 					myRef.setValue(messageText);
-					destRef.setValue(messageText);
+					//destRef.setValue(messageText);
 					addMessageBox("You:-\n" + messageText, 1);
 					messageArea.setText("");
 				}
 			}
 		});
 
-		reference1.addChildEventListener(new ChildEventListener() {
+		// Read from the database
+		FirebaseDatabase database = FirebaseDatabase.getInstance();
+		DatabaseReference myRef = database.getReference("/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "/" + "From: " + UserDetails.chatWith + " To: " + UserDetails.username);
+
+		myRef.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+				// This method is called once with the initial value and again
+				// whenever data at this location is updated.
+				String value = dataSnapshot.getValue(String.class);
+				addMessageBox(UserDetails.chatWith + ":-\n" + value, 2);
+
+			}
+
+
+			@Override
+			public void onCancelled(DatabaseError error) {
+				// Failed to read value
+			}
+		});
+
+		reference.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Map map = dataSnapshot.getValue(Map.class);
@@ -123,6 +143,7 @@ public class ChatActivity extends AppCompatActivity {
 		}
 		else{
 			lp2.gravity = Gravity.RIGHT;
+			textView.setTextColor(Color.WHITE);
 			textView.setBackgroundResource(R.drawable.msg_out);
 		}
 		textView.setLayoutParams(lp2);
