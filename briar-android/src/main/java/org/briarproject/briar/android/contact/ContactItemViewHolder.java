@@ -1,5 +1,4 @@
 package org.briarproject.briar.android.contact;
-
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -42,6 +41,7 @@ public class ContactItemViewHolder<I extends ContactItem>
 		avatar.setImageDrawable(
 				new IdenticonDrawable(author.getId().getBytes()));
 		String contactName = author.getName();
+
 		name.setText(contactName);
 
 		if (bulb != null) {

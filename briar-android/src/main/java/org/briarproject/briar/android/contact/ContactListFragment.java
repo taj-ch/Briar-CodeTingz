@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,11 +54,10 @@ import org.briarproject.briar.api.sharing.event.InvitationResponseReceivedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.Collections;
-import java.util.Comparator;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
 
 import static android.support.v4.app.ActivityOptionsCompat.makeSceneTransitionAnimation;
 import static android.support.v4.view.ViewCompat.getTransitionName;
@@ -117,6 +117,12 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 		OnContactClickListener<ContactListItem> onContactClickListener =
 				(view, item) -> {
+
+					String contactName = item.getContact().getAuthor().getName();
+					Log.d("name with blanks: ", contactName);
+					Log.d("name without blanks: ", contactName.replaceAll("\\s",""));
+					UserDetails.changeChatWith(contactName.replaceAll("\\s",""));
+
 					Intent i = new Intent(getActivity(),
 							ChatActivity.class);
 					ContactId contactId = item.getContact().getId();

@@ -21,6 +21,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
 import org.briarproject.briar.android.profile.ProfileDb;
 import org.briarproject.briar.android.util.UiUtils;
@@ -67,14 +68,11 @@ public class SignInFragment extends SetupFragment {
 		signInButton = v.findViewById(R.id.btn_sign_in);
 		createAccountButton = v.findViewById(R.id.btn_create_account);
 
-		//authorNameInput.addTextChangedListener(this);
-		//passwordInput.addTextChangedListener(this);
 		signInButton.setOnClickListener(this);
 		createAccountButton.setOnClickListener(this);
 
 		FirebaseApp.initializeApp(this.getContext());
 		mAuth = FirebaseAuth.getInstance();
-		FirebaseUser currentUser = mAuth.getCurrentUser();
 
 		return v;
 	}
@@ -104,7 +102,6 @@ public class SignInFragment extends SetupFragment {
 				String password = passwordInput.getText().toString();
 				signInButton.setVisibility(INVISIBLE);
 				openAccount(email, password);
-				//FirebaseUser currentUser = mAuth.getCurrentUser();
 			case R.id.btn_create_account:
 				onCreateAccountClick();
 		}
@@ -113,7 +110,9 @@ public class SignInFragment extends SetupFragment {
 
 
 	public void openAccount(String email, String password) {
-		//mAuth.createUserWithEmailAndPassword(email, password);
+		String firstPartOfEmail = email.split("\\@")[0];
+		UserDetails.changeUsername(firstPartOfEmail);
+		Log.d("ChangeUsername:", firstPartOfEmail);
 
 		//authenticate user
 		mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -132,12 +131,12 @@ public class SignInFragment extends SetupFragment {
 							Log.d("TOKEN_REFRESH_login", tkn);
 
 							setupController.setAuthorName(authorNameInput.getText().toString());
-
 							setupController.setPassword(passwordInput.getText().toString());
 							if (!setupController.needToShowDozeFragment()) {
 								signInButton.setVisibility(INVISIBLE);
 							}
 							setupController.setPassword(password);
+
 							setupController.showDozeOrCreateAccount();
 
 						} else {
