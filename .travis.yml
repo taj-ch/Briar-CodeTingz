@@ -38,6 +38,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 jobs:
+  include:
     - stage: build
       script:
         chmod +x ./gradlew;
