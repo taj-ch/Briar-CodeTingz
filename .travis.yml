@@ -17,11 +17,6 @@ android:
     - extra-android-m2repository
     - addon-google_apis-google-26
 
-addons:
-  apt:
-    packages:
-      - openjdk-7-jdk
-
 jdk:
     - oraclejdk8
 
@@ -53,11 +48,6 @@ jobs:
         ./gradlew deviceCheck
     - stage: test with oracle
       script: 
-        chmod +x ./gradlew;
-        ./gradlew test
-    - stage: test with openjdk
-      script:
-        jdk_switcher use openjdk7;
         chmod +x ./gradlew;
         ./gradlew test
 
