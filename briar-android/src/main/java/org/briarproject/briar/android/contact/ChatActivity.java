@@ -74,7 +74,7 @@ public class ChatActivity extends AppCompatActivity {
 
 		// Read from the database
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
-		DatabaseReference myRef = database.getReference("/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "/" + "From: " + UserDetails.chatWith + " To: " + UserDetails.username);
+		DatabaseReference myRef = database.getReference("/messages/" + UserDetails.chatWith + "_" + UserDetails.username + "/" + "From: " + UserDetails.chatWith + " To: " + UserDetails.username);
 
 		myRef.addValueEventListener(new ValueEventListener() {
 			@Override
