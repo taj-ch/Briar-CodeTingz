@@ -18,5 +18,11 @@
 		android:id="@+id/action_sort_contact_recent"
 		android:title="@string/sort_contact_recent"
 		app:showAsAction="never"/>
+	<item
+		android:id="@+id/action_search_contacts"
+		android:title="@string/search_contacts"
+		android:icon="@android:drawable/ic_menu_search"
+		app:showAsAction="collapseActionView|ifRoom"
+		app:actionViewClass="android.widget.SearchView" />
 
 </menu>

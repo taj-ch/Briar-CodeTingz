@@ -1,7 +1,5 @@
 package org.briarproject.briar.android.login;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -25,7 +23,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import org.briarproject.bramble.util.StringUtils;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
-import org.briarproject.briar.android.profile.ProfileDb;
 
 import org.briarproject.briar.android.activity.BaseActivity;
 import org.briarproject.briar.android.util.UiUtils;
@@ -184,6 +181,5 @@ public class AuthorNameFragment extends SetupFragment {
 	public void onLogInClick() {
 		//go to the Log In page (SignInFragment.java)
 		showNextFragment(SignInFragment.newInstance());
-
 	}
 }

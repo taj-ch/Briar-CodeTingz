@@ -12,11 +12,11 @@ import org.briarproject.bramble.api.nullsafety.MethodsNotNullByDefault;
 import org.briarproject.bramble.api.nullsafety.ParametersNotNullByDefault;
 import org.briarproject.bramble.api.sync.GroupId;
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.Theme;
 import org.briarproject.briar.android.privategroup.conversation.GroupActivity;
 import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.android.view.TextAvatarView;
 
-import static android.support.v4.content.ContextCompat.getColor;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.briarproject.briar.android.activity.BriarActivity.GROUP_ID;
@@ -36,6 +36,7 @@ class GroupViewHolder extends RecyclerView.ViewHolder {
 	private final TextView date;
 	private final TextView status;
 	private final Button remove;
+	private int briarTextSecondary;
 
 	GroupViewHolder(View v) {
 		super(v);
@@ -52,6 +53,8 @@ class GroupViewHolder extends RecyclerView.ViewHolder {
 
 	void bindView(Context ctx, GroupItem group,
 			OnGroupRemoveClickListener listener) {
+		briarTextSecondary = Theme.getAttributeColor(ctx, R.attr.briar_text_secondary);
+
 		// Avatar
 		avatar.setText(group.getName().substring(0, 1));
 		avatar.setBackgroundBytes(group.getId().getBytes());
@@ -85,8 +88,7 @@ class GroupViewHolder extends RecyclerView.ViewHolder {
 				postCount.setText(ctx.getResources()
 						.getQuantityString(R.plurals.messages, messageCount,
 								messageCount));
-				postCount.setTextColor(
-						getColor(ctx, R.color.briar_text_secondary));
+				postCount.setTextColor(briarTextSecondary);
 
 				long lastUpdate = group.getTimestamp();
 				date.setText(UiUtils.formatDate(ctx, lastUpdate));

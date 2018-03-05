@@ -27,7 +27,7 @@
 		android:layout_toEndOf="@+id/avatarView"
 		android:layout_toRightOf="@+id/avatarView"
 		android:maxLines="2"
-		android:textColor="@color/briar_text_primary"
+		android:textColor="?attr/briar_text_primary"
 		android:textSize="@dimen/text_size_medium"
 		tools:text="This is a name of a Private Group"/>
 
@@ -40,7 +40,7 @@
 		android:layout_toEndOf="@+id/avatarView"
 		android:layout_toRightOf="@+id/avatarView"
 		android:paddingTop="@dimen/margin_small"
-		android:textColor="@color/briar_text_secondary"
+		android:textColor="?attr/briar_text_secondary"
 		android:textSize="@dimen/text_size_small"
 		tools:text="Created by Santa Claus"/>
 
@@ -53,7 +53,7 @@
 		android:layout_toEndOf="@+id/avatarView"
 		android:layout_toRightOf="@+id/avatarView"
 		android:paddingTop="@dimen/margin_small"
-		android:textColor="@color/briar_text_secondary"
+		android:textColor="?attr/briar_text_secondary"
 		android:textSize="@dimen/text_size_small"
 		tools:text="1337 messages"
 		tools:visibility="visible"/>
@@ -68,7 +68,7 @@
 		android:layout_marginEnd="@dimen/listitem_horizontal_margin"
 		android:layout_marginRight="@dimen/listitem_horizontal_margin"
 		android:paddingTop="@dimen/margin_small"
-		android:textColor="@color/briar_text_secondary"
+		android:textColor="?attr/briar_text_secondary"
 		android:textSize="@dimen/text_size_small"
 		tools:text="3 weeks ago, 12:00"
 		tools:visibility="visible"/>
@@ -82,7 +82,7 @@
 		android:layout_toRightOf="@+id/avatarView"
 		android:layout_toLeftOf="@+id/removeButton"
 		android:paddingTop="@dimen/margin_small"
-		android:textColor="@color/briar_text_tertiary"
+		android:textColor="?attr/briar_text_tertiary"
 		tools:text="@string/groups_group_is_empty"/>
 
 	<Button

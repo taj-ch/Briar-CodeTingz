@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
+import android.preference.PreferenceManager;
 
 import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.briar.R;
@@ -58,6 +59,11 @@ public abstract class BaseActivity extends AppCompatActivity
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
+		if (PreferenceManager.getDefaultSharedPreferences(this)
+				.getBoolean("pref_key_dark_mode", false)) {
+			setTheme(R.style.BriarThemeDark);
+		}
+
 		super.onCreate(savedInstanceState);
 
 		if (PREVENT_SCREENSHOTS) getWindow().addFlags(FLAG_SECURE);

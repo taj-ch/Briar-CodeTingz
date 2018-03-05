@@ -12,7 +12,6 @@ dependencies {
 	compile "com.google.firebase:firebase-database:11.8.0"
 	compile 'com.android.volley:volley:1.0.0'
 
-
 	def supportVersion = '27.0.1'
 	implementation "com.android.support:support-v4:$supportVersion"
 	implementation("com.android.support:appcompat-v7:$supportVersion") {
@@ -212,8 +211,6 @@ android {
 			shrinkResources false
 			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-			debuggable true
-			useProguard true
 		}
 		release {
 			debuggable false
@@ -222,8 +219,6 @@ android {
 			minifyEnabled true
 			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-			debuggable false
-			useProguard true
 		}
 	}
 

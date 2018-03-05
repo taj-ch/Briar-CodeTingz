@@ -41,7 +41,7 @@
 		android:layout_toEndOf="@+id/avatarView"
 		android:layout_toRightOf="@+id/avatarView"
 		android:paddingTop="@dimen/margin_medium"
-		android:textColor="@color/briar_text_secondary"
+		android:textColor="?attr/briar_text_secondary"
 		android:textSize="@dimen/text_size_small"
 		tools:text="Shared by Megalox"/>
 
@@ -54,7 +54,7 @@
 		android:layout_marginRight="@dimen/listitem_horizontal_margin"
 		android:paddingTop="@dimen/margin_medium"
 		android:text="@string/forum_invitation_exists"
-		android:textColor="@color/briar_text_tertiary"
+		android:textColor="?attr/briar_text_tertiary"
 		android:textSize="@dimen/text_size_small"
 		tools:visibility="visible"/>
 

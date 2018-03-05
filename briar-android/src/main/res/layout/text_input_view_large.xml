@@ -15,7 +15,7 @@
 		android:layout_marginRight="@dimen/margin_medium"
 		android:layout_marginStart="@dimen/margin_medium"
 		android:layout_marginTop="@dimen/margin_medium"
-		android:background="@android:color/white"
+		android:background="?attr/android_primary"
 		android:elevation="@dimen/cardview_default_elevation"
 		android:minHeight="@dimen/text_input_height"
 		android:orientation="horizontal">
@@ -41,8 +41,8 @@
 			android:paddingEnd="@dimen/margin_small"
 			android:paddingRight="@dimen/margin_small"
 			android:paddingTop="@dimen/margin_small"
-			android:textColor="@color/briar_text_primary"
-			android:textColorHint="@color/briar_text_tertiary"
+			android:textColor="?attr/briar_text_primary"
+			android:textColorHint="?attr/briar_text_tertiary"
 			tools:ignore="RtlSymmetry"/>
 
 	</LinearLayout>

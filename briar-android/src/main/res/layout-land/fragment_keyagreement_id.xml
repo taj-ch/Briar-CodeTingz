@@ -20,7 +20,7 @@
 		android:paddingStart="@dimen/margin_activity_horizontal"
 		android:paddingTop="@dimen/margin_activity_vertical"
 		android:scaleType="fitCenter"
-		android:src="@drawable/qr_code_intro"/>
+		android:src="?attr/qr_code_intro"/>
 
 	<ScrollView
 		android:id="@+id/scrollView"
@@ -51,7 +51,7 @@
 					android:layout_height="wrap_content"
 					android:adjustViewBounds="true"
 					android:padding="@dimen/margin_medium"
-					android:src="@drawable/qr_code_explanation"
+					android:src="?attr/qr_code_explanation"
 					tools:ignore="ContentDescription"/>
 
 				<TextView

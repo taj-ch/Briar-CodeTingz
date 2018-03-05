@@ -42,7 +42,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/margin_small"
 					android:gravity="center"
-					android:textColor="@color/briar_text_primary"
+					android:textColor="?attr/briar_text_primary"
 					android:textSize="@dimen/text_size_small"
 					tools:text="Contact 1"/>
 
@@ -53,7 +53,8 @@
 				android:layout_width="@dimen/listitem_picture_size"
 				android:layout_height="@dimen/listitem_picture_size"
 				android:src="@drawable/ic_contact_introduction"
-				tools:ignore="ContentDescription"/>
+				tools:ignore="ContentDescription"
+				android:tint="?attr/icons_color"/>
 
 			<LinearLayout
 				android:layout_width="wrap_content"
@@ -78,7 +79,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/margin_small"
 					android:gravity="center"
-					android:textColor="@color/briar_text_primary"
+					android:textColor="?attr/briar_text_primary"
 					android:textSize="@dimen/text_size_small"
 					tools:text="Contact 2"/>
 

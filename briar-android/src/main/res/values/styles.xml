@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
 	<style name="BriarToolbar" parent="Widget.AppCompat.Toolbar">
 		<item name="android:background">?colorPrimary</item>
 		<item name="android:textColorPrimary">@color/briar_text_primary_inverse</item>
@@ -25,6 +24,7 @@
 
 	<style name="BriarButton.Default">
 		<item name="android:textAllCaps">true</item>
+		<item name="android:background">@color/briar_accent</item>
 	</style>
 
 	<style name="BriarButton" parent="Widget.AppCompat.Button.Colored">
@@ -128,6 +128,48 @@
 	<!-- This fixes the missing TextAppearance.Design.Counter.Overflow style -->
 	<style name="BriarTextCounter.Overflow" parent="TextAppearance.Design.Counter">
 		<item name="android:textColor">@color/briar_button_negative</item>
+	</style>
+
+	<style name="BriarThemeDark" parent="BriarTheme">
+		<item name="colorPrimary">@color/briar_primary</item>
+		<item name="colorPrimaryDark">@color/briar_primary_dark</item>
+		<item name="colorAccent">@color/briar_text_secondary_inverse</item>
+		<item name="colorControlNormal">@color/control_normal_light</item>
+		<item name="android:textColorLink">@color/briar_text_link</item>
+		<item name="android:windowBackground">@color/briar_blue_dark</item>
+		<item name="android:textColor">@color/briar_text_primary_inverse</item>
+		<item name="android:editTextColor">@color/briar_text_primary_inverse</item>
+		<item name="android:textColorHint">@color/briar_text_primary_inverse</item>
+		<item name="android:itemBackground">@color/briar_blue_dark</item>
+		<item name="android:textColorSecondary">@color/briar_text_secondary_inverse</item>
+
+		<item name="splashScreen">@drawable/splash_screen_white</item>
+		<item name="splashBackground">@color/briar_blue_dark</item>
+		<item name="textTitleSize">@dimen/text_size_medium</item>
+		<item name="textTitleColor">@android:color/primary_text_dark</item>
+		<item name="window_background">@color/briar_blue_dark</item>
+		<item name="button_bar_background">@color/briar_blue_dark</item>
+		<item name="briar_text_primary">@color/briar_text_primary_inverse</item>
+		<item name="briar_text_secondary">@color/briar_text_secondary_inverse</item>
+		<item name="briar_text_tertiary">@color/briar_text_tertiary_inverse</item>
+		<item name="menu_background">@color/briar_blue_dark</item>
+		<item name="icons_color">@android:color/primary_text_dark</item>
+		<item name="android_primary">@android:color/black</item>
+		<item name="textBodySize">@dimen/text_size_small</item>
+		<item name="textBodyColor">@android:color/primary_text_dark</item>
+		<item name="qr_code_explanation">@drawable/qr_code_explanation_white</item>
+		<item name="qr_code_intro">@drawable/qr_code_intro_white</item>
+		<item name="contact_connected">@drawable/contact_connected_white</item>
+		<item name="contact_disconnected">@drawable/contact_disconnected_white</item>
+		<item name="ic_info">@drawable/ic_info_white</item>
+		<item name="ic_repeat">@drawable/ic_repeat_white</item>
+		<item name="card_background">@color/briar_accent</item>
+		<item name="msg_in">@drawable/msg_in_dark</item>
+		<item name="msg_in_top">@drawable/msg_in_top_dark</item>
+		<item name="private_message_date">@color/private_message_date_inverse</item>
+
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
 	</style>
 
 </resources>

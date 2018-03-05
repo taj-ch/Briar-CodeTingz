@@ -401,6 +401,16 @@
 			android:theme="@android:style/Theme.NoDisplay">
 		</activity>
 
+		<activity
+			android:name="org.briarproject.briar.android.profile.ProfileActivity"
+			android:label="@string/view_profile"
+			android:parentActivityName="org.briarproject.briar.android.contact.ConversationActivity">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="org.briarproject.briar.android.contact.ConversationActivity"
+				/>
+		</activity>
+
 	</application>
 
 
