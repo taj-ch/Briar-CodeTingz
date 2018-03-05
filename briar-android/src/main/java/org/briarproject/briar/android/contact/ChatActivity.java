@@ -137,7 +137,7 @@ public class ChatActivity extends AppCompatActivity {
 		LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		lp2.weight = 1.0f;
 
-		if(type == 1) {
+		if(type == 2) {
 			lp2.gravity = Gravity.LEFT;
 			textView.setBackgroundResource(R.drawable.msg_in);
 		}
