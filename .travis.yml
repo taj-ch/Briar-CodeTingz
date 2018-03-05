@@ -38,15 +38,11 @@ jobs:
       script:
         chmod +x ./gradlew;
         ./gradlew build
-    - stage: device instrumentation check
-      script:
-        chmod +x ./gradlew;
-        ./gradlew deviceAndroidTest
     - stage: device check
       script:
         chmod +x ./gradlew;
         ./gradlew deviceCheck
-    - stage: test with oracle
+    - stage: test
       script: 
         chmod +x ./gradlew;
         ./gradlew test
