@@ -256,7 +256,7 @@ public class ConversationActivity extends BriarActivity
 		notificationManager.unblockContactNotification(contactId);
 		list.stopPeriodicUpdate();
 	}
-/*
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu items for use in the action bar
@@ -295,7 +295,7 @@ public class ConversationActivity extends BriarActivity
 				return super.onOptionsItemSelected(item);
 		}
 	}
-*/
+
 	private void loadContactDetailsAndMessages() {
 		runOnDbThread(() -> {
 			try {

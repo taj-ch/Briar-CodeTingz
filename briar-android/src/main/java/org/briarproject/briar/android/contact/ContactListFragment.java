@@ -131,7 +131,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					String contactName = item.getContact().getAuthor().getName();
 					Log.d("name with blanks: ", contactName);
 					Log.d("name without blanks: ", contactName.replaceAll("\\s",""));
-					UserDetails.changeChatWith(contactName.replaceAll("\\s",""));
+					UserDetails.changeChatWithEmail(contactName.replaceAll("\\s",""));
 					String mydata = contactName.replaceAll("\\s","");
 					Pattern pattern = Pattern.compile("([^@]+)");
 					Matcher matcher = pattern.matcher(mydata);
