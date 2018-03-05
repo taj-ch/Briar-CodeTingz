@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.TestBriarApplication;
+import org.briarproject.briar.android.contact.UserDetails;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import static junit.framework.Assert.assertEquals;
 @Config(sdk = 21, application = TestBriarApplication.class,
 		packageName = "org.briarproject.briar")
 public class ProfileActivityTest {
+	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
 
 	private ProfileActivity profileActivity;
 
@@ -34,9 +36,10 @@ public class ProfileActivityTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		Intent intent = new Intent();
+		Intent profileIntent = new Intent();
+		profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
 		profileActivity = Robolectric.buildActivity(ProfileActivity.class,
-				intent).create().get();
+				profileIntent).create().get();
 
 		nickname = profileActivity.findViewById(R.id.view_profile_nickname);
 		firstName = profileActivity.findViewById(R.id.view_profile_first_name);
