@@ -51,6 +51,7 @@ public class ContactItemViewHolder<I extends ContactItem>
 		avatar.setImageDrawable(
 				new IdenticonDrawable(author.getId().getBytes()));
 		String contactName = author.getName();
+
 		name.setText(contactName);
 
 		if (bulb != null) {

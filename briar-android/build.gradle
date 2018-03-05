@@ -5,9 +5,12 @@ dependencies {
 	implementation project(path: ':briar-core', configuration: 'default')
 	implementation project(path: ':bramble-core', configuration: 'default')
 	implementation project(path: ':bramble-android', configuration: 'default')
+	compile 'com.firebase:firebase-client-android:2.5.2'
 	compile 'com.google.firebase:firebase-core:11.8.0'
 	compile 'com.google.firebase:firebase-auth:11.8.0'
-	compile 'com.google.firebase:firebase-database:11.8.0'
+	compile 'com.google.firebase:firebase-messaging:11.8.0'
+	compile "com.google.firebase:firebase-database:11.8.0"
+	compile 'com.android.volley:volley:1.0.0'
 	compile 'com.google.firebase:firebase-storage:11.8.0'
 
 	def supportVersion = '27.0.1'
@@ -196,6 +199,7 @@ android {
 		resValue "string", "app_package", "org.briarproject.briar.android"
 		resValue "string", "app_name", "Briar"
 		buildConfigField "String", "GitHash", "\"${getGitHash()}\""
+		multiDexEnabled true
 	}
 
 	buildTypes {
@@ -206,7 +210,6 @@ android {
 			resValue "string", "app_package", "org.briarproject.briar.android.debug"
 			resValue "string", "app_name", "Briar Debug"
 			shrinkResources false
-			minifyEnabled true
 			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}

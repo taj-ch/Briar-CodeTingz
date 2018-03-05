@@ -50,6 +50,18 @@ public interface TestData {
 			getRandomString(MAX_AUTHOR_NAME_LENGTH),
 	};
 
+	String SPECIFIC_AUTHOR_NAMES[] = {
+			"mira",
+			"roy",
+			"briar",
+			"bob",
+			"alex",
+			"laxman",
+			"mazen",
+			"tajbid",
+			"tusman",
+	};
+
 	String GROUP_NAMES[] = {
 			"Private Messengers",
 			"The Darknet",

@@ -57,10 +57,11 @@ import static org.briarproject.bramble.util.StringUtils.getRandomString;
 import static org.briarproject.briar.test.TestData.AUTHOR_NAMES;
 import static org.briarproject.briar.test.TestData.GROUP_DESCS;
 import static org.briarproject.briar.test.TestData.GROUP_NAMES;
+import static org.briarproject.briar.test.TestData.SPECIFIC_AUTHOR_NAMES;
 
 public class TestDataCreatorImpl implements TestDataCreator {
 
-	private final static int NUM_CONTACTS = 20;
+	private final static int NUM_CONTACTS = 37;
 	private final static int NUM_PRIVATE_MSGS = 15;
 	private final static int NUM_BLOG_POSTS = 30;
 	private final static int NUM_FORUMS = 3;
@@ -142,14 +143,25 @@ public class TestDataCreatorImpl implements TestDataCreator {
 	}
 
 	private List<Contact> createContacts() throws DbException {
-		List<Contact> contacts = new ArrayList<>(NUM_CONTACTS);
+		int SPECIFIC_NUM_CONTACTS = 9;
+		List<Contact> contacts = new ArrayList<>(SPECIFIC_NUM_CONTACTS);
+
 		LocalAuthor localAuthor = identityManager.getLocalAuthor();
-		for (int i = 0; i < NUM_CONTACTS; i++) {
-			Contact contact = addRandomContact(localAuthor);
+		//add the specific contacts we need to test
+		for (int i = 0; i < SPECIFIC_NUM_CONTACTS; i++) {
+			Contact contact = addSpecificContact(localAuthor, i);
 			contacts.add(contact);
 		}
+		//add the random contacts
+		/*for (int i = 0; i < NUM_CONTACTS; i++) {
+			Contact contact = addRandomContact(localAuthor);
+			contacts.add(contact);
+		}*/
+
 		return contacts;
 	}
+
+
 
 	private Contact addRandomContact(LocalAuthor localAuthor)
 			throws DbException {
@@ -185,9 +197,52 @@ public class TestDataCreatorImpl implements TestDataCreator {
 		return contact;
 	}
 
+	private Contact addSpecificContact(LocalAuthor localAuthor, int i)
+			throws DbException {
+
+		// prepare to add contact
+		LocalAuthor author = getSpecificAuthor(i);
+		SecretKey secretKey = getSecretKey();
+		long timestamp = clock.currentTimeMillis();
+		boolean verified = random.nextBoolean();
+
+		// prepare transport properties
+		Map<TransportId, TransportProperties> props =
+				getRandomTransportProperties();
+
+		Contact contact;
+		Transaction txn = db.startTransaction(false);
+		try {
+			ContactId contactId = contactManager
+					.addContact(txn, author, localAuthor.getId(), secretKey,
+							timestamp, true, verified, true);
+			transportPropertyManager.addRemoteProperties(txn, contactId, props);
+			contact = db.getContact(txn, contactId);
+			db.commitTransaction(txn);
+		} finally {
+			db.endTransaction(txn);
+		}
+
+		if (LOG.isLoggable(INFO)) {
+			LOG.info("Added contact " + author.getName());
+			LOG.info("with transport properties: " + props.toString());
+		}
+		localAuthors.put(contact, author);
+		return contact;
+	}
+
 	private LocalAuthor getRandomAuthor() {
 		int i = random.nextInt(AUTHOR_NAMES.length);
 		String authorName = AUTHOR_NAMES[i];
+		KeyPair keyPair = cryptoComponent.generateSignatureKeyPair();
+		byte[] publicKey = keyPair.getPublic().getEncoded();
+		byte[] privateKey = keyPair.getPrivate().getEncoded();
+		return authorFactory
+				.createLocalAuthor(authorName, publicKey, privateKey);
+	}
+
+	private LocalAuthor getSpecificAuthor(int i) {
+		String authorName = SPECIFIC_AUTHOR_NAMES[i];
 		KeyPair keyPair = cryptoComponent.generateSignatureKeyPair();
 		byte[] publicKey = keyPair.getPublic().getEncoded();
 		byte[] privateKey = keyPair.getPrivate().getEncoded();

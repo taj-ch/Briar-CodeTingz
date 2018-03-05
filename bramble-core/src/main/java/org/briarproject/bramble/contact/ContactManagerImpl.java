@@ -127,6 +127,9 @@ class ContactManagerImpl implements ContactManager {
 		}
 		List<Contact> active = new ArrayList<>(contacts.size());
 		for (Contact c : contacts) if (c.isActive()) active.add(c);
+
+
+
 		return active;
 	}
 

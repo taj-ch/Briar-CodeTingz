@@ -7,6 +7,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
 
 import static android.support.v4.app.ActivityOptionsCompat.makeSceneTransitionAnimation;
 import static android.support.v4.view.ViewCompat.getTransitionName;
@@ -123,11 +125,19 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 		OnContactClickListener<ContactListItem> onContactClickListener =
 				(view, item) -> {
+
+					String contactName = item.getContact().getAuthor().getName();
+					Log.d("name with blanks: ", contactName);
+					Log.d("name without blanks: ", contactName.replaceAll("\\s",""));
+					UserDetails.changeChatWith(contactName.replaceAll("\\s",""));
+
 					Intent i = new Intent(getActivity(),
-							ConversationActivity.class);
+							ChatActivity.class);
 					ContactId contactId = item.getContact().getId();
 					i.putExtra(CONTACT_ID, contactId.getInt());
 
+					startActivity(i);
+					/*
 					if (Build.VERSION.SDK_INT >= 23) {
 						ContactListItemViewHolder holder =
 								(ContactListItemViewHolder) list
@@ -148,7 +158,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					} else {
 						// work-around for android bug #224270
 						startActivity(i);
-					}
+					}*/
 				};
 		adapter = new ContactListAdapter(getContext(), onContactClickListener);
 		list = contentView.findViewById(R.id.list);
