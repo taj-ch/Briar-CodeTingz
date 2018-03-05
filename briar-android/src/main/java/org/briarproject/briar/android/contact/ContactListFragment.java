@@ -58,6 +58,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -130,6 +132,16 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					Log.d("name with blanks: ", contactName);
 					Log.d("name without blanks: ", contactName.replaceAll("\\s",""));
 					UserDetails.changeChatWith(contactName.replaceAll("\\s",""));
+					String mydata = contactName.replaceAll("\\s","");
+					Pattern pattern = Pattern.compile("([^@]+)");
+					Matcher matcher = pattern.matcher(mydata);
+					String temp= "";
+					if (matcher.find())
+					{
+						temp = matcher.group(1);
+					}
+
+					UserDetails.changeChatWith(temp);
 
 					Intent i = new Intent(getActivity(),
 							ChatActivity.class);
