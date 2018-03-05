@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -19,16 +21,22 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -48,6 +56,30 @@ public class ChatActivity extends AppCompatActivity {
 		messageArea = (EditText)findViewById(R.id.messageArea);
 		scrollView = (ScrollView)findViewById(R.id.scrollView);
 
+		sendButton.setEnabled(false);
+
+		TextWatcher tw = new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				enableOrDisableSendButton();
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		};
+
+		messageArea.addTextChangedListener(tw);
+
+
+		FirebaseApp.initializeApp(this);
 		Firebase.setAndroidContext(this);
 		reference = new Firebase("https://briar-61651.firebaseio.com//messages/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith);
 
@@ -137,7 +169,7 @@ public class ChatActivity extends AppCompatActivity {
 		LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		lp2.weight = 1.0f;
 
-		if(type == 2) {
+		if(type == 1) {
 			lp2.gravity = Gravity.LEFT;
 			textView.setBackgroundResource(R.drawable.msg_in);
 		}
@@ -150,5 +182,10 @@ public class ChatActivity extends AppCompatActivity {
 		layout.addView(textView);
 		scrollView.fullScroll(View.FOCUS_DOWN);
 	}
-}
 
+	private void enableOrDisableSendButton() {
+		if (messageArea != null) {
+			sendButton.setEnabled(true);
+		}
+	}
+}
