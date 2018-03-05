@@ -23,7 +23,6 @@ import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
-import org.briarproject.briar.android.profile.ProfileDb;
 import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.regex.Matcher;
@@ -124,9 +123,6 @@ public class SignInFragment extends SetupFragment {
 						if (task.isSuccessful()){
 							//sign in successful
 
-							// This will set the nickname so that the profile page can use it
-							ProfileDb profileDb = new ProfileDb(getActivity());
-							profileDb.setProfileAuthorName(email);
 							String tkn = FirebaseInstanceId.getInstance().getToken();
 							Log.d("TOKEN_REFRESH_login", tkn);
 
