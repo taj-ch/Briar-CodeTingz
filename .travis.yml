@@ -34,18 +34,26 @@ cache:
 
 jobs:
   include:
-    - stage: build
+    - stage: compile
       script:
         chmod +x ./gradlew;
-        ./gradlew build
-    - stage: device check
-      script:
-        chmod +x ./gradlew;
-        ./gradlew deviceCheck
+        ./gradlew compileDebugAndroidTestSources;
+        ./gradlew compileDebugSources;
+        ./gradlew compileDebugUnitTestSources;
+        ./gradlew compileReleaseSources;
+        ./gradlew compileReleaseUnitTestSources;
     - stage: test
       script: 
         chmod +x ./gradlew;
         ./gradlew test
+    - stage: package
+      script:
+        chmod +x ./gradlew;
+        ./gradlew jar;
+    - stage: device check
+      script:
+        chmod +x ./gradlew;
+        ./gradlew deviceCheck
 
 after_script:
     # this file changes every time but should not be cached
