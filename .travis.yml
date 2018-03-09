@@ -32,11 +32,8 @@ jobs:
       install: true
       script:
         chmod +x ./gradlew;
-        ./gradlew compileDebugAndroidTestSources;
         ./gradlew compileDebugSources;
-        ./gradlew compileDebugUnitTestSources;
         ./gradlew compileReleaseSources;
-        ./gradlew compileReleaseUnitTestSources;
     - stage: test
       install: true
       script: 
