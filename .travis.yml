@@ -10,6 +10,7 @@ android:
 
     # The SDK version used to compile your project
     - android-26
+    - android-22
 
     # Additional components
     - extra-google-google_play_services
@@ -17,6 +18,8 @@ android:
     - extra-android-m2repository
     - addon-google_apis-google-26
 
+    - sys-img-armeabi-v7a-android-26
+    - sys-img-armeabi-v7a-android-22
 addons:
   apt:
     packages:
@@ -37,9 +40,17 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+# Emulator Management: Create, Start and Wait
+before_script:
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+
 script:
     - chmod +x ./gradlew
     - ./gradlew test
+    - ./gradlew connectedAndroidTest --stacktrace
 
 after_script:
     # this file changes every time but should not be cached
