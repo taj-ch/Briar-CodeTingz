@@ -57,7 +57,7 @@ before_script:
 
 script:
     - ./gradlew test
-    - ./gradlew connectedAndroidTest --stacktrace
+    - ./gradlew connectedAndroidTest --stacktrace --info
 
 after_script:
     # this file changes every time but should not be cached

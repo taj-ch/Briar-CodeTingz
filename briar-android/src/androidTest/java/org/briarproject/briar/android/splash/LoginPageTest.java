@@ -81,7 +81,11 @@ public class LoginPageTest {
 		ViewInteraction editText = onView(
 				allOf(withId(R.id.edit_email), withText("laxman@laxman.lax"), isDisplayed()));
 		editText.check(matches(withText("laxman@laxman.lax")));
-
+		try {
+			Thread.sleep(15000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		ViewInteraction appCompatButton2 = onView(
 				allOf(withId(R.id.btn_sign_in), isDisplayed()));
 		appCompatButton2.perform(scrollTo(), click());
