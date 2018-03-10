@@ -57,7 +57,7 @@ before_script:
 
 script:
     - ./gradlew test
-    - travis_wait 30 ./gradlew connectedAndroidTest --stacktrace
+    - ./gradlew connectedAndroidTest --stacktrace
 
 after_script:
     # this file changes every time but should not be cached
