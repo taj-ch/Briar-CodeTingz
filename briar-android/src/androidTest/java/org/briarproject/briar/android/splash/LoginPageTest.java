@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.login.EmailPasswordActivity;
+import org.briarproject.briar.android.login.SetupActivity;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -49,8 +51,12 @@ public class LoginPageTest {
 			e.printStackTrace();
 		}
 
+		ViewInteraction editText2 = onView(
+				allOf(withId(R.id.email_entry), isDisplayed()));
+		editText2.perform(replaceText("laxman"), closeSoftKeyboard());
+
 		ViewInteraction appCompatButton = onView(
-				allOf(withId(R.id.btn_log_in), withText("Log In Instead"), isDisplayed()));
+				allOf(withId(R.id.btn_log_in), isDisplayed()));
 		appCompatButton.perform(click());
 
 		// Added a sleep statement to match the app's execution delay.
@@ -85,6 +91,10 @@ public class LoginPageTest {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
+		ViewInteraction textView = onView(
+				allOf(withText("Contacts"), isDisplayed()));
+		textView.check(matches(withText("Contacts")));
 
 	}
 
