@@ -17,11 +17,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -50,14 +50,8 @@ public class LoginPageTest {
 		}
 
 		ViewInteraction appCompatButton = onView(
-				allOf(withId(R.id.btn_log_in), withText("Log In Instead"),
-						childAtPosition(
-								childAtPosition(
-										withClassName(
-												is("android.widget.ScrollView")),
-										0),
-								5)));
-		appCompatButton.perform(scrollTo(), click());
+				allOf(withId(R.id.btn_log_in), withText("Log In Instead"), isDisplayed()));
+		appCompatButton.perform(click());
 
 		// Added a sleep statement to match the app's execution delay.
 		// The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -69,44 +63,28 @@ public class LoginPageTest {
 		}
 
 		ViewInteraction textInputEditText = onView(
-				allOf(withId(R.id.edit_email),
-						childAtPosition(
-								childAtPosition(
-										withId(R.id.email_layout),
-										0),
-								0)));
-		textInputEditText.perform(scrollTo(), replaceText("laxman@laxman.lax"),
+				allOf(withId(R.id.edit_email), isDisplayed()));
+		textInputEditText.perform(replaceText("laxman@laxman.lax"),
 				closeSoftKeyboard());
 
 		ViewInteraction textInputEditText2 = onView(
-				allOf(withId(R.id.edit_password),
-						childAtPosition(
-								childAtPosition(
-										withId(R.id.password_layout),
-										0),
-								0)));
-		textInputEditText2.perform(scrollTo(), replaceText("onetwothree"),
+				allOf(withId(R.id.edit_password), isDisplayed()));
+		textInputEditText2.perform(replaceText("onetwothree"),
 				closeSoftKeyboard());
 
 		ViewInteraction editText = onView(
-				allOf(withId(R.id.edit_email), withText("laxman@laxman.lax"),
-						childAtPosition(
-								childAtPosition(
-										withId(R.id.email_layout),
-										0),
-								0),
-						isDisplayed()));
+				allOf(withId(R.id.edit_email), withText("laxman@laxman.lax"), isDisplayed()));
 		editText.check(matches(withText("laxman@laxman.lax")));
 
 		ViewInteraction appCompatButton2 = onView(
-				allOf(withId(R.id.btn_sign_in), withText("Sign In"),
-						childAtPosition(
-								childAtPosition(
-										withClassName(
-												is("android.widget.ScrollView")),
-										0),
-								5)));
+				allOf(withId(R.id.btn_sign_in), withText("Sign In"), isDisplayed()));
 		appCompatButton2.perform(scrollTo(), click());
+
+		try {
+			Thread.sleep(15000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 	}
 
