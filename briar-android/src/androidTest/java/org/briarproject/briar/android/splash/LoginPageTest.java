@@ -88,7 +88,7 @@ public class LoginPageTest {
 		}
 		ViewInteraction appCompatButton2 = onView(
 				allOf(withId(R.id.btn_sign_in), isDisplayed()));
-		appCompatButton2.perform(scrollTo(), click());
+		appCompatButton2.perform(click());
 
 		try {
 			Thread.sleep(15000);
