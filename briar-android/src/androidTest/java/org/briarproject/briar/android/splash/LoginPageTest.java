@@ -83,7 +83,7 @@ public class LoginPageTest {
 		editText.check(matches(withText("laxman@laxman.lax")));
 
 		ViewInteraction appCompatButton2 = onView(
-				allOf(withId(R.id.btn_sign_in), withText("Sign In"), isDisplayed()));
+				allOf(withId(R.id.btn_sign_in), isDisplayed()));
 		appCompatButton2.perform(scrollTo(), click());
 
 		try {
