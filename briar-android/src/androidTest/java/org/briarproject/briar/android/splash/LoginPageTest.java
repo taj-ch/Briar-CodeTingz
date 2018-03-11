@@ -62,28 +62,14 @@ public class LoginPageTest {
 		textInputEditText.perform(replaceText("laxman@laxman.lax"),
 				closeSoftKeyboard());
 
-		ViewInteraction editText = onView(
-				allOf(withId(R.id.edit_email), withText("laxman@laxman.lax")));
-		editText.check(matches(withText("laxman@laxman.lax")));
-
 		ViewInteraction textInputEditText2 = onView(
 				allOf(withId(R.id.edit_password)));
 		textInputEditText2.perform(replaceText("onetwothree"),
 				closeSoftKeyboard());
 
-		ViewInteraction appCompatButton2 = onView(
-				allOf(withId(R.id.btn_sign_in)));
-		appCompatButton2.perform(scrollTo(), click());
-
-		try {
-			Thread.sleep(15000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		ViewInteraction appCompatImageButton = onView(
-				allOf(allOf(withId(R.id.toolbar))));
-		appCompatImageButton.perform(click());
+		ViewInteraction editText = onView(
+				allOf(withId(R.id.edit_email), withText("laxman@laxman.lax")));
+		editText.check(matches(withText("laxman@laxman.lax")));
 
 	}
 }
