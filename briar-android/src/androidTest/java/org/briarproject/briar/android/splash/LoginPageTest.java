@@ -57,7 +57,7 @@ public class LoginPageTest {
 
 		ViewInteraction appCompatButton = onView(
 				allOf(withId(R.id.btn_log_in), isDisplayed()));
-		appCompatButton.perform(click());
+		appCompatButton.perform(scrollTo(), click());
 
 		// Added a sleep statement to match the app's execution delay.
 		// The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -73,22 +73,18 @@ public class LoginPageTest {
 		textInputEditText.perform(replaceText("laxman@laxman.lax"),
 				closeSoftKeyboard());
 
+		ViewInteraction editText = onView(
+				allOf(withId(R.id.edit_email), withText("laxman@laxman.lax"), isDisplayed()));
+		editText.check(matches(withText("laxman@laxman.lax")));
+
 		ViewInteraction textInputEditText2 = onView(
 				allOf(withId(R.id.edit_password), isDisplayed()));
 		textInputEditText2.perform(replaceText("onetwothree"),
 				closeSoftKeyboard());
 
-		ViewInteraction editText = onView(
-				allOf(withId(R.id.edit_email), withText("laxman@laxman.lax"), isDisplayed()));
-		editText.check(matches(withText("laxman@laxman.lax")));
-		try {
-			Thread.sleep(15000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		ViewInteraction appCompatButton2 = onView(
 				allOf(withId(R.id.btn_sign_in), isDisplayed()));
-		appCompatButton2.perform(click());
+		appCompatButton2.perform(scrollTo(), click());
 
 		try {
 			Thread.sleep(15000);
