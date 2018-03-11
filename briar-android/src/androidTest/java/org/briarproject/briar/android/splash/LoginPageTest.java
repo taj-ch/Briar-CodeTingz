@@ -71,5 +71,10 @@ public class LoginPageTest {
 				allOf(withId(R.id.edit_email), withText("laxman@laxman.lax")));
 		editText.check(matches(withText("laxman@laxman.lax")));
 
+		ViewInteraction appCompatButton2 = onView(
+				allOf(withId(R.id.btn_sign_in)));
+		appCompatButton2.perform(scrollTo(), click());
+
+
 	}
 }

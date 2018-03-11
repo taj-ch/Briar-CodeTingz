@@ -63,3 +63,6 @@ after_script:
     # this file changes every time but should not be cached
     - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
     - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+after_failure:
+"cat home/travis/build/CodeTaj/Briar-CodeTingz/briar-android/build/reports/androidTests/connected/index.html"
