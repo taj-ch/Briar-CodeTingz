@@ -242,6 +242,8 @@ android {
 		warning 'MissingTranslation'
 		warning 'ImpliedQuantity'
 		warning 'ExtraTranslation'
+		warning 'InvalidPackage'
+		warning 'AppCompatCustomView'
 	}
 
 
