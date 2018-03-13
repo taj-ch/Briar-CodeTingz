@@ -164,6 +164,7 @@ public class ChatActivity extends AppCompatActivity {
 
 	public void addMessageBox(String message, int type){
 		TextView textView = new TextView(ChatActivity.this);
+		textView.setAutoLinkMask(15); // Makes URLS, Emails and Phone numbers clickable
 		textView.setText(message);
 
 		LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
