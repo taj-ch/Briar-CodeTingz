@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,16 +37,16 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
+import static android.widget.Toast.LENGTH_LONG;
 import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 
 public class SignInFragment extends SetupFragment {
 
 	private final static String TAG = SignInFragment.class.getName();
 
-	private TextInputLayout authorNameWrapper;
-	private TextInputEditText authorNameInput;
-	private TextInputLayout passwordWrapper;
-	private TextInputEditText passwordInput;
+
+	private EditText authorNameInput;
+	private EditText passwordInput;
 	private Button signInButton;
 	private Button createAccountButton;
 
@@ -60,9 +63,7 @@ public class SignInFragment extends SetupFragment {
 		getActivity().setTitle(getString(R.string.setup_title));
 		View v = inflater.inflate(R.layout.activity_email_password_login,
 				container, false);
-		authorNameWrapper = v.findViewById(R.id.email_layout);
 		authorNameInput = v.findViewById(R.id.edit_email);
-		passwordWrapper = v.findViewById(R.id.password_layout);
 		passwordInput = v.findViewById(R.id.edit_password);
 		signInButton = v.findViewById(R.id.btn_sign_in);
 		createAccountButton = v.findViewById(R.id.btn_create_account);
@@ -145,7 +146,7 @@ public class SignInFragment extends SetupFragment {
 	}
 
 	private void tryAgain() {
-		UiUtils.setError(passwordWrapper, getString(R.string.try_again), true);
+		Toast.makeText(getActivity(), R.string.try_again, LENGTH_LONG).show();
 		signInButton.setVisibility(VISIBLE);
 
 	}
