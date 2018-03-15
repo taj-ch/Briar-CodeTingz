@@ -4,7 +4,10 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,30 +16,25 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
+
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.ServerValue;
 
 import org.briarproject.briar.R;
-import org.briarproject.briar.android.util.UiUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -45,6 +43,11 @@ public class ChatActivity extends AppCompatActivity {
 	private EditText messageArea;
 	private ScrollView scrollView;
 	private Firebase reference;
+	private DatabaseReference mRootRef;
+	private RecyclerView mMessagesList;
+	private final List<Message> messageList = new ArrayList<>();
+	private LinearLayoutManager mLinearLayout;
+	private MessageAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,19 @@ public class ChatActivity extends AppCompatActivity {
 		scrollView = (ScrollView)findViewById(R.id.scrollView);
 
 		sendButton.setEnabled(false);
+
+		mRootRef = FirebaseDatabase.getInstance().getReference();
+
+		mAdapter = new MessageAdapter(messageList);
+
+		mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
+		mLinearLayout = new LinearLayoutManager(this);
+
+		mMessagesList.setHasFixedSize(true);
+		mMessagesList.setLayoutManager(mLinearLayout);
+		mMessagesList.setAdapter(mAdapter);
+
+		loadMessages();
 
 		TextWatcher tw = new TextWatcher() {
 
@@ -81,63 +97,76 @@ public class ChatActivity extends AppCompatActivity {
 
 		FirebaseApp.initializeApp(this);
 		Firebase.setAndroidContext(this);
-		reference = new Firebase("https://briar-61651.firebaseio.com//messages/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith);
 
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String messageText = messageArea.getText().toString();
-				Long tsLong = System.currentTimeMillis()/1000;
-				String ts = tsLong.toString();
+				sendMessage();
+			}
+		});
+	}
 
-				// Write a message to the database
-				FirebaseDatabase database = FirebaseDatabase.getInstance();
-				DatabaseReference myRef = database.getReference("/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith);
-				//DatabaseReference destRef = database.getReference("messages/" + "To: " + UserDetails.chatWith + " From:  " + UserDetails.username + " " + ts);
+	private void enableOrDisableSendButton() {
+		if (messageArea != null) {
+			sendButton.setEnabled(true);
+		}
+	}
 
-				if(!messageText.equals("")){
-					myRef.setValue(messageText);
-					//destRef.setValue(messageText);
-					addMessageBox("You:-\n" + messageText, 1);
-					messageArea.setText("");
+	private void sendMessage() {
+		String message = messageArea.getText().toString();
+
+		if(!TextUtils.isEmpty(message)){
+
+			String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+
+			DatabaseReference user_message_push = mRootRef.child("messages")
+					.child(UserDetails.username).child(UserDetails.chatWith).push();
+
+			String push_id = user_message_push.getKey();
+
+			Map messageMap = new HashMap();
+			messageMap.put("message", message);
+			messageMap.put("seen", false);
+			messageMap.put("type", "text");
+			messageMap.put("time", ServerValue.TIMESTAMP);
+			messageMap.put("from", UserDetails.username);
+
+			Map messageUserMap = new HashMap();
+			messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+			messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+
+			messageArea.setText("");
+
+			//CURRENTLY NOT DOING ANYTHING
+			mRootRef.child("Chat").child(UserDetails.username).child(UserDetails.chatWith).child("seen").setValue(true);
+			mRootRef.child("Chat").child(UserDetails.username).child(UserDetails.chatWith).child("timestamp").setValue(ServerValue.TIMESTAMP);
+			
+			//CURRENTLY NOT DOING ANYTHING
+			mRootRef.child("Chat").child(UserDetails.chatWith).child(UserDetails.username).child("seen").setValue(false);
+			mRootRef.child("Chat").child(UserDetails.chatWith).child(UserDetails.username).child("timestamp").setValue(ServerValue.TIMESTAMP);
+
+			mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+				@Override
+				public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+					if(databaseError != null){
+						Log.d("CHAT_LOG", databaseError.getMessage().toString());
+					}
 				}
-			}
-		});
+			});
+		}
+	}
 
-		// Read from the database
-		FirebaseDatabase database = FirebaseDatabase.getInstance();
-		DatabaseReference myRef = database.getReference("/messages/" + UserDetails.chatWith + "_" + UserDetails.username + "/" + "From: " + UserDetails.chatWith + " To: " + UserDetails.username);
+	private void loadMessages() {
+		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 
-		myRef.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-				// This method is called once with the initial value and again
-				// whenever data at this location is updated.
-				String value = dataSnapshot.getValue(String.class);
-				addMessageBox(UserDetails.chatWith + ":-\n" + value, 2);
-
-			}
-
-
-			@Override
-			public void onCancelled(DatabaseError error) {
-				// Failed to read value
-			}
-		});
-
-		reference.addChildEventListener(new ChildEventListener() {
+		messageRef.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-				Map map = dataSnapshot.getValue(Map.class);
-				String message = map.get("message").toString();
-				String userName = map.get("user").toString();
+				Message message = dataSnapshot.getValue(Message.class);
 
-				if(userName.equals(UserDetails.username)){
-					addMessageBox("You:-\n" + message, 1);
-				}
-				else{
-					addMessageBox(UserDetails.chatWith + ":-\n" + message, 2);
-				}
+				messageList.add(message);
+				mAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -156,36 +185,9 @@ public class ChatActivity extends AppCompatActivity {
 			}
 
 			@Override
-			public void onCancelled(FirebaseError firebaseError) {
+			public void onCancelled(DatabaseError databaseError) {
 
 			}
 		});
-	}
-
-	public void addMessageBox(String message, int type){
-		TextView textView = new TextView(ChatActivity.this);
-		textView.setText(message);
-
-		LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		lp2.weight = 1.0f;
-
-		if(type == 1) {
-			lp2.gravity = Gravity.LEFT;
-			textView.setBackgroundResource(R.drawable.msg_in);
-		}
-		else{
-			lp2.gravity = Gravity.RIGHT;
-			textView.setTextColor(Color.WHITE);
-			textView.setBackgroundResource(R.drawable.msg_out);
-		}
-		textView.setLayoutParams(lp2);
-		layout.addView(textView);
-		scrollView.fullScroll(View.FOCUS_DOWN);
-	}
-
-	private void enableOrDisableSendButton() {
-		if (messageArea != null) {
-			sendButton.setEnabled(true);
-		}
 	}
 }
