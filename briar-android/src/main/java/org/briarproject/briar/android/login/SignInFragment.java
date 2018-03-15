@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +22,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
 import org.briarproject.briar.android.util.UiUtils;
@@ -34,6 +36,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
+import static android.widget.Toast.LENGTH_SHORT;
 import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 
 public class SignInFragment extends SetupFragment {
@@ -99,10 +102,17 @@ public class SignInFragment extends SetupFragment {
 			case R.id.btn_sign_in:
 				String email = authorNameInput.getText().toString();
 				String password = passwordInput.getText().toString();
-				signInButton.setVisibility(INVISIBLE);
-				openAccount(email, password);
+				if(email != null && !email.isEmpty() && password !=null && !password.isEmpty()){
+					signInButton.setVisibility(INVISIBLE);
+					openAccount(email, password);
+				}else{
+					Toast.makeText(getActivity(), "Fields can't be blank!", Toast.LENGTH_LONG)
+							.show();
+				}
+				break;
 			case R.id.btn_create_account:
 				onCreateAccountClick();
+				break;
 		}
 
 	}
