@@ -11,6 +11,7 @@ env:
     - ADB_INSTALL_TIMEOUT=30 # Give emulator more time to start (Default 2 minutes)
 
 android:
+  update_sdk: true
   components:
     - tools
     - platform-tools
