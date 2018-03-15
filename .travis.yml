@@ -11,7 +11,6 @@ env:
     - ADB_INSTALL_TIMEOUT=30 # Give emulator more time to start (Default 2 minutes)
 
 android:
-  update_sdk: true
   components:
     - tools
     - platform-tools
@@ -37,6 +36,9 @@ android:
     # Specify at least one system image
     - sys-img-armeabi-v7a-google_apis-$ANDROID_API_LEVEL
     - sys-img-armeabi-v7a-google_apis-$EMULATOR_API_LEVEL
+
+before_install:
+    - yes | sdkmanager "platforms;android-27"
 
 before_cache:
     - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
