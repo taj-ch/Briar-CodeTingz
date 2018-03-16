@@ -1,10 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	              xmlns:tools="http://schemas.android.com/tools"
-	              android:layout_width="match_parent"
-	              android:layout_height="match_parent"
-	              android:orientation="vertical"
-	              tools:context=".android.contact.ChatActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".android.contact.ChatActivity">
+
+	<android.support.design.widget.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			style="@style/BriarToolbar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<LinearLayout
+				android:id="@+id/layout1"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent">
+
+				<org.thoughtcrime.securesms.components.emoji.EmojiTextView
+					android:id="@+id/contactName"
+					style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_marginLeft="@dimen/margin_medium"
+					android:layout_marginStart="@dimen/margin_medium"
+					android:gravity="center"
+					tools:text="Contact Name"/>
+
+			</LinearLayout>
+
+		</android.support.v7.widget.Toolbar>
+
+	</android.support.design.widget.AppBarLayout>
 
 		<android.support.v7.widget.RecyclerView
 		android:id="@+id/messages_list"
@@ -19,4 +50,5 @@
 			android:layout_height="wrap_content"
 			android:gravity="bottom"
 			android:layout_marginTop="5dp"/>
+
 	</LinearLayout>

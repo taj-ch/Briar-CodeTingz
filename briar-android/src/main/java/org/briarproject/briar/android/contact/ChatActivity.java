@@ -1,8 +1,5 @@
 package org.briarproject.briar.android.contact;
 
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 
 import com.firebase.client.Firebase;
@@ -30,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.activity.BriarActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BriarActivity {
 	private LinearLayout layout;
 	private ImageView sendButton;
 	private EditText messageArea;
@@ -48,16 +48,24 @@ public class ChatActivity extends AppCompatActivity {
 	private final List<Message> messageList = new ArrayList<>();
 	private LinearLayoutManager mLinearLayout;
 	private MessageAdapter mAdapter;
+	private Toolbar toolbar;
+	private TextView toolbarContactName;
+	private TextView toolbarTitle;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void injectActivity(ActivityComponent component) {
+		component.inject(this);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
-		sendButton = (ImageView)findViewById(R.id.sendButton);
-		messageArea = (EditText)findViewById(R.id.messageArea);
-		scrollView = (ScrollView)findViewById(R.id.scrollView);
+		sendButton = (ImageView) findViewById(R.id.sendButton);
+		messageArea = (EditText) findViewById(R.id.messageArea);
+		//scrollView = (ScrollView) findViewById(R.id.scrollView);
 
 		sendButton.setEnabled(false);
 
@@ -71,6 +79,17 @@ public class ChatActivity extends AppCompatActivity {
 		mMessagesList.setHasFixedSize(true);
 		mMessagesList.setLayoutManager(mLinearLayout);
 		mMessagesList.setAdapter(mAdapter);
+
+		mMessagesList.scrollToPosition(messageList.size() - 1);
+
+		// Custom Toolbar
+		toolbar = setUpCustomToolbar(true);
+		if (toolbar != null) {
+			//toolbarAvatar = toolbar.findViewById(R.id.contactAvatar);
+			//toolbarStatus = toolbar.findViewById(R.id.contactStatus);
+			toolbarTitle = toolbar.findViewById(R.id.contactName);
+		}
+		toolbarTitle.setText(UserDetails.chatWith);
 
 		loadMessages();
 
