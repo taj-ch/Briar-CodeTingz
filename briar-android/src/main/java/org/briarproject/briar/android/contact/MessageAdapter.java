@@ -17,6 +17,9 @@ import java.util.List;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
 	private List<Message> mMessageList;
 	private DatabaseReference mUserDatabase;
+	private final int MSG_OUT = 0;
+	private final int MSG_IN = 1;
+
 
 	public MessageAdapter(List<Message> mMessageList) {
 		this.mMessageList = mMessageList;
@@ -25,12 +28,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 	@Override
 	public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		switch (viewType) {
-			case R.layout.list_item_conversation_msg_in:
+			case MSG_IN:
 				View v1 = LayoutInflater.from(parent.getContext())
 						.inflate(R.layout.list_item_conversation_msg_in, parent,
 								false);
 				return new MessageViewHolder(v1);
-			case R.layout.list_item_conversation_msg_out:
+			case MSG_OUT:
 				View v2 = LayoutInflater.from(parent.getContext())
 						.inflate(R.layout.list_item_conversation_msg_out, parent,
 								false);
@@ -76,10 +79,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 		String from_user = c.getFrom();
 		String current_user = UserDetails.username;
 
-		if (from_user == current_user) {
-			return R.layout.list_item_conversation_msg_out;
-		} else if (from_user != current_user) {
-			return R.layout.list_item_conversation_msg_in;
+		if (from_user.equals(current_user)) {
+			return MSG_OUT;
+		} else if (!from_user.equals(current_user)) {
+			return MSG_IN;
 		}
 		return -1;
 	}
