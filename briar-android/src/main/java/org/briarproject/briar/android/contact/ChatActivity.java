@@ -1,5 +1,6 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 
@@ -8,6 +9,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -28,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.introduction.IntroductionActivity;
+import org.briarproject.briar.android.profile.ProfileActivity;
 import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.HashMap;
@@ -37,6 +43,8 @@ import java.util.logging.Logger;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -45,6 +53,8 @@ public class ChatActivity extends AppCompatActivity {
 	private EditText messageArea;
 	private ScrollView scrollView;
 	private Firebase reference;
+	public static final String CONTACT_ID = "briar.CONTACT_ID";
+	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +196,32 @@ public class ChatActivity extends AppCompatActivity {
 	private void enableOrDisableSendButton() {
 		if (messageArea != null) {
 			sendButton.setEnabled(true);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.conversation_actions, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+			case R.id.action_view_profile:
+				Intent profileIntent = new Intent(this, ProfileActivity.class);
+				profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
+				startActivityForResult(profileIntent, REQUEST_PROFILE);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 }
