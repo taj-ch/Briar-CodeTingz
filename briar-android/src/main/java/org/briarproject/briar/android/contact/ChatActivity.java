@@ -80,6 +80,7 @@ public class ChatActivity extends AppCompatActivity {
 		sendButton.setEnabled(false);
 
 		mRootRef = FirebaseDatabase.getInstance().getReference();
+		mImageStorage = FirebaseStorage.getInstance().getReference();
 
 		mAdapter = new MessageAdapter(messageList);
 
@@ -91,8 +92,6 @@ public class ChatActivity extends AppCompatActivity {
 		mMessagesList.setAdapter(mAdapter);
 
 		loadMessages();
-		//------- IMAGE STORAGE ---------
-		mImageStorage = FirebaseStorage.getInstance().getReference();
 
 		TextWatcher tw = new TextWatcher() {
 
@@ -221,14 +220,15 @@ public class ChatActivity extends AppCompatActivity {
 		if (request == GALLERY_PICK && result == RESULT_OK) {
 			Uri imageUri = data.getData();
 
-			FirebaseDatabase database = FirebaseDatabase.getInstance();
-			DatabaseReference myRef = database.getReference("/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "/" + "From: " + UserDetails.username + " To: " + UserDetails.chatWith);
+			final String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
+			DatabaseReference user_message_push = mRootRef.child("messages")
+					.child(UserDetails.username).child(UserDetails.chatWith).push();
 
-			final String push_id = myRef.getKey();
+			final String push_id = user_message_push.getKey();
 
-
-			StorageReference filepath = mImageStorage.child("message_images").child( push_id + ".jpg");
+			StorageReference filepath = mImageStorage.child("message_images").child(push_id + ".jpg");
 
 			filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
 				@Override
@@ -236,12 +236,27 @@ public class ChatActivity extends AppCompatActivity {
 					if(task.isSuccessful()){
 						String download_url = task.getResult().getDownloadUrl().toString();
 
-						if(!download_url.isEmpty()){
-							myRef.setValue(download_url);
-							//destRef.setValue(messageText);
-							addMessageBox("You:-\n" + download_url, 1);
-							messageArea.setText("");
-						}
+						Map messageMap = new HashMap();
+						messageMap.put("message", download_url);
+						messageMap.put("seen", false);
+						messageMap.put("type", "image");
+						messageMap.put("time", ServerValue.TIMESTAMP);
+						messageMap.put("from", UserDetails.username);
+
+						Map messageUserMap = new HashMap();
+						messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+
+						messageArea.setText("");
+
+						mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+							@Override
+							public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+								if(databaseError != null){
+									Log.d("CHAT_LOG", databaseError.getMessage().toString());
+								}
+							}
+						});
 					}
 				}
 			});
