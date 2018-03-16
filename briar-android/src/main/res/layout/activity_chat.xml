@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	              xmlns:tools="http://schemas.android.com/tools"
-	              android:layout_width="match_parent"
-	              android:layout_height="match_parent"
-	              android:orientation="vertical"
-	              tools:context=".android.contact.ChatActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".android.contact.ChatActivity">
 
-		<ScrollView
+	<android.support.design.widget.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			style="@style/BriarToolbar"
 			android:layout_width="match_parent"
-			android:layout_weight="20"
-			android:layout_height="wrap_content"
-			android:id="@+id/scrollView">
-			<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			                android:id="@+id/layout2"
-			                android:layout_width="match_parent"
-			                android:layout_height="wrap_content">
-				<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:orientation="vertical"
-					android:id="@+id/layout1">
-				</LinearLayout>
-			</RelativeLayout>
-		</ScrollView>
-		<include
-			layout="@layout/message_area"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="bottom"
-			android:layout_marginTop="5dp"/>
-	</LinearLayout>
+			android:layout_height="wrap_content">
+
+		</android.support.v7.widget.Toolbar>
+
+	</android.support.design.widget.AppBarLayout>
+
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_weight="20"
+		android:layout_height="wrap_content"
+		android:id="@+id/scrollView">
+		<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		                android:id="@+id/layout2"
+		                android:layout_width="match_parent"
+		                android:layout_height="wrap_content">
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:id="@+id/layout1">
+			</LinearLayout>
+		</RelativeLayout>
+	</ScrollView>
+	<include
+		layout="@layout/message_area"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="bottom"
+		android:layout_marginTop="5dp"/>
+</LinearLayout>
