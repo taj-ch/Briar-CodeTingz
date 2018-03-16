@@ -65,9 +65,12 @@ public class IntroFragment extends BaseFragment {
 				false);
 		scrollView = v.findViewById(R.id.scrollView);
 		View button = v.findViewById(R.id.continueButton);
+		View emailButton = v.findViewById(R.id.addByEmailButton);
 		button.setOnClickListener(view -> screenSeenListener.showNextScreen());
 		return v;
 	}
+
+
 
 	@Override
 	public void onStart() {
