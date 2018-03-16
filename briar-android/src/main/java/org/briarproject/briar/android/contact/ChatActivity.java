@@ -138,14 +138,6 @@ public class ChatActivity extends AppCompatActivity {
 
 			messageArea.setText("");
 
-			//CURRENTLY NOT DOING ANYTHING
-			mRootRef.child("Chat").child(UserDetails.username).child(UserDetails.chatWith).child("seen").setValue(true);
-			mRootRef.child("Chat").child(UserDetails.username).child(UserDetails.chatWith).child("timestamp").setValue(ServerValue.TIMESTAMP);
-			
-			//CURRENTLY NOT DOING ANYTHING
-			mRootRef.child("Chat").child(UserDetails.chatWith).child(UserDetails.username).child("seen").setValue(false);
-			mRootRef.child("Chat").child(UserDetails.chatWith).child(UserDetails.username).child("timestamp").setValue(ServerValue.TIMESTAMP);
-
 			mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
 				@Override
 				public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
