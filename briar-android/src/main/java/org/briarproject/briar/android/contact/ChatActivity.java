@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 
 
 import com.firebase.client.Firebase;
+import com.firebase.client.Query;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -169,15 +170,19 @@ public class ChatActivity extends BriarActivity {
 	}
 
 	private void loadMessages() {
+
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 
-		messageRef.addChildEventListener(new ChildEventListener() {
+		com.google.firebase.database.Query messageQuery = messageRef.limitToLast(10);
+
+		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
 
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
+				mMessagesList.scrollToPosition(messageList.size() - 1);
 			}
 
 			@Override
