@@ -56,6 +56,9 @@ public class ChatActivity extends BriarActivity {
 	private SwipeRefreshLayout mRefreshLayout;
 	private static final int  TOTAL_ITEMS_TO_LOAD = 10;
 	private int mCurrentPage = 1;
+	private int itemPos = 0;
+	private String mLastKey = "";
+	private String mPrevKey = "";
 
 	@Override
 	public void injectActivity(ActivityComponent component) {
@@ -135,9 +138,8 @@ public class ChatActivity extends BriarActivity {
 					@Override
 					public void onRefresh() {
 						mCurrentPage++;
-
+						itemPos = 0;
 						loadMoreMessages();
-						mRefreshLayout.setRefreshing(false);
 					}
 				});
 	}
@@ -193,12 +195,35 @@ public class ChatActivity extends BriarActivity {
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
 				Message message = dataSnapshot.getValue(Message.class);
+				String messageKey = dataSnapshot.getKey();
 
-				messageList.add(message);
+				if(!mPrevKey.equals(messageKey)){
+
+					messageList.add(itemPos++, message);
+
+				} else {
+
+					mPrevKey = mLastKey;
+
+				}
+
+
+				if(itemPos == 1) {
+
+					mLastKey = messageKey;
+
+				}
+
+
+				Log.d("TOTALKEYS", "Last Key : " + mLastKey + " | Prev Key : " + mPrevKey + " | Message Key : " + messageKey);
+
 				mAdapter.notifyDataSetChanged();
+
+				mRefreshLayout.setRefreshing(false);
+
 				mLinearLayout.scrollToPositionWithOffset(10, 0);
+
 
 			}
 
@@ -236,10 +261,23 @@ public class ChatActivity extends BriarActivity {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
+				itemPos++;
+
+				if(itemPos == 1){
+
+					String messageKey = dataSnapshot.getKey();
+
+					mLastKey = messageKey;
+					mPrevKey = messageKey;
+
+				}
 
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
+
 				mMessagesList.scrollToPosition(messageList.size() - 1);
+
+				mRefreshLayout.setRefreshing(false);
 			}
 
 			@Override
