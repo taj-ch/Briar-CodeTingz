@@ -1,15 +1,39 @@
 package org.briarproject.briar.android.contact;
 
-		import android.os.Bundle;
-		import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
-		import org.briarproject.briar.R;
+import com.bumptech.glide.Glide;
 
+import org.briarproject.briar.R;
 public class FullScreenImageActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fullscreenimage);
+		ImageView fullScreenImageView = (ImageView) findViewById(R.id.imageFullView);
+
+		Intent callingActivityIntent= getIntent();
+		Bundle b = callingActivityIntent.getExtras();
+
+		String URL = "";
+
+		//Set for url
+		if(b!=null)
+		{
+			 URL =(String) b.get("url");
+		}
+
+		//Check for intent
+		if(callingActivityIntent !=null){
+			//Picasso.with(this).load(URL).into(fullScreenImageView);
+			Glide.with(this)
+					.load(URL)
+					.into(fullScreenImageView);
+		}
+
 	}
 }

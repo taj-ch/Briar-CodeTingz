@@ -1,6 +1,9 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,22 +12,24 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.List;
-import com.squareup.picasso.Picasso;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
 	private List<Message> mMessageList;
 	private DatabaseReference mUserDatabase;
 	private final int MSG_OUT = 0;
 	private final int MSG_IN = 1;
+	private Context mContext;
 
 
-	public MessageAdapter(List<Message> mMessageList) {
+	public MessageAdapter(List<Message> mMessageList, Context context) {
 		this.mMessageList = mMessageList;
+		this.mContext = context;
 	}
 
 	@Override
@@ -74,6 +79,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 		} else {
 			viewHolder.messageText.setVisibility(View.GONE);
 			viewHolder.messageImage.setVisibility(View.VISIBLE);
+			viewHolder.messageImage.setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Log.wtf("from",c.getFrom() + "");
+							Log.wtf("message", c.getMessage()+"");
+							Log.wtf("test",c.toString());
+							Intent intent = (new Intent(mContext, FullScreenImageActivity.class));
+							intent.putExtra("url",c.getMessage());
+							mContext.startActivity(intent);
+						}
+					});
 			Picasso.with(viewHolder.messageImage.getContext()).load(c.getMessage())
 					.placeholder(R.drawable.placeholder_thumbnail)
 					.into(viewHolder.messageImage);

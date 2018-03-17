@@ -94,7 +94,7 @@ public class ChatActivity extends BriarActivity {
 		mRootRef = FirebaseDatabase.getInstance().getReference();
 		mImageStorage = FirebaseStorage.getInstance().getReference();
 
-		mAdapter = new MessageAdapter(messageList);
+		mAdapter = new MessageAdapter(messageList, this);
 
 		mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
 		mLinearLayout = new LinearLayoutManager(this);
@@ -164,7 +164,7 @@ public class ChatActivity extends BriarActivity {
 			sendButton.setEnabled(true);
 		}
 	}
-	
+
 	private void sendMessage() {
 		String message = messageArea.getText().toString();
 
