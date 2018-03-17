@@ -58,6 +58,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -127,9 +129,24 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				(view, item) -> {
 
 					String contactName = item.getContact().getAuthor().getName();
-					Log.d("name with blanks: ", contactName);
-					Log.d("name without blanks: ", contactName.replaceAll("\\s",""));
-					UserDetails.changeChatWith(contactName.replaceAll("\\s",""));
+
+					UserDetails.changeChatWithEmail(contactName.replaceAll("\\s",""));
+
+					// Variables to get user from email
+					String tempEmail;
+					Pattern pattern;
+					Matcher matcher;
+					String emailToUserName= "";
+
+					// Get username from email(i.e, ignore everything after @ inclusive from email)
+					tempEmail = contactName.replaceAll("\\s","");
+					pattern = Pattern.compile("([^@]+)");
+					matcher = pattern.matcher(tempEmail);
+					if (matcher.find()) {
+						emailToUserName = matcher.group(1);
+					}
+
+					UserDetails.changeChatWith(emailToUserName);
 
 					Intent i = new Intent(getActivity(),
 							ChatActivity.class);
@@ -183,21 +200,21 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		searchEditText.setHintTextColor(getResources().getColor(R.color.briar_text_primary_inverse));
 
 		searchView.setOnQueryTextListener(
-			new SearchView.OnQueryTextListener() {
-				@Override
-				public boolean onQueryTextChange (String newText) {
-					if (TextUtils.isEmpty(newText)) {
-						filter("");
+				new SearchView.OnQueryTextListener() {
+					@Override
+					public boolean onQueryTextChange (String newText) {
+						if (TextUtils.isEmpty(newText)) {
+							filter("");
+						}
+						return true;
 					}
-					return true;
-				}
 
-				@Override
-				public boolean onQueryTextSubmit(String query) {
-					filter(query);
-					return true;
+					@Override
+					public boolean onQueryTextSubmit(String query) {
+						filter(query);
+						return true;
+					}
 				}
-			}
 		);
 	}
 

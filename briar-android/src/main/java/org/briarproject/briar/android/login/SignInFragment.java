@@ -25,6 +25,7 @@ import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
+import org.briarproject.briar.android.sharing.ShareForumActivity;
 import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.regex.Matcher;
@@ -49,9 +50,11 @@ public class SignInFragment extends SetupFragment {
 	private TextInputEditText passwordInput;
 	private Button signInButton;
 	private Button createAccountButton;
+	private Button resetAccountPassword;
 
 	private FirebaseAuth mAuth;
 
+	private String email;
 
 	public static SignInFragment newInstance() {
 		return new SignInFragment();
@@ -69,9 +72,10 @@ public class SignInFragment extends SetupFragment {
 		passwordInput = v.findViewById(R.id.edit_password);
 		signInButton = v.findViewById(R.id.btn_sign_in);
 		createAccountButton = v.findViewById(R.id.btn_create_account);
-
+		resetAccountPassword = v.findViewById(R.id.btn_reset_password);
 		signInButton.setOnClickListener(this);
 		createAccountButton.setOnClickListener(this);
+		resetAccountPassword.setOnClickListener(this);
 
 		FirebaseApp.initializeApp(this.getContext());
 		mAuth = FirebaseAuth.getInstance();
@@ -100,7 +104,7 @@ public class SignInFragment extends SetupFragment {
 	public void onClick(View view) {
 		switch(view.getId()) {
 			case R.id.btn_sign_in:
-				String email = authorNameInput.getText().toString();
+				email = authorNameInput.getText().toString();
 				String password = passwordInput.getText().toString();
 				if(email != null && !email.isEmpty() && password !=null && !password.isEmpty()){
 					signInButton.setClickable(false);
@@ -112,6 +116,19 @@ public class SignInFragment extends SetupFragment {
 				break;
 			case R.id.btn_create_account:
 				onCreateAccountClick();
+				break;
+			case R.id.btn_reset_password:
+				email = authorNameInput.getText().toString();
+				if(email==null || email.isEmpty()) {
+					Toast.makeText(getActivity(),
+							"Fill in the email above", Toast.LENGTH_LONG)
+							.show();
+				} else{
+					resetPassword(email);
+					Toast.makeText(getActivity(),
+							"Email Reset Password sent", Toast.LENGTH_LONG)
+							.show();
+				}
 				break;
 		}
 
@@ -159,10 +176,23 @@ public class SignInFragment extends SetupFragment {
 		signInButton.setClickable(true);
 
 	}
-
+	
 	public void onCreateAccountClick() {
 		//go to the Create Account page (AuthorNameFragment.java)
 		showNextFragment(AuthorNameFragment.newInstance());
 
+	}
+	
+	public void resetPassword(String emailAddress){
+
+		mAuth.sendPasswordResetEmail(emailAddress)
+				.addOnCompleteListener(new OnCompleteListener<Void>() {
+					@Override
+					public void onComplete(@NonNull Task<Void> task) {
+						if (task.isSuccessful()) {
+							Log.d(TAG, "Email sent.");
+						}
+					}
+				});
 	}
 }
