@@ -137,6 +137,7 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 			}
 			else{
 				UiUtils.setError(emailWrapper, "Contact Already Exists", true);
+				addContactButton.setVisibility(VISIBLE);
 			}
 		} catch (DbException e) {
 			e.printStackTrace();
