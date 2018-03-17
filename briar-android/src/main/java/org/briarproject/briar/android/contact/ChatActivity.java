@@ -137,6 +137,7 @@ public class ChatActivity extends BriarActivity {
 						mCurrentPage++;
 
 						loadMoreMessages();
+						mRefreshLayout.setRefreshing(false);
 					}
 				});
 	}
@@ -197,9 +198,6 @@ public class ChatActivity extends BriarActivity {
 
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
-
-				mRefreshLayout.setRefreshing(false);
-
 				mLinearLayout.scrollToPositionWithOffset(10, 0);
 
 			}
