@@ -1,5 +1,9 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +12,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -37,7 +44,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class ChatActivity extends BriarActivity {
 	private LinearLayout layout;
@@ -300,5 +306,31 @@ public class ChatActivity extends BriarActivity {
 
 			}
 		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.conversation_actions, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+			case R.id.action_view_profile:
+				Intent profileIntent = new Intent(this, ProfileActivity.class);
+				profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
+				startActivityForResult(profileIntent, REQUEST_PROFILE);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 }
