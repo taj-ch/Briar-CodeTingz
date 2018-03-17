@@ -51,6 +51,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			super(view);
 			messageText = (TextView) view.findViewById(R.id.text);
 			timeText = (TextView) view.findViewById(R.id.time);
+			messageText.setAutoLinkMask(15);
 		}
 	}
 
