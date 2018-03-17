@@ -145,8 +145,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					if (matcher.find()) {
 						emailToUserName = matcher.group(1);
 					}
-
-					UserDetails.changeChatWith(emailToUserName);
+					String dbSafeEmail = contactName.replaceAll("\\.", ",");
+					UserDetails.changeChatWith(dbSafeEmail);
 
 					Intent i = new Intent(getActivity(),
 							ChatActivity.class);

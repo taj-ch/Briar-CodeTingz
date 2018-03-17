@@ -141,7 +141,7 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 			} else {
 				try {
 					if (!checkForDuplicate(emailToUserName)) {
-						testDataCreator.createNewContact(emailToUserName);
+						testDataCreator.createNewContact(email);
 						getActivity().finish();
 					} else {
 						UiUtils.setError(emailWrapper, "Contact Already Exists",
