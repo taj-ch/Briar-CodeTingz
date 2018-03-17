@@ -7,5 +7,5 @@ public interface TestDataCreator {
 
 	/* Creates fake test data on the DatabaseExecutor */
 	void createTestData();
-
+	void createNewContact(String newAuthor);
 }

@@ -19,24 +19,36 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.briarproject.bramble.api.system.Clock;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.fragment.BaseFragment;
 import org.briarproject.briar.android.login.AuthorNameFragment;
 import org.briarproject.briar.android.util.UiUtils;
+import org.briarproject.briar.api.test.TestDataCreator;
 import android.text.TextWatcher;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+import javax.inject.Inject;
+
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static java.util.logging.Level.INFO;
+import static org.briarproject.briar.test.TestData.AUTHOR_NAMES;
+import static org.briarproject.briar.test.TestData.SPECIFIC_AUTHOR_NAMES;
 
 public class AddContactFragment extends BaseFragment implements TextWatcher,
 		OnEditorActionListener, View.OnClickListener {
 
 	private final static String TAG = AddContactFragment.class.getName();
-
+	private Clock clock;
 
 	private TextInputEditText emailInput;
 	private Button addContactButton;
@@ -48,6 +60,9 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 		return new AddContactFragment();
 	}
 
+	@Inject
+	TestDataCreator testDataCreator;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -56,8 +71,7 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 				container, false);
 		emailInput = v.findViewById(R.id.edit_email);
 		addContactButton = v.findViewById(R.id.btn_add_by_email);
-
-		emailInput.setOnClickListener(this);
+		
 		addContactButton.setOnClickListener(this);
 
 		FirebaseApp.initializeApp(this.getContext());
@@ -80,6 +94,19 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 	public void onClick(View view) {
 		String email = emailInput.getText().toString();
 		addContactButton.setVisibility(INVISIBLE);
+		String emailToUserName= "";
+
+		// Get username from email(i.e, ignore everything after @ inclusive from email)
+		String tempEmail = email.replaceAll("\\s","");
+		Pattern pattern = Pattern.compile("([^@]+)");
+		Matcher matcher = pattern.matcher(tempEmail);
+		if (matcher.find()) {
+			emailToUserName = matcher.group(1);
+		}
+
+		testDataCreator.createNewContact(emailToUserName);
+		getActivity().finish();
+
 
 	}
 
@@ -106,4 +133,5 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 	public void afterTextChanged(Editable editable) {
 		// noop
 	}
+
 }

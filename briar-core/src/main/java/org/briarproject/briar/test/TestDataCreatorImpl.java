@@ -119,6 +119,87 @@ public class TestDataCreatorImpl implements TestDataCreator {
 		this.ioExecutor = ioExecutor;
 	}
 
+
+
+	public void createNewContact(String newAuthor) {
+		ioExecutor.execute(() -> {
+			try {
+				createNewContactOnDbExecutor(newAuthor);
+			} catch (DbException e) {
+				if (LOG.isLoggable(WARNING))
+					LOG.log(WARNING, "Creating new contact failed", e);
+			}
+		});
+	}
+
+	@IoExecutor
+	private void createNewContactOnDbExecutor(String newAuthor) throws DbException {
+		List<Contact> contacts = createNewContacts(newAuthor);
+		//createPrivateMessages(contacts);
+		//createBlogPosts(contacts);
+		//List<Forum> forums = createForums(contacts);
+
+		//for (Forum forum : forums) {
+			//createRandomForumPosts(forum, contacts);
+		//}
+	}
+
+	private List<Contact> createNewContacts(String newAuthor) throws DbException {
+		int SPECIFIC_NUM_CONTACTS = 1;
+		List<Contact> contacts = new ArrayList<>(SPECIFIC_NUM_CONTACTS);
+
+		LocalAuthor localAuthor = identityManager.getLocalAuthor();
+		//add the specific contact
+		Contact contact = addNewContact(localAuthor, 0, newAuthor);
+		contacts.add(contact);
+
+		return contacts;
+	}
+
+
+	private Contact addNewContact(LocalAuthor localAuthor, int i, String newAuthor)
+			throws DbException {
+
+		// prepare to add contact
+		LocalAuthor author = getNewAuthor(i, newAuthor);
+		SecretKey secretKey = getSecretKey();
+		long timestamp = clock.currentTimeMillis();
+		boolean verified = random.nextBoolean();
+
+		// prepare transport properties
+		Map<TransportId, TransportProperties> props =
+				getRandomTransportProperties();
+
+		Contact contact;
+		Transaction txn = db.startTransaction(false);
+		try {
+			ContactId contactId = contactManager
+					.addContact(txn, author, localAuthor.getId(), secretKey,
+							timestamp, true, verified, true);
+			transportPropertyManager.addRemoteProperties(txn, contactId, props);
+			contact = db.getContact(txn, contactId);
+			db.commitTransaction(txn);
+		} finally {
+			db.endTransaction(txn);
+		}
+
+		if (LOG.isLoggable(INFO)) {
+			LOG.info("Added contact " + author.getName());
+			LOG.info("with transport properties: " + props.toString());
+		}
+		localAuthors.put(contact, author);
+		return contact;
+	}
+
+	private LocalAuthor getNewAuthor(int i, String author) {
+		String authorName = author;
+		KeyPair keyPair = cryptoComponent.generateSignatureKeyPair();
+		byte[] publicKey = keyPair.getPublic().getEncoded();
+		byte[] privateKey = keyPair.getPrivate().getEncoded();
+		return authorFactory
+				.createLocalAuthor(authorName, publicKey, privateKey);
+	}
+
 	public void createTestData() {
 		ioExecutor.execute(() -> {
 			try {
@@ -141,6 +222,7 @@ public class TestDataCreatorImpl implements TestDataCreator {
 			createRandomForumPosts(forum, contacts);
 		}
 	}
+
 
 	private List<Contact> createContacts() throws DbException {
 		int SPECIFIC_NUM_CONTACTS = 9;
