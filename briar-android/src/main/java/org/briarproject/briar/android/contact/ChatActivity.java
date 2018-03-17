@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 
 import com.firebase.client.Firebase;
@@ -52,6 +53,9 @@ public class ChatActivity extends BriarActivity {
 	private Toolbar toolbar;
 	private TextView toolbarContactName;
 	private TextView toolbarTitle;
+	private SwipeRefreshLayout mRefreshLayout;
+	private static final int  TOTAL_ITEMS_TO_LOAD = 10;
+	private int mCurrentPage = 1;
 
 	@Override
 	public void injectActivity(ActivityComponent component) {
@@ -76,6 +80,7 @@ public class ChatActivity extends BriarActivity {
 
 		mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
 		mLinearLayout = new LinearLayoutManager(this);
+		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
 
 		mMessagesList.setHasFixedSize(true);
 		mMessagesList.setLayoutManager(mLinearLayout);
@@ -124,6 +129,16 @@ public class ChatActivity extends BriarActivity {
 				sendMessage();
 			}
 		});
+
+		mRefreshLayout.setOnRefreshListener(
+				new SwipeRefreshLayout.OnRefreshListener() {
+					@Override
+					public void onRefresh() {
+						mCurrentPage++;
+
+						loadMoreMessages();
+					}
+				});
 	}
 
 	private void enableOrDisableSendButton() {
@@ -168,12 +183,56 @@ public class ChatActivity extends BriarActivity {
 			});
 		}
 	}
+	private void loadMoreMessages() {
+
+		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+
+		com.google.firebase.database.Query messageQuery = messageRef.limitToLast(10);
+
+		messageQuery.addChildEventListener(new ChildEventListener() {
+			@Override
+			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+				Message message = dataSnapshot.getValue(Message.class);
+
+				messageList.add(message);
+				mAdapter.notifyDataSetChanged();
+
+				mRefreshLayout.setRefreshing(false);
+
+				mLinearLayout.scrollToPositionWithOffset(10, 0);
+
+			}
+
+			@Override
+			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+			}
+
+			@Override
+			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+	}
+
 
 	private void loadMessages() {
 
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 
-		com.google.firebase.database.Query messageQuery = messageRef.limitToLast(10);
+		com.google.firebase.database.Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
 
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
