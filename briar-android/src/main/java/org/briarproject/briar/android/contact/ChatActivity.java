@@ -22,9 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 
-import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+
+
+import com.firebase.client.Firebase;
+import com.firebase.client.Query;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +42,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.activity.BriarActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BriarActivity {
 	private LinearLayout layout;
 	private ImageView sendButton;
 	private EditText messageArea;
@@ -62,16 +69,24 @@ public class ChatActivity extends AppCompatActivity {
 
 	// Storage Firebase
 	private StorageReference mImageStorage;
+	private Toolbar toolbar;
+	private TextView toolbarContactName;
+	private TextView toolbarTitle;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void injectActivity(ActivityComponent component) {
+		component.inject(this);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
 		sendButton = (ImageView)findViewById(R.id.sendButton);
 		messageArea = (EditText)findViewById(R.id.messageArea);
-		scrollView = (ScrollView)findViewById(R.id.scrollView);
+		//scrollView = (ScrollView)findViewById(R.id.scrollView);
 		addImageButton = (ImageButton)findViewById(R.id.addImageButton);
 
 		sendButton.setEnabled(false);
@@ -87,6 +102,17 @@ public class ChatActivity extends AppCompatActivity {
 		mMessagesList.setHasFixedSize(true);
 		mMessagesList.setLayoutManager(mLinearLayout);
 		mMessagesList.setAdapter(mAdapter);
+
+		mMessagesList.scrollToPosition(messageList.size() - 1);
+
+		// Custom Toolbar
+		toolbar = setUpCustomToolbar(true);
+		if (toolbar != null) {
+			//toolbarAvatar = toolbar.findViewById(R.id.contactAvatar);
+			//toolbarStatus = toolbar.findViewById(R.id.contactStatus);
+			toolbarTitle = toolbar.findViewById(R.id.contactName);
+		}
+		toolbarTitle.setText(UserDetails.chatWith);
 
 		loadMessages();
 
@@ -177,15 +203,19 @@ public class ChatActivity extends AppCompatActivity {
 	}
 
 	private void loadMessages() {
+
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 
-		messageRef.addChildEventListener(new ChildEventListener() {
+		com.google.firebase.database.Query messageQuery = messageRef.limitToLast(10);
+
+		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
 
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
+				mMessagesList.scrollToPosition(messageList.size() - 1);
 			}
 
 			@Override
