@@ -20,7 +20,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 
 
 import com.firebase.client.Firebase;
-import com.firebase.client.Query;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.Query;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -189,9 +189,7 @@ public class ChatActivity extends BriarActivity {
 	private void loadMoreMessages() {
 
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
-
-		com.google.firebase.database.Query messageQuery = messageRef.limitToLast(10);
-
+		Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -199,32 +197,18 @@ public class ChatActivity extends BriarActivity {
 				String messageKey = dataSnapshot.getKey();
 
 				if(!mPrevKey.equals(messageKey)){
-
 					messageList.add(itemPos++, message);
-
 				} else {
-
 					mPrevKey = mLastKey;
-
 				}
-
-
 				if(itemPos == 1) {
-
 					mLastKey = messageKey;
-
 				}
-
 
 				Log.d("TOTALKEYS", "Last Key : " + mLastKey + " | Prev Key : " + mPrevKey + " | Message Key : " + messageKey);
-
 				mAdapter.notifyDataSetChanged();
-
 				mRefreshLayout.setRefreshing(false);
-
 				mLinearLayout.scrollToPositionWithOffset(10, 0);
-
-
 			}
 
 			@Override
@@ -254,15 +238,12 @@ public class ChatActivity extends BriarActivity {
 	private void loadMessages() {
 
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
-
-		com.google.firebase.database.Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
-
+		Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
 				itemPos++;
-
 				if(itemPos == 1){
 
 					String messageKey = dataSnapshot.getKey();
@@ -271,12 +252,9 @@ public class ChatActivity extends BriarActivity {
 					mPrevKey = messageKey;
 
 				}
-
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
-
 				mMessagesList.scrollToPosition(messageList.size() - 1);
-
 				mRefreshLayout.setRefreshing(false);
 			}
 
