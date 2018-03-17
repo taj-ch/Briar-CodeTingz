@@ -103,7 +103,7 @@ public class SignInFragment extends SetupFragment {
 				String email = authorNameInput.getText().toString();
 				String password = passwordInput.getText().toString();
 				if(email != null && !email.isEmpty() && password !=null && !password.isEmpty()){
-					signInButton.setVisibility(INVISIBLE);
+					signInButton.setClickable(false);
 					openAccount(email, password);
 				}else{
 					Toast.makeText(getActivity(), "Fields can't be blank!", Toast.LENGTH_LONG)
@@ -139,7 +139,7 @@ public class SignInFragment extends SetupFragment {
 							setupController.setAuthorName(authorNameInput.getText().toString());
 							setupController.setPassword(passwordInput.getText().toString());
 							if (!setupController.needToShowDozeFragment()) {
-								signInButton.setVisibility(INVISIBLE);
+								signInButton.setClickable(false);
 							}
 							setupController.setPassword(password);
 
@@ -156,7 +156,7 @@ public class SignInFragment extends SetupFragment {
 
 	private void tryAgain() {
 		UiUtils.setError(passwordWrapper, getString(R.string.try_again), true);
-		signInButton.setVisibility(VISIBLE);
+		signInButton.setClickable(true);
 
 	}
 
