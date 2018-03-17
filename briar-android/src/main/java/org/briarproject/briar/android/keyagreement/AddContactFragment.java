@@ -130,17 +130,24 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 		if (matcher.find()) {
 			emailToUserName = matcher.group(1);
 		}
-		try {
-			if(!checkForDuplicate(emailToUserName)){
-				testDataCreator.createNewContact(emailToUserName);
-				getActivity().finish();
+		if (emailToUserName.equals(""))
+		{
+			UiUtils.setError(emailWrapper, "Enter a valid Email", true);
+			addContactButton.setVisibility(VISIBLE);
+		}
+		else{
+			try {
+				if(!checkForDuplicate(emailToUserName)){
+					testDataCreator.createNewContact(emailToUserName);
+					getActivity().finish();
+				}
+				else{
+					UiUtils.setError(emailWrapper, "Contact Already Exists", true);
+					addContactButton.setVisibility(VISIBLE);
+				}
+			} catch (DbException e) {
+				e.printStackTrace();
 			}
-			else{
-				UiUtils.setError(emailWrapper, "Contact Already Exists", true);
-				addContactButton.setVisibility(VISIBLE);
-			}
-		} catch (DbException e) {
-			e.printStackTrace();
 		}
 	}
 
