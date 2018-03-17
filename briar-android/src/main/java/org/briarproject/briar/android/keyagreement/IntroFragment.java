@@ -19,7 +19,8 @@ import static android.view.View.FOCUS_DOWN;
 
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
-public class IntroFragment extends BaseFragment {
+public class IntroFragment extends BaseFragment
+		implements View.OnClickListener {
 
 	interface IntroScreenSeenListener {
 		void showNextScreen();
@@ -66,11 +67,20 @@ public class IntroFragment extends BaseFragment {
 		scrollView = v.findViewById(R.id.scrollView);
 		View button = v.findViewById(R.id.continueButton);
 		View emailButton = v.findViewById(R.id.addByEmailButton);
-		button.setOnClickListener(view -> screenSeenListener.showNextScreen());
+		button.setOnClickListener(this);
+		emailButton.setOnClickListener(this);
 		return v;
 	}
 
-
+	@Override
+	public void onClick(View view) {
+		switch(view.getId()) {
+			case R.id.continueButton:
+				screenSeenListener.showNextScreen();
+			case R.id.addByEmailButton:
+				showNextFragment(AddContactFragment.newInstance());
+			}
+		}
 
 	@Override
 	public void onStart() {
