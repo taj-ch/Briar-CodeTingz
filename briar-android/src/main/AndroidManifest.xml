@@ -418,6 +418,11 @@
 				/>
 		</activity>
 
+		<activity
+			android:name="org.briarproject.briar.android.contact.FullScreenImageActivity"
+			android:label="@string/fullscreen_image">
+		</activity>
+
 	</application>
 
 
