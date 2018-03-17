@@ -121,34 +121,45 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 	public void onClick(View view) {
 		String email = emailInput.getText().toString();
 		addContactButton.setVisibility(INVISIBLE);
-		String emailToUserName= "";
 
-		// Get username from email(i.e, ignore everything after @ inclusive from email)
-		String tempEmail = email.replaceAll("\\s","");
-		Pattern pattern = Pattern.compile("([^@]+)");
-		Matcher matcher = pattern.matcher(tempEmail);
-		if (matcher.find()) {
-			emailToUserName = matcher.group(1);
-		}
-		if (emailToUserName.equals(""))
-		{
+		if(!isEmailValid(email)){
 			UiUtils.setError(emailWrapper, "Enter a valid Email", true);
 			addContactButton.setVisibility(VISIBLE);
-		}
-		else{
-			try {
-				if(!checkForDuplicate(emailToUserName)){
-					testDataCreator.createNewContact(emailToUserName);
-					getActivity().finish();
+		} else {
+			String emailToUserName = "";
+
+			// Get username from email(i.e, ignore everything after @ inclusive from email)
+			String tempEmail = email.replaceAll("\\s", "");
+			Pattern pattern = Pattern.compile("([^@]+)");
+			Matcher matcher = pattern.matcher(tempEmail);
+			if (matcher.find()) {
+				emailToUserName = matcher.group(1);
+			}
+			if (emailToUserName.equals("")) {
+				UiUtils.setError(emailWrapper, "Enter a valid Email", true);
+				addContactButton.setVisibility(VISIBLE);
+			} else {
+				try {
+					if (!checkForDuplicate(emailToUserName)) {
+						testDataCreator.createNewContact(emailToUserName);
+						getActivity().finish();
+					} else {
+						UiUtils.setError(emailWrapper, "Contact Already Exists",
+								true);
+						addContactButton.setVisibility(VISIBLE);
+					}
+				} catch (DbException e) {
+					e.printStackTrace();
 				}
-				else{
-					UiUtils.setError(emailWrapper, "Contact Already Exists", true);
-					addContactButton.setVisibility(VISIBLE);
-				}
-			} catch (DbException e) {
-				e.printStackTrace();
 			}
 		}
+	}
+
+	public static boolean isEmailValid(String email) {
+		String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
 	}
 
 	@Override
