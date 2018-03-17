@@ -256,6 +256,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		list.showProgressBar();
 		list.stopPeriodicUpdate();
 	}
+
 	private void loadContactsSortedAlpha(){
 		adapter.setSort("ALPHA");
 		loadContacts();

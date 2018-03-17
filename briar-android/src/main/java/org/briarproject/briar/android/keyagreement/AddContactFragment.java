@@ -19,20 +19,31 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+
+import org.briarproject.bramble.api.contact.Contact;
+import org.briarproject.bramble.api.contact.ContactId;
+import org.briarproject.bramble.api.db.DbException;
+import org.briarproject.bramble.api.db.NoSuchContactException;
 import org.briarproject.bramble.api.system.Clock;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.contact.ContactListItem;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.fragment.BaseFragment;
 import org.briarproject.briar.android.login.AuthorNameFragment;
 import org.briarproject.briar.android.util.UiUtils;
+import org.briarproject.briar.api.client.MessageTracker;
 import org.briarproject.briar.api.test.TestDataCreator;
+import org.briarproject.bramble.api.contact.ContactManager;
 import android.text.TextWatcher;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -49,12 +60,16 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 
 	private final static String TAG = AddContactFragment.class.getName();
 	private Clock clock;
+	private static final Logger LOG = Logger.getLogger(TAG);
 
 	private TextInputEditText emailInput;
+	private TextInputLayout emailWrapper;
 	private Button addContactButton;
 
 	private FirebaseAuth mAuth;
 
+	@Inject
+	volatile ContactManager contactManager;
 
 	public static AddContactFragment newInstance() {
 		return new AddContactFragment();
@@ -70,6 +85,7 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 		View v = inflater.inflate(R.layout.activity_add_contact_by_email,
 				container, false);
 		emailInput = v.findViewById(R.id.edit_email);
+		emailWrapper = v.findViewById(R.id.email_to_add_layout);
 		addContactButton = v.findViewById(R.id.btn_add_by_email);
 		
 		addContactButton.setOnClickListener(this);
@@ -90,6 +106,17 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 		return TAG;
 	}
 
+	public boolean checkForDuplicate(String author) throws DbException {
+		for (Contact c : contactManager.getActiveContacts()) {
+			LOG.info("Printing author: "+ c.getAuthor().getName());
+			if(c.getAuthor().getName().equals(author))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void onClick(View view) {
 		String email = emailInput.getText().toString();
@@ -103,11 +130,17 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 		if (matcher.find()) {
 			emailToUserName = matcher.group(1);
 		}
-
-		testDataCreator.createNewContact(emailToUserName);
-		getActivity().finish();
-
-
+		try {
+			if(!checkForDuplicate(emailToUserName)){
+				testDataCreator.createNewContact(emailToUserName);
+				getActivity().finish();
+			}
+			else{
+				UiUtils.setError(emailWrapper, "Contact Already Exists", true);
+			}
+		} catch (DbException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
