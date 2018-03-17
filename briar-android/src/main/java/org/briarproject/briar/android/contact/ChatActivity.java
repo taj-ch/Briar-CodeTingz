@@ -1,5 +1,6 @@
 package org.briarproject.briar.android.contact;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -13,19 +14,15 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -35,7 +32,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -60,6 +56,7 @@ public class ChatActivity extends AppCompatActivity {
 	private final List<Message> messageList = new ArrayList<>();
 	private LinearLayoutManager mLinearLayout;
 	private MessageAdapter mAdapter;
+	private ProgressDialog mProgressDialog;
 
 	private static final int GALLERY_PICK = 1;
 
@@ -218,6 +215,12 @@ public class ChatActivity extends AppCompatActivity {
 		super.onActivityResult(request, result, data);
 
 		if (request == GALLERY_PICK && result == RESULT_OK) {
+			mProgressDialog = new ProgressDialog(ChatActivity.this);
+			mProgressDialog.setTitle("Uploading Image...");
+			mProgressDialog.setMessage("Please wait while we upload and process the image.");
+			mProgressDialog.setCanceledOnTouchOutside(false);
+			mProgressDialog.show();
+
 			Uri imageUri = data.getData();
 
 			final String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
@@ -252,6 +255,7 @@ public class ChatActivity extends AppCompatActivity {
 						mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
 							@Override
 							public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+								mProgressDialog.dismiss();
 								if(databaseError != null){
 									Log.d("CHAT_LOG", databaseError.getMessage().toString());
 								}
