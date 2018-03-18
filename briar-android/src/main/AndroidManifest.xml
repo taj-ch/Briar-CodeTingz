@@ -420,7 +420,12 @@
 
 		<activity
 			android:name="org.briarproject.briar.android.contact.FullScreenImageActivity"
-			android:label="@string/fullscreen_image">
+			android:label="@string/fullscreen_image"
+			android:parentActivityName="org.briarproject.briar.android.contact.ChatActivity">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="org.briarproject.briar.android.contact.ChatActivity"
+				/>
 		</activity>
 
 	</application>
