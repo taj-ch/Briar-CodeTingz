@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 
@@ -59,7 +60,6 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 		OnEditorActionListener, View.OnClickListener {
 
 	private final static String TAG = AddContactFragment.class.getName();
-	private Clock clock;
 	private static final Logger LOG = Logger.getLogger(TAG);
 
 	private TextInputEditText emailInput;
@@ -106,6 +106,7 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 		return TAG;
 	}
 
+	//makes sure that contact does not already exists locally
 	public boolean checkForDuplicate(String author) throws DbException {
 		for (Contact c : contactManager.getActiveContacts()) {
 			LOG.info("Printing author: "+ c.getAuthor().getName());
@@ -126,35 +127,37 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 			UiUtils.setError(emailWrapper, "Enter a valid Email", true);
 			addContactButton.setVisibility(VISIBLE);
 		} else {
-			String emailToUserName = "";
+			//checks database for existing user
+			mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
+	              @Override
+	              public void onComplete(@NonNull Task<ProviderQueryResult> task) {
+		              if (!(task.getResult().getProviders().size() > 0)) {
+			              UiUtils.setError(emailWrapper,
+					              "This email is not associated to a user",
+					              true);
+			              addContactButton.setVisibility(VISIBLE);
+		              } else {
+			              try {
+				              if (!checkForDuplicate(email)) {
+					              testDataCreator.createNewContact(email);
+					              getActivity().finish();
+				              } else {
+					              UiUtils.setError(emailWrapper,
+							              "Contact Already Exists",
+							              true);
+					              addContactButton.setVisibility(VISIBLE);
+				              }
+			              } catch (DbException e) {
+				              e.printStackTrace();
+			              }
+		              }
+	              }
 
-			// Get username from email(i.e, ignore everything after @ inclusive from email)
-			String tempEmail = email.replaceAll("\\s", "");
-			Pattern pattern = Pattern.compile("([^@]+)");
-			Matcher matcher = pattern.matcher(tempEmail);
-			if (matcher.find()) {
-				emailToUserName = matcher.group(1);
-			}
-			if (emailToUserName.equals("")) {
-				UiUtils.setError(emailWrapper, "Enter a valid Email", true);
-				addContactButton.setVisibility(VISIBLE);
-			} else {
-				try {
-					if (!checkForDuplicate(emailToUserName)) {
-						testDataCreator.createNewContact(email);
-						getActivity().finish();
-					} else {
-						UiUtils.setError(emailWrapper, "Contact Already Exists",
-								true);
-						addContactButton.setVisibility(VISIBLE);
-					}
-				} catch (DbException e) {
-					e.printStackTrace();
-				}
-			}
+	          });
 		}
 	}
 
+	//checks email pattern
 	public static boolean isEmailValid(String email) {
 		String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
 		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
