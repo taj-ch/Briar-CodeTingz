@@ -83,9 +83,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							Log.wtf("from",c.getFrom() + "");
-							Log.wtf("message", c.getMessage()+"");
-							Log.wtf("test",c.toString());
 							Intent intent = (new Intent(mContext, FullScreenImageActivity.class));
 							intent.putExtra("url",c.getMessage());
 							mContext.startActivity(intent);
