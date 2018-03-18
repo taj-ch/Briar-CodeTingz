@@ -70,6 +70,9 @@ public class ChatActivity extends BriarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 
+		FirebaseApp.initializeApp(this);
+		Firebase.setAndroidContext(this);
+
 		layout = (LinearLayout) findViewById(R.id.layout1);
 		sendButton = (ImageView) findViewById(R.id.sendButton);
 		messageArea = (EditText) findViewById(R.id.messageArea);
@@ -121,10 +124,6 @@ public class ChatActivity extends BriarActivity {
 		};
 
 		messageArea.addTextChangedListener(tw);
-
-
-		FirebaseApp.initializeApp(this);
-		Firebase.setAndroidContext(this);
 
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -278,5 +277,10 @@ public class ChatActivity extends BriarActivity {
 
 			}
 		});
+	}
+
+	//For testing purposes
+	public void addtToMessagesList(Message message) {
+		messageList.add(message);
 	}
 }
