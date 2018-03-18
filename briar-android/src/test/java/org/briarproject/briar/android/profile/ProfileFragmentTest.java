@@ -13,11 +13,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import static org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
 @RunWith(RobolectricTestRunner.class)
@@ -27,6 +29,10 @@ public class ProfileFragmentTest {
 
     @InjectMocks
     private ProfileFragment profileFragment = new ProfileFragment();
+
+    private ProfileFragment profileFragmentSpy;
+
+    private ProfileFirebaseMock profileFirebaseMock = new ProfileFirebaseMock();
 
     private EditText nickname;
     private EditText firstName;
@@ -40,37 +46,81 @@ public class ProfileFragmentTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        startFragment(profileFragment, SetupActivity.class);
-        assertNotNull(profileFragment);
+        // Create a spy to only mock firebase calls
+        profileFragmentSpy = spy(profileFragment);
 
-        View v = profileFragment.getView();
-        nickname = v.findViewById(R.id.profile_nickname);
-        firstName = v.findViewById(R.id.profile_first_name);
-        lastName = v.findViewById(R.id.profile_last_name);
-        email = v.findViewById(R.id.profile_email);
-        description = v.findViewById(R.id.profile_description);
-        createProfileAccount = v.findViewById(R.id.action_create_profile);
-        profileImage = v.findViewById(R.id.profilePic);
+        // Mock firebase call to write profile info with our custom mock class
+        doAnswer(new Answer() {
+            public Object answer(InvocationOnMock invocation) {
+
+                profileFirebaseMock.writeProfileInfo("Bob",
+                        "Bobby", "Marley", "Bob@hotmail.com",
+                        "Creating a profile");
+                return 1;
+            }})
+                .when(profileFragmentSpy).writeProfileInfo("Bob",
+                "Bobby", "Marley", "Bob@hotmail.com",
+                "Creating a profile");
+
+        // Mock firebase call to read profile info with our custom mock class
+        doAnswer(new Answer() {
+            public Object answer(InvocationOnMock invocation) {
+
+                profileFirebaseMock.readProfileInfo();
+                return 1;
+            }})
+                .when(profileFragmentSpy).readProfileInfo();
+
+        // Start Fragment
+        startFragment(profileFragmentSpy, SetupActivity.class);
+
+        // Get layout fields
+        View view = profileFragmentSpy.getView();
+        nickname = view.findViewById(R.id.profile_nickname);
+        firstName = view.findViewById(R.id.profile_first_name);
+        lastName = view.findViewById(R.id.profile_last_name);
+        email = view.findViewById(R.id.profile_email);
+        description = view.findViewById(R.id.profile_description);
+        createProfileAccount = view.findViewById(R.id.action_create_profile);
+        profileImage = view.findViewById(R.id.profilePic);
+        profileFirebaseMock.setView(view);
     }
 
     @Test
     public void testCreateProfileUI() {
-        firstName.setText("John");
-        lastName.setText("Doe");
-        nickname.setText("JD");
-        description.setText("I am a journalist.");
+
+        // Validate that the layout is initially empty
+        assertEquals("", firstName.getText().toString());
+        assertEquals("", lastName.getText().toString());
+        assertEquals("", description.getText().toString());
+        assertEquals("", nickname.getText().toString());
+
+        // Fill in layout
+        firstName.setText("Bobby");
+        lastName.setText("Marley");
+        nickname.setText("Bob");
+        description.setText("Creating a profile");
+        email.setText("Bob@hotmail.com");
+
+        // Save layout
+        createProfileAccount.performClick();
+
+        // Verify firebase write is called
+        verify(profileFragmentSpy).writeProfileInfo("Bob",
+                "Bobby", "Marley", "Bob@hotmail.com",
+                "Creating a profile");
+
+        // Restart fragment to test firebase read
+        profileFragmentSpy.onStart();
+
+        // Verify firebase read is called
+        verify(profileFragmentSpy, times(2)).readProfileInfo();
 
         // Validate that the inputs set are correct
-        assertEquals(firstName.getText().toString(), "John");
-        assertEquals(lastName.getText().toString(), "Doe");
-        assertEquals(description.getText().toString(), "I am a journalist.");
-        assertEquals(nickname.getText().toString(), "JD");
-
-        // Make sure the profile image is clickable to update image
-        createProfileAccount.isClickable();
-
-        // Make sure the create profile button is clickable
-        profileImage.isClickable();
+        assertEquals("Bobby", firstName.getText().toString());
+        assertEquals("Marley", lastName.getText().toString());
+        assertEquals("Creating a profile", description.getText().toString());
+        assertEquals("Bob", nickname.getText().toString());
     }
 
     @Test
