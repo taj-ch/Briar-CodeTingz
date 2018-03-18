@@ -129,17 +129,17 @@ public class CreateForumTest {
 											0),
 									5)));
 			appCompatButton2.perform(scrollTo(), click());
-
-			try {
-				Thread.sleep(15000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
 	@Test
 	public void CreateForumTest() {
+
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		// Open the navigation menu
 		ViewInteraction appCompatImageButton4 = onView(

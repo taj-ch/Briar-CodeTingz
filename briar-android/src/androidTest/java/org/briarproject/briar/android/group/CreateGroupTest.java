@@ -130,17 +130,18 @@ public class CreateGroupTest {
 											0),
 									5)));
 			appCompatButton2.perform(scrollTo(), click());
-
-			try {
-				Thread.sleep(15000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
 	@Test
 	public void CreateGroupTest() {
+
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		// Open the navigation menu
 		ViewInteraction appCompatImageButton = onView(
 				allOf(withContentDescription("Open the navigation drawer"),
@@ -230,18 +231,25 @@ public class CreateGroupTest {
 						isDisplayed()));
 		editText.check(matches(isDisplayed()));
 
-		// Check if Create group button exists
-		ViewInteraction button = onView(
-				allOf(withId(R.id.button),
-						isDisplayed()));
-		button.check(matches(isDisplayed()));
-
 		// Enter the name of the group we are going to create as "First Group"
 		ViewInteraction appCompatEditText = onView(
 				allOf(withId(R.id.name),
 						isDisplayed()));
 		appCompatEditText
 				.perform(replaceText("First Group"), closeSoftKeyboard());
+
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Check if Create group button exists
+		ViewInteraction button = onView(
+				allOf(withId(R.id.button),
+						isDisplayed()));
+		button.check(matches(isDisplayed()));
+
 
 		// Click the create group button
 		ViewInteraction appCompatButton3 = onView(
