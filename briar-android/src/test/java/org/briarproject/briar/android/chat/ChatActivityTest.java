@@ -1,12 +1,9 @@
 package org.briarproject.briar.android.chat;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -27,6 +24,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 
 /**
@@ -100,5 +98,13 @@ public class ChatActivityTest {
 		TextView timeTextView = v.itemView.findViewById(R.id.time);
 		String timeText = timeTextView.getText().toString();
 		assertEquals(time , timeText);
+	}
+
+	@Test
+	public void testLinksClickable() {
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(0);
+		TextView messageTextView = v.itemView.findViewById(R.id.text);
+
+		assertTrue(messageTextView.getLinksClickable());
 	}
 }
