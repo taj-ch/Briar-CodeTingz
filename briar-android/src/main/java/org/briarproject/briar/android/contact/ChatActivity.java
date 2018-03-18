@@ -26,10 +26,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 
 import com.firebase.client.Firebase;
-import com.firebase.client.Query;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +40,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.firebase.database.Query;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
@@ -72,6 +73,12 @@ public class ChatActivity extends BriarActivity {
 	private Toolbar toolbar;
 	private TextView toolbarContactName;
 	private TextView toolbarTitle;
+	private SwipeRefreshLayout mRefreshLayout;
+	private static final int  TOTAL_ITEMS_TO_LOAD = 10;
+	private int mCurrentPage = 1;
+	private int itemPos = 0;
+	private String mLastKey = "";
+	private String mPrevKey = "";
 
 	@Override
 	public void injectActivity(ActivityComponent component) {
@@ -82,6 +89,9 @@ public class ChatActivity extends BriarActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
+
+		FirebaseApp.initializeApp(this);
+		Firebase.setAndroidContext(this);
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
 		sendButton = (ImageView)findViewById(R.id.sendButton);
@@ -98,6 +108,7 @@ public class ChatActivity extends BriarActivity {
 
 		mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
 		mLinearLayout = new LinearLayoutManager(this);
+		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
 
 		mMessagesList.setHasFixedSize(true);
 		mMessagesList.setLayoutManager(mLinearLayout);
@@ -136,10 +147,6 @@ public class ChatActivity extends BriarActivity {
 
 		messageArea.addTextChangedListener(tw);
 
-
-		FirebaseApp.initializeApp(this);
-		Firebase.setAndroidContext(this);
-
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -157,6 +164,16 @@ public class ChatActivity extends BriarActivity {
 				startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
 			}
 		});
+		
+		mRefreshLayout.setOnRefreshListener(
+				new SwipeRefreshLayout.OnRefreshListener() {
+					@Override
+					public void onRefresh() {
+						mCurrentPage++;
+						itemPos = 0;
+						loadMoreMessages();
+					}
+				});
 	}
 
 	private void enableOrDisableSendButton() {
@@ -201,21 +218,76 @@ public class ChatActivity extends BriarActivity {
 			});
 		}
 	}
-
-	private void loadMessages() {
+	private void loadMoreMessages() {
 
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
-
-		com.google.firebase.database.Query messageQuery = messageRef.limitToLast(10);
-
+		Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
+				String messageKey = dataSnapshot.getKey();
 
+				if(!mPrevKey.equals(messageKey)){
+					messageList.add(itemPos++, message);
+				} else {
+					mPrevKey = mLastKey;
+				}
+				if(itemPos == 1) {
+					mLastKey = messageKey;
+				}
+
+				Log.d("TOTALKEYS", "Last Key : " + mLastKey + " | Prev Key : " + mPrevKey + " | Message Key : " + messageKey);
+				mAdapter.notifyDataSetChanged();
+				mRefreshLayout.setRefreshing(false);
+				mLinearLayout.scrollToPositionWithOffset(10, 0);
+			}
+
+			@Override
+			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+			}
+
+			@Override
+			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+	}
+
+
+	private void loadMessages() {
+
+		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
+		messageQuery.addChildEventListener(new ChildEventListener() {
+			@Override
+			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+				Message message = dataSnapshot.getValue(Message.class);
+				itemPos++;
+				if(itemPos == 1){
+
+					String messageKey = dataSnapshot.getKey();
+
+					mLastKey = messageKey;
+					mPrevKey = messageKey;
+
+				}
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
 				mMessagesList.scrollToPosition(messageList.size() - 1);
+				mRefreshLayout.setRefreshing(false);
 			}
 
 			@Override
@@ -295,5 +367,10 @@ public class ChatActivity extends BriarActivity {
 				}
 			});
 		}
+	}
+	
+	//For testing purposes
+	public void addToMessagesList(Message message) {
+		messageList.add(message);
 	}
 }

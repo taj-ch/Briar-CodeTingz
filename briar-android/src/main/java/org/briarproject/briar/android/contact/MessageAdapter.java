@@ -60,6 +60,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			messageText = (TextView) view.findViewById(R.id.text);
 			timeText = (TextView) view.findViewById(R.id.time);
 			messageImage = (ImageView) view.findViewById(R.id.image);
+			messageText.setAutoLinkMask(15);
 		}
 	}
 
