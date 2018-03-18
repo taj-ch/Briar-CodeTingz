@@ -35,7 +35,7 @@ import javax.inject.Inject;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
-import static org.briarproject.briar.android.contact.ConversationActivity.CONTACT_ID;
+import static org.briarproject.briar.android.contact.ChatActivity.CONTACT_EMAIL;
 /*
 This class display the contacts profile page information by searching the
 database and storage for the contacts author name.
@@ -79,9 +79,8 @@ public class ProfileActivity extends BriarActivity {
 		setContentView(R.layout.activity_profile);
 
 		Intent intent = getIntent();
-		int id = intent.getIntExtra(CONTACT_ID, -1);
-		// if (id == -1) throw new IllegalStateException("No ContactId");
-		contactId = new ContactId(id);
+		String contactName = intent.getStringExtra(CONTACT_EMAIL);
+		contactUserId = StringUtils.toHexString(contactName.getBytes());
 
 		// Find the text boxes in the fragment layout
 		firstName = findViewById(R.id.view_profile_first_name);
@@ -92,19 +91,11 @@ public class ProfileActivity extends BriarActivity {
 		selectedImage = findViewById(R.id.view_profile_pic);
 
 		try {
-			if (contactName == null) {
-				Contact contact = contactManager.getContact(contactId);
-				contactName = contact.getAuthor().getName();
-				contactUserId = StringUtils.toHexString(contactName.getBytes());
-			}
 
 			profileInfoDbRef = FirebaseDatabase.getInstance().getReference()
 					.child("Profile").child(contactUserId);
 
 			readProfileInfo();
-
-		} catch (DbException e) {
-			LOG.info("Error getting contact");
 		}catch (Exception e){
 			if (LOG.isLoggable(WARNING)) {
 				LOG.log(WARNING, e.toString(), e);
