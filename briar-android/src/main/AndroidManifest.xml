@@ -421,10 +421,10 @@
 		<activity
 			android:name="org.briarproject.briar.android.contact.FullScreenImageActivity"
 			android:label="@string/fullscreen_image"
-			android:parentActivityName="org.briarproject.briar.android.contact.ChatActivity">
+			android:parentActivityName="org.briarproject.briar.android.contact.ConversationActivity">
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
-				android:value="org.briarproject.briar.android.contact.ChatActivity"
+				android:value="org.briarproject.briar.android.contact.ConversationActivity"
 				/>
 		</activity>
 
