@@ -1,5 +1,9 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +12,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -30,6 +37,9 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.Query;
 
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.introduction.IntroductionActivity;
+import org.briarproject.briar.android.profile.ProfileActivity;
+import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
 
@@ -38,6 +48,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {
 	private LinearLayout layout;
@@ -45,6 +60,8 @@ public class ChatActivity extends BriarActivity {
 	private EditText messageArea;
 	private ScrollView scrollView;
 	private Firebase reference;
+	public static final String CONTACT_ID = "briar.CONTACT_ID";
+	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
 	private DatabaseReference mRootRef;
 	private RecyclerView mMessagesList;
 	private final List<Message> messageList = new ArrayList<>();
@@ -282,5 +299,30 @@ public class ChatActivity extends BriarActivity {
 	//For testing purposes
 	public void addToMessagesList(Message message) {
 		messageList.add(message);
+	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.conversation_actions, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+			case R.id.action_view_profile:
+				Intent profileIntent = new Intent(this, ProfileActivity.class);
+				profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
+				startActivityForResult(profileIntent, REQUEST_PROFILE);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 }
