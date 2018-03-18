@@ -90,6 +90,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 					});
 			Picasso.with(viewHolder.messageImage.getContext()).load(c.getMessage())
 					.placeholder(R.drawable.placeholder_thumbnail)
+					.fit()
+					.centerCrop()
 					.into(viewHolder.messageImage);
 		}
 
