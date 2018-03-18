@@ -59,9 +59,9 @@ public class ChatActivityTest {
 		message1.setFrom("testing");
 		message2.setFrom("working");
 		message3.setFrom("testing");
-		chatActivity.addtToMessagesList(message1);
-		chatActivity.addtToMessagesList(message2);
-		chatActivity.addtToMessagesList(message3);
+		chatActivity.addToMessagesList(message1);
+		chatActivity.addToMessagesList(message2);
+		chatActivity.addToMessagesList(message3);
 		messagesList.getAdapter().notifyDataSetChanged();
 	}
 

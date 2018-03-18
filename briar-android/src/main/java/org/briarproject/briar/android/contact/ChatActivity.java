@@ -280,7 +280,7 @@ public class ChatActivity extends BriarActivity {
 	}
 
 	//For testing purposes
-	public void addtToMessagesList(Message message) {
+	public void addToMessagesList(Message message) {
 		messageList.add(message);
 	}
 }
