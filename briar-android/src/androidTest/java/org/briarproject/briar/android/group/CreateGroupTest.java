@@ -156,6 +156,12 @@ public class CreateGroupTest {
 						isDisplayed()));
 		appCompatImageButton.perform(click());
 
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		// Select Private Groups
 		ViewInteraction navigationMenuItemView = onView(
 				childAtPosition(
@@ -168,7 +174,7 @@ public class CreateGroupTest {
 		navigationMenuItemView.perform(scrollTo(), click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -204,7 +210,7 @@ public class CreateGroupTest {
 		actionMenuItemView.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -259,7 +265,7 @@ public class CreateGroupTest {
 		appCompatButton3.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -352,7 +358,7 @@ public class CreateGroupTest {
 		appCompatImageButton2.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -386,7 +392,7 @@ public class CreateGroupTest {
 		appCompatImageButton3.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

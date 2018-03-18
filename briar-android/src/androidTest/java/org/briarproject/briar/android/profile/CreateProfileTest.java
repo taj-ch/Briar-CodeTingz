@@ -144,6 +144,12 @@ public class CreateProfileTest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Select profile in navigation menu
         ViewInteraction navigationMenuItemView = onView(
                 childAtPosition(
@@ -224,6 +230,12 @@ public class CreateProfileTest {
                                         0),
                                 11)));
         appCompatButton3.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // Open Navigation menu
         ViewInteraction appCompatImageButton2 = onView(

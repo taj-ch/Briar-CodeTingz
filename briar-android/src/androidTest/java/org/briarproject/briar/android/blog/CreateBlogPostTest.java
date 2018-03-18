@@ -152,6 +152,12 @@ public class CreateBlogPostTest {
 						isDisplayed()));
 		appCompatImageButton7.perform(click());
 
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		// Select the blogs option in the navigation menu
 		ViewInteraction navigationMenuItemView3 = onView(
 				childAtPosition(
@@ -164,7 +170,7 @@ public class CreateBlogPostTest {
 		navigationMenuItemView3.perform(scrollTo(), click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -212,7 +218,7 @@ public class CreateBlogPostTest {
 		actionMenuItemView3.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -313,7 +319,7 @@ public class CreateBlogPostTest {
 		appCompatButton5.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

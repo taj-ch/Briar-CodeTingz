@@ -155,6 +155,12 @@ public class CreateForumTest {
 						isDisplayed()));
 		appCompatImageButton4.perform(click());
 
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		// Select the forums option in the navigation menu
 		ViewInteraction navigationMenuItemView2 = onView(
 				childAtPosition(
@@ -167,7 +173,7 @@ public class CreateForumTest {
 		navigationMenuItemView2.perform(scrollTo(), click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -203,7 +209,7 @@ public class CreateForumTest {
 		actionMenuItemView2.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -308,7 +314,7 @@ public class CreateForumTest {
 		appCompatButton4.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -425,6 +431,12 @@ public class CreateForumTest {
 						isDisplayed()));
 		appCompatImageButton5.perform(click());
 
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		// Assert that the author of the message added is correct
 		ViewInteraction textView17 = onView(
 				allOf(withId(
@@ -461,7 +473,7 @@ public class CreateForumTest {
 		appCompatImageButton6.perform(click());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
