@@ -24,7 +24,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
 		Intent callingActivityIntent= getIntent();
 		Bundle b = callingActivityIntent.getExtras();
 		
-		if(b! = null){
+		if(b != null){
 			 URL =(String) b.get("url");
 		}
 
