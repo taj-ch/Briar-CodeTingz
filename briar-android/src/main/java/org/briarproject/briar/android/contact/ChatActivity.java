@@ -1,5 +1,10 @@
 package org.briarproject.briar.android.contact;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -16,11 +21,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,6 +43,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.firebase.database.Query;
 
 import org.briarproject.briar.R;
@@ -59,6 +71,7 @@ public class ChatActivity extends BriarActivity {
 	private ImageView sendButton;
 	private EditText messageArea;
 	private ScrollView scrollView;
+	private ImageButton addImageButton;
 	private Firebase reference;
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
 	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
@@ -67,6 +80,12 @@ public class ChatActivity extends BriarActivity {
 	private final List<Message> messageList = new ArrayList<>();
 	private LinearLayoutManager mLinearLayout;
 	private MessageAdapter mAdapter;
+	private ProgressDialog mProgressDialog;
+
+	private static final int GALLERY_PICK = 1;
+
+	// Storage Firebase
+	private StorageReference mImageStorage;
 	private Toolbar toolbar;
 	private TextView toolbarContactName;
 	private TextView toolbarTitle;
@@ -91,14 +110,17 @@ public class ChatActivity extends BriarActivity {
 		Firebase.setAndroidContext(this);
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
-		sendButton = (ImageView) findViewById(R.id.sendButton);
-		messageArea = (EditText) findViewById(R.id.messageArea);
+
+		sendButton = (ImageView)findViewById(R.id.sendButton);
+		messageArea = (EditText)findViewById(R.id.messageArea);
+		addImageButton = (ImageButton)findViewById(R.id.addImageButton);
 
 		sendButton.setEnabled(false);
 
 		mRootRef = FirebaseDatabase.getInstance().getReference();
+		mImageStorage = FirebaseStorage.getInstance().getReference();
 
-		mAdapter = new MessageAdapter(messageList);
+		mAdapter = new MessageAdapter(messageList, this);
 
 		mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
 		mLinearLayout = new LinearLayoutManager(this);
@@ -146,6 +168,17 @@ public class ChatActivity extends BriarActivity {
 			}
 		});
 
+		addImageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent galleryIntent = new Intent();
+				galleryIntent.setType("image/*");
+				galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+				startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+			}
+		});
+		
 		mRefreshLayout.setOnRefreshListener(
 				new SwipeRefreshLayout.OnRefreshListener() {
 					@Override
@@ -293,6 +326,63 @@ public class ChatActivity extends BriarActivity {
 		});
 	}
 
+	@Override
+	public void onActivityResult(int request, int result, Intent data) {
+		super.onActivityResult(request, result, data);
+
+		if (request == GALLERY_PICK && result == RESULT_OK) {
+			mProgressDialog = new ProgressDialog(ChatActivity.this);
+			mProgressDialog.setTitle("Uploading Image...");
+			mProgressDialog.setMessage("Please wait while we upload and process the image.");
+			mProgressDialog.setCanceledOnTouchOutside(false);
+			mProgressDialog.show();
+
+			Uri imageUri = data.getData();
+
+			final String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+
+			DatabaseReference user_message_push = mRootRef.child("messages")
+					.child(UserDetails.username).child(UserDetails.chatWith).push();
+
+			final String push_id = user_message_push.getKey();
+
+			StorageReference filepath = mImageStorage.child("message_images").child(push_id + ".jpg");
+
+			filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+				@Override
+				public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+					if(task.isSuccessful()){
+						String download_url = task.getResult().getDownloadUrl().toString();
+
+						Map messageMap = new HashMap();
+						messageMap.put("message", download_url);
+						messageMap.put("seen", false);
+						messageMap.put("type", "image");
+						messageMap.put("time", ServerValue.TIMESTAMP);
+						messageMap.put("from", UserDetails.username);
+
+						Map messageUserMap = new HashMap();
+						messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+
+						messageArea.setText("");
+
+						mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+							@Override
+							public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+								mProgressDialog.dismiss();
+								if(databaseError != null){
+									Log.d("CHAT_LOG", databaseError.getMessage().toString());
+								}
+							}
+						});
+					}
+				}
+			});
+		}
+	}
+	
 	//For testing purposes
 	public void addToMessagesList(Message message) {
 		messageList.add(message);
