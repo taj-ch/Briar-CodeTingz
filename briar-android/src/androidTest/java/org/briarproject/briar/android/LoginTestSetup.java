@@ -9,8 +9,7 @@ public class LoginTestSetup {
 	private LoginTestSetup(){}
 
 	public static Boolean isUserAlreadyLoggedIn(){
-		if(alreadyLoggedIn==false)
-		{
+		if(alreadyLoggedIn==false) {
 			alreadyLoggedIn = true;
 			return false;
 		}
