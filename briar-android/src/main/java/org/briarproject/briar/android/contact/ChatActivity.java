@@ -110,9 +110,9 @@ public class ChatActivity extends BriarActivity {
 		Firebase.setAndroidContext(this);
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
+
 		sendButton = (ImageView)findViewById(R.id.sendButton);
 		messageArea = (EditText)findViewById(R.id.messageArea);
-		//scrollView = (ScrollView)findViewById(R.id.scrollView);
 		addImageButton = (ImageButton)findViewById(R.id.addImageButton);
 
 		sendButton.setEnabled(false);
@@ -135,8 +135,6 @@ public class ChatActivity extends BriarActivity {
 		// Custom Toolbar
 		toolbar = setUpCustomToolbar(true);
 		if (toolbar != null) {
-			//toolbarAvatar = toolbar.findViewById(R.id.contactAvatar);
-			//toolbarStatus = toolbar.findViewById(R.id.contactStatus);
 			toolbarTitle = toolbar.findViewById(R.id.contactName);
 		}
 		toolbarTitle.setText(UserDetails.chatWith);

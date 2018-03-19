@@ -146,6 +146,13 @@ public class ProfileFragment extends BaseFragment implements
 
 			readProfileInfo();
 		} catch (Exception e) {
+			Log.w(TAG, "Error getting firebase instance \n" + e.toString(), e);
+		}
+
+		// Read the users profile info from database
+		try {
+			readProfileInfo();
+		} catch (Exception e) {
 			Log.w(TAG, "Error reading user profile from firebase \n" + e.toString(), e);
 		}
 
