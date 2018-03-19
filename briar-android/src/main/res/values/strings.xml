@@ -425,7 +425,8 @@
 	<string name="profile_data_description_input">profile_data_description_input</string>
 	<string name="view_profile">View Profile</string>
 
-
+	<!-- Full screen image -->
+	<string name="fullscreen_image">Fullscreen Image</string>
 	<string name="search_contacts">Search Contacts</string>
 
 </resources>

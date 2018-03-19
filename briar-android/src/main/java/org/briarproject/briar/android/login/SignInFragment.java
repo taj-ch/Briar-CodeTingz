@@ -22,6 +22,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
 import org.briarproject.briar.android.sharing.ShareForumActivity;
@@ -105,8 +106,13 @@ public class SignInFragment extends SetupFragment {
 			case R.id.btn_sign_in:
 				email = authorNameInput.getText().toString();
 				String password = passwordInput.getText().toString();
-				signInButton.setVisibility(INVISIBLE);
-				openAccount(email, password);
+				if(email != null && !email.isEmpty() && password !=null && !password.isEmpty()){
+					signInButton.setClickable(false);
+					openAccount(email, password);
+				}else{
+					Toast.makeText(getActivity(), "Fields can't be blank!", Toast.LENGTH_LONG)
+							.show();
+				}
 				break;
 			case R.id.btn_create_account:
 				onCreateAccountClick();
@@ -150,7 +156,7 @@ public class SignInFragment extends SetupFragment {
 							setupController.setAuthorName(authorNameInput.getText().toString());
 							setupController.setPassword(passwordInput.getText().toString());
 							if (!setupController.needToShowDozeFragment()) {
-								signInButton.setVisibility(INVISIBLE);
+								signInButton.setClickable(false);
 							}
 							setupController.setPassword(password);
 
@@ -167,7 +173,7 @@ public class SignInFragment extends SetupFragment {
 
 	private void tryAgain() {
 		UiUtils.setError(passwordWrapper, getString(R.string.try_again), true);
-		signInButton.setVisibility(VISIBLE);
+		signInButton.setClickable(true);
 
 	}
 	
