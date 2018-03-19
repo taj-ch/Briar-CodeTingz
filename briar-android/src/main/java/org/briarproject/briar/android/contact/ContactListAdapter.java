@@ -40,9 +40,9 @@ public class ContactListAdapter extends
 
 	@Override
 	public int compare(ContactListItem c1, ContactListItem c2) {
-		if (SORT == "ALPHA") {
-			return c1.getContact().getAuthor().getName()
-					.compareTo(c2.getContact().getAuthor().getName());
+		if (SORT.equals("ALPHA")) {
+			return c1.getContact().getAuthor().getName().toLowerCase()
+					.compareTo(c2.getContact().getAuthor().getName().toLowerCase());
 		} else {
 			long time1 = c1.getTimestamp();
 			long time2 = c2.getTimestamp();
