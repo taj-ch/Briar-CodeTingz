@@ -37,10 +37,29 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
-
+/*
+Steps:
+0. Sign in if not already signed it
+1. Assert that the toolbar title and options are displayed
+2. Select add contact and add by email
+3. Assert toolbar title and button are correct and displayed
+4. Add a user and click add button
+5. Select add contact and add by email
+6. Add a user and click add button
+7. Select first user
+8. Assert that the image button, toolbar title and message box are there
+9. Click back
+10. Assert the order of the contacts
+11. Click option and Assert all the options
+12. Click sort alphabetically
+13. Assert that the order of the list is correct
+14. Click options again
+15. Click sort by recent
+16. Assert order of the list is correct.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class ContactsMessageTest {
+public class ContactsTest {
 
 	@Rule
 	public ActivityTestRule<SplashScreenActivity> mActivityTestRule =
@@ -112,21 +131,44 @@ public class ContactsMessageTest {
 		}
 	}
 
-
 	@Test
-	public void contactsMessageTest() {
-		// Added a sleep statement to match the app's execution delay.
-		// The recommended way to handle such scenarios is to use Espresso idling resources:
-		// https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+	public void contactsTest() {
+
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		// Select add contact in toolbar
+		// Assert that the title of the toolbar is "Contacts"
+		ToolbarEspressoHelper.matchToolbarTitle("Contacts")
+				.check(matches(isDisplayed()));
+
+		// Assert that the add contact option is there
+		ViewInteraction textView2 = onView(
+				allOf(withId(R.id.action_add_contact),
+						childAtPosition(
+								childAtPosition(
+										withId(R.id.toolbar),
+										2),
+								0),
+						isDisplayed()));
+		textView2.check(matches(isDisplayed()));
+
+		// Assert that the options option is there
+		ViewInteraction imageView = onView(
+				allOf(childAtPosition(
+								childAtPosition(
+										withId(R.id.toolbar),
+										2),
+								1),
+						isDisplayed()));
+		imageView.check(matches(isDisplayed()));
+
+		// Click Add contact
 		ViewInteraction actionMenuItemView = onView(
 				allOf(withId(R.id.action_add_contact),
+						withContentDescription("Add a Contact"),
 						childAtPosition(
 								childAtPosition(
 										withId(R.id.toolbar),
@@ -136,12 +178,38 @@ public class ContactsMessageTest {
 		actionMenuItemView.perform(click());
 
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(6000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		// Select add by email
+		// Assert that the title of the toolbar is "Add a Contact"
+		ToolbarEspressoHelper.matchToolbarTitle("Add a Contact")
+				.check(matches(isDisplayed()));
+
+		// Assert that the continue to QR button is there
+		ViewInteraction button = onView(
+				allOf(withId(R.id.continueButton),
+						childAtPosition(
+								childAtPosition(
+										withId(R.id.scrollView),
+										0),
+								2),
+						isDisplayed()));
+		button.check(matches(isDisplayed()));
+
+		// Assert that the add by email button is there
+		ViewInteraction button2 = onView(
+				allOf(withId(R.id.addByEmailButton),
+						childAtPosition(
+								childAtPosition(
+										withId(R.id.scrollView),
+										0),
+								3),
+						isDisplayed()));
+		button2.check(matches(isDisplayed()));
+
+		// Click add by email
 		ViewInteraction appCompatButton3 = onView(
 				allOf(withId(R.id.addByEmailButton), withText("Add By Email"),
 						childAtPosition(
@@ -152,12 +220,12 @@ public class ContactsMessageTest {
 		appCompatButton3.perform(scrollTo(), click());
 
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(6000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		// Enter tusman@tusman.tus
+		// Enter name of contact to add
 		ViewInteraction textInputEditText3 = onView(
 				allOf(withId(R.id.edit_email),
 						childAtPosition(
@@ -167,6 +235,24 @@ public class ContactsMessageTest {
 								0)));
 		textInputEditText3.perform(scrollTo(), replaceText("tusman@tusman.tus"),
 				closeSoftKeyboard());
+
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that that the add button is there
+		ViewInteraction button3 = onView(
+				allOf(withId(R.id.btn_add_by_email),
+						childAtPosition(
+								childAtPosition(
+										IsInstanceOf.<View>instanceOf(
+												android.widget.ScrollView.class),
+										0),
+								3),
+						isDisplayed()));
+		button3.check(matches(isDisplayed()));
 
 		// Click add contact
 		ViewInteraction appCompatButton4 = onView(
@@ -185,34 +271,7 @@ public class ContactsMessageTest {
 			e.printStackTrace();
 		}
 
-		// Assert that the title of the toolbar is "Profile"
-		ToolbarEspressoHelper.matchToolbarTitle("Contacts")
-				.check(matches(isDisplayed()));
-
-		// The first contact is the correct one
-		ViewInteraction textView2 = onView(
-				allOf(withId(R.id.nameView), withText("tusman@tusman.tus"),
-						childAtPosition(
-								childAtPosition(
-										IsInstanceOf.<View>instanceOf(
-												android.widget.RelativeLayout.class),
-										1),
-								0),
-						isDisplayed()));
-		textView2.check(matches(withText("tusman@tusman.tus")));
-
-		// The add contact option is displayed
-		ViewInteraction textView3 = onView(
-				allOf(withId(R.id.action_add_contact),
-						childAtPosition(
-								childAtPosition(
-										withId(R.id.toolbar),
-										2),
-								0),
-						isDisplayed()));
-		textView3.check(matches(isDisplayed()));
-
-		// Select add contact
+		// Click add contact
 		ViewInteraction actionMenuItemView2 = onView(
 				allOf(withId(R.id.action_add_contact),
 						withContentDescription("Add a Contact"),
@@ -225,7 +284,7 @@ public class ContactsMessageTest {
 		actionMenuItemView2.perform(click());
 
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(6000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -241,12 +300,12 @@ public class ContactsMessageTest {
 		appCompatButton5.perform(scrollTo(), click());
 
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(6000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		// Type mira@mira.mira to add as a contact
+		// Enter contact to add
 		ViewInteraction textInputEditText4 = onView(
 				allOf(withId(R.id.edit_email),
 						childAtPosition(
@@ -274,7 +333,7 @@ public class ContactsMessageTest {
 			e.printStackTrace();
 		}
 
-		// Select the first user in the list
+		// Select the first contact in the list
 		ViewInteraction recyclerView = onView(
 				allOf(withId(R.id.recyclerView),
 						childAtPosition(
@@ -284,27 +343,38 @@ public class ContactsMessageTest {
 		recyclerView.perform(actionOnItemAtPosition(0, click()));
 
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(6000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		// Name in the tooldbar is correct
-		ToolbarEspressoHelper.matchToolbarTitle("tusman@tusman.tus")
-				.check(matches(isDisplayed()));
-
-		// Options in toolbar is displayed
-		ViewInteraction imageView = onView(
-				allOf(withContentDescription("More options"),
+	    // Assert that the send image button is there
+		ViewInteraction imageButton = onView(
+				allOf(withId(R.id.addImageButton),
 						childAtPosition(
-								childAtPosition(
-										withId(R.id.toolbar),
-										2),
+								allOf(withId(R.id.include),
+										childAtPosition(
+												IsInstanceOf.<View>instanceOf(
+														android.widget.RelativeLayout.class),
+												2)),
 								0),
 						isDisplayed()));
-		imageView.check(matches(isDisplayed()));
+		imageButton.check(matches(isDisplayed()));
 
-		// Send image button is displayed
+		// Assert that the message box is displayed
+		ViewInteraction editText = onView(
+				allOf(withId(R.id.messageArea),
+						childAtPosition(
+								allOf(withId(R.id.include),
+										childAtPosition(
+												IsInstanceOf.<View>instanceOf(
+														android.widget.RelativeLayout.class),
+												2)),
+								1),
+						isDisplayed()));
+		editText.check(matches(isDisplayed()));
+
+		// Click the back button
 		ViewInteraction appCompatImageButton = onView(
 				allOf(childAtPosition(
 								allOf(withId(R.id.toolbar),
@@ -316,17 +386,48 @@ public class ContactsMessageTest {
 						isDisplayed()));
 		appCompatImageButton.perform(click());
 
-		// Added a sleep statement to match the app's execution delay.
-		// The recommended way to handle such scenarios is to use Espresso idling resources:
-		// https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the first person in the list is tusman
+		ViewInteraction textView5 = onView(
+				allOf(withId(R.id.nameView), withText("tusman@tusman.tus"),
+						childAtPosition(
+								childAtPosition(
+										IsInstanceOf.<View>instanceOf(
+												android.widget.RelativeLayout.class),
+										1),
+								0),
+						isDisplayed()));
+		textView5.check(matches(withText("tusman@tusman.tus")));
+
+		// Assert that the second person in the list is mira
+		ViewInteraction textView6 = onView(
+				allOf(withId(R.id.nameView), withText("mira@mira.mira"),
+						childAtPosition(
+								childAtPosition(
+										IsInstanceOf.<View>instanceOf(
+												android.widget.RelativeLayout.class),
+										1),
+								0),
+						isDisplayed()));
+		textView6.check(matches(withText("mira@mira.mira")));
+
+
+		openActionBarOverflowOrOptionsMenu(
+				getInstrumentation().getTargetContext());
+
 		try {
 			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		// Check if the sort option is there
-		ViewInteraction textView5 = onView(
+		// Assert that the first option is correct
+		ViewInteraction textView7 = onView(
 				allOf(withId(R.id.title), withText("Sort Alphabetically"),
 						childAtPosition(
 								childAtPosition(
@@ -335,10 +436,10 @@ public class ContactsMessageTest {
 										0),
 								0),
 						isDisplayed()));
-		textView5.check(matches(withText("Sort Alphabetically")));
+		textView7.check(matches(withText("Sort Alphabetically")));
 
-		// Check if the recent option is there
-		ViewInteraction textView6 = onView(
+		// Assert that the second option is correct
+		ViewInteraction textView8 = onView(
 				allOf(withId(R.id.title), withText("Recent"),
 						childAtPosition(
 								childAtPosition(
@@ -347,10 +448,10 @@ public class ContactsMessageTest {
 										0),
 								0),
 						isDisplayed()));
-		textView6.check(matches(withText("Recent")));
+		textView8.check(matches(withText("Recent")));
 
-		// Check if the search option is there
-		ViewInteraction textView7 = onView(
+		// Assert that the second option is correct
+		ViewInteraction textView9 = onView(
 				allOf(withId(R.id.title), withText("Search Contacts"),
 						childAtPosition(
 								childAtPosition(
@@ -359,8 +460,101 @@ public class ContactsMessageTest {
 										0),
 								0),
 						isDisplayed()));
-		textView7.check(matches(withText("Search Contacts")));
+		textView9.check(matches(withText("Search Contacts")));
 
+		// Select sort alphabetically
+		ViewInteraction appCompatTextView = onView(
+				allOf(withId(R.id.title), withText("Sort Alphabetically"),
+						childAtPosition(
+								childAtPosition(
+										withClassName(
+												is("android.support.v7.view.menu.ListMenuItemView")),
+										0),
+								0),
+						isDisplayed()));
+		appCompatTextView.perform(click());
+
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that mira is first in the list
+		ViewInteraction textView10 = onView(
+				allOf(withId(R.id.nameView), withText("mira@mira.mira"),
+						childAtPosition(
+								childAtPosition(
+										IsInstanceOf.<View>instanceOf(
+												android.widget.RelativeLayout.class),
+										1),
+								0),
+						isDisplayed()));
+		textView10.check(matches(withText("mira@mira.mira")));
+
+		// Assert that tusman is second in the list
+		ViewInteraction textView11 = onView(
+				allOf(withId(R.id.nameView), withText("tusman@tusman.tus"),
+						childAtPosition(
+								childAtPosition(
+										IsInstanceOf.<View>instanceOf(
+												android.widget.RelativeLayout.class),
+										1),
+								0),
+						isDisplayed()));
+		textView11.check(matches(withText("tusman@tusman.tus")));
+
+		// Open option again
+		openActionBarOverflowOrOptionsMenu(
+				getInstrumentation().getTargetContext());
+
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Select recent
+		ViewInteraction appCompatTextView2 = onView(
+				allOf(withId(R.id.title), withText("Recent"),
+						childAtPosition(
+								childAtPosition(
+										withClassName(
+												is("android.support.v7.view.menu.ListMenuItemView")),
+										0),
+								0),
+						isDisplayed()));
+		appCompatTextView2.perform(click());
+
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that tusman is first in the list
+		ViewInteraction textView12 = onView(
+				allOf(withId(R.id.nameView), withText("tusman@tusman.tus"),
+						childAtPosition(
+								childAtPosition(
+										IsInstanceOf.<View>instanceOf(
+												android.widget.RelativeLayout.class),
+										1),
+								0),
+						isDisplayed()));
+		textView12.check(matches(withText("tusman@tusman.tus")));
+
+		// Assert mira is second in the list
+		ViewInteraction textView13 = onView(
+				allOf(withId(R.id.nameView), withText("mira@mira.mira"),
+						childAtPosition(
+								childAtPosition(
+										IsInstanceOf.<View>instanceOf(
+												android.widget.RelativeLayout.class),
+										1),
+								0),
+						isDisplayed()));
+		textView13.check(matches(withText("mira@mira.mira")));
 	}
 
 	private static Matcher<View> childAtPosition(
