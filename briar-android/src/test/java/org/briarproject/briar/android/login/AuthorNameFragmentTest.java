@@ -79,12 +79,6 @@ public class AuthorNameFragmentTest {
 		authorNameInput.setText(testEmail);
 		// Confirm that the create account button is clickable
 		assertEquals(createAccountButton.isEnabled(), true);
-
-		//createAccountButton.performClick();
-		//
-		//// assert controller has been called properly
-		//verify(setupController, times(1)).setPassword(safePass);
-		//verify(setupController, times(1)).showDozeOrCreateAccount();
 	}
 
 	@Test
