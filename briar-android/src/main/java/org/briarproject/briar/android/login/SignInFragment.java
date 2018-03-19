@@ -137,8 +137,9 @@ public class SignInFragment extends SetupFragment {
 
 	public void openAccount(String email, String password) {
 		String firstPartOfEmail = email.split("\\@")[0];
-		UserDetails.changeUsername(firstPartOfEmail);
-		Log.d("ChangeUsername:", firstPartOfEmail);
+		String dbSafeEmail = email.replaceAll("\\.", ",");
+		UserDetails.changeUsername(dbSafeEmail);
+		Log.d("ChangeUsername:", dbSafeEmail);
 
 		//authenticate user
 		mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {

@@ -122,6 +122,7 @@
 	<string name="add_contact_title">Add a Contact</string>
 	<string name="face_to_face">You must meet up with the person you want to add as a contact.\n\nThis will prevent anyone from impersonating you or reading your messages in future.</string>
 	<string name="continue_button">Continue</string>
+	<string name="add_by_email_button">Add By Email</string>
 	<string name="connection_failed">Connection failed</string>
 	<string name="try_again_button">Try Again</string>
 	<string name="waiting_for_contact_to_scan">Waiting for contact to scan and connect\u2026</string>

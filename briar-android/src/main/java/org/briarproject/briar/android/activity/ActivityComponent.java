@@ -25,6 +25,7 @@ import org.briarproject.briar.android.forum.ForumModule;
 import org.briarproject.briar.android.introduction.ContactChooserFragment;
 import org.briarproject.briar.android.introduction.IntroductionActivity;
 import org.briarproject.briar.android.introduction.IntroductionMessageFragment;
+import org.briarproject.briar.android.keyagreement.AddContactFragment;
 import org.briarproject.briar.android.keyagreement.IntroFragment;
 import org.briarproject.briar.android.keyagreement.KeyAgreementActivity;
 import org.briarproject.briar.android.keyagreement.ShowQrCodeFragment;
@@ -164,8 +165,13 @@ public interface ActivityComponent {
 
 	// Fragments
 	void inject(AuthorNameFragment fragment);
+
 	void inject(SignInFragment fragment);
+
+	void inject(AddContactFragment fragment);
+
 	void inject(PasswordFragment fragment);
+
 	void inject(DozeFragment fragment);
 
 	void inject(ContactListFragment fragment);

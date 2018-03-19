@@ -51,7 +51,7 @@
 				android:layout_marginTop="@dimen/margin_medium"
 				android:text="@string/face_to_face"
 				android:textColor="?attr/textBodyColor"
-				android:textSize="?attr/textBodySize"/>
+				android:textSize="4pt"/>
 
 		</LinearLayout>
 
@@ -63,6 +63,15 @@
 			android:layout_gravity="center_horizontal"
 			android:layout_marginTop="@dimen/margin_medium"
 			android:text="@string/continue_button"/>
+
+		<Button
+			android:id="@+id/addByEmailButton"
+			style="@style/BriarButton.Default"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="@dimen/margin_medium"
+			android:text="@string/add_by_email_button"/>
 
 	</LinearLayout>
 
