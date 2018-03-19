@@ -21,25 +21,20 @@ public class FullScreenImageActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_fullscreenimage);
 		ImageView fullScreenImageView = (ImageView) findViewById(R.id.imageFullView);
 		Button download = (Button)findViewById(R.id.image_download_button);
-
 		Intent callingActivityIntent= getIntent();
 		Bundle b = callingActivityIntent.getExtras();
-
-
-		//Set for url
-		if(b!=null)
-		{
+		
+		if(b! = null){
 			 URL =(String) b.get("url");
 		}
 
-		//Check for intent
-		if(callingActivityIntent !=null){
+		if(callingActivityIntent != null){
 			//Picasso.with(this).load(URL).into(fullScreenImageView);
 			Glide.with(this)
 					.load(URL)
 					.into(fullScreenImageView);
 		}
-
+		
 		download.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
