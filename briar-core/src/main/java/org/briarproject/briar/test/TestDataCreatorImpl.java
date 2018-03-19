@@ -88,7 +88,6 @@ public class TestDataCreatorImpl implements TestDataCreator {
 
 	@IoExecutor
 	private final Executor ioExecutor;
-
 	private final Random random = new Random();
 	private final Map<Contact, LocalAuthor> localAuthors = new HashMap<>();
 
@@ -119,8 +118,6 @@ public class TestDataCreatorImpl implements TestDataCreator {
 		this.ioExecutor = ioExecutor;
 	}
 
-
-
 	public void createNewContact(String newAuthor) {
 		ioExecutor.execute(() -> {
 			try {
@@ -135,13 +132,6 @@ public class TestDataCreatorImpl implements TestDataCreator {
 	@IoExecutor
 	private void createNewContactOnDbExecutor(String newAuthor) throws DbException {
 		List<Contact> contacts = createNewContacts(newAuthor);
-		//createPrivateMessages(contacts);
-		//createBlogPosts(contacts);
-		//List<Forum> forums = createForums(contacts);
-
-		//for (Forum forum : forums) {
-			//createRandomForumPosts(forum, contacts);
-		//}
 	}
 
 	private List<Contact> createNewContacts(String newAuthor) throws DbException {
@@ -155,7 +145,6 @@ public class TestDataCreatorImpl implements TestDataCreator {
 
 		return contacts;
 	}
-
 
 	private Contact addNewContact(LocalAuthor localAuthor, int i, String newAuthor)
 			throws DbException {
@@ -223,7 +212,6 @@ public class TestDataCreatorImpl implements TestDataCreator {
 		}
 	}
 
-
 	private List<Contact> createContacts() throws DbException {
 		int SPECIFIC_NUM_CONTACTS = 9;
 		List<Contact> contacts = new ArrayList<>(SPECIFIC_NUM_CONTACTS);
@@ -242,8 +230,6 @@ public class TestDataCreatorImpl implements TestDataCreator {
 
 		return contacts;
 	}
-
-
 
 	private Contact addRandomContact(LocalAuthor localAuthor)
 			throws DbException {

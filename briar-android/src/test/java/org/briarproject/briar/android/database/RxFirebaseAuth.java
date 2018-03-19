@@ -2,18 +2,18 @@
 
 package org.briarproject.briar.android.database;
 
-		import android.support.annotation.NonNull;
+	import android.support.annotation.NonNull;
 
-		import com.google.firebase.auth.AuthCredential;
-		import com.google.firebase.auth.AuthResult;
-		import com.google.firebase.auth.FirebaseAuth;
-		import com.google.firebase.auth.FirebaseUser;
-		import com.google.firebase.auth.ProviderQueryResult;
+	import com.google.firebase.auth.AuthCredential;
+	import com.google.firebase.auth.AuthResult;
+	import com.google.firebase.auth.FirebaseAuth;
+	import com.google.firebase.auth.FirebaseUser;
+	import com.google.firebase.auth.ProviderQueryResult;
 
-		import rx.Observable;
-		import rx.Subscriber;
-		import rx.functions.Action0;
-		import rx.subscriptions.Subscriptions;
+	import rx.Observable;
+	import rx.Subscriber;
+	import rx.functions.Action0;
+	import rx.subscriptions.Subscriptions;
 
 public class RxFirebaseAuth {
 

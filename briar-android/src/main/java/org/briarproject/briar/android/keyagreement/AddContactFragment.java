@@ -110,10 +110,9 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 	public boolean checkForDuplicate(String author) throws DbException {
 		for (Contact c : contactManager.getActiveContacts()) {
 			LOG.info("Printing author: "+ c.getAuthor().getName());
-			if(c.getAuthor().getName().equals(author))
-			{
-				return true;
-			}
+				if(c.getAuthor().getName().equals(author)) {
+					return true;
+				}
 		}
 		return false;
 	}
@@ -126,7 +125,8 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 		if(!isEmailValid(email)){
 			UiUtils.setError(emailWrapper, "Enter a valid Email", true);
 			addContactButton.setVisibility(VISIBLE);
-		} else {
+		}
+		else {
 			//checks database for existing user
 			mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
 	              @Override
@@ -166,27 +166,20 @@ public class AddContactFragment extends BaseFragment implements TextWatcher,
 	}
 
 	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-		// noop
+	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 	}
 
 	@Override
-	public void onTextChanged(CharSequence s, int start, int before,
-			int count) {
-		// noop
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
 	}
 
 	@Override
-	public boolean onEditorAction(TextView textView, int actionId,
-			KeyEvent keyEvent) {
+	public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
 		onClick(textView);
 		return true;
 	}
 
 	@Override
 	public void afterTextChanged(Editable editable) {
-		// noop
 	}
-
 }
