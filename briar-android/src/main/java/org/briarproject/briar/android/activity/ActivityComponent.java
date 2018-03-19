@@ -14,6 +14,7 @@ import org.briarproject.briar.android.blog.ReblogFragment;
 import org.briarproject.briar.android.blog.RssFeedImportActivity;
 import org.briarproject.briar.android.blog.RssFeedManageActivity;
 import org.briarproject.briar.android.blog.WriteBlogPostActivity;
+import org.briarproject.briar.android.contact.ChatActivity;
 import org.briarproject.briar.android.contact.ContactListFragment;
 import org.briarproject.briar.android.contact.ContactModule;
 import org.briarproject.briar.android.contact.ConversationActivity;
@@ -101,6 +102,8 @@ public interface ActivityComponent {
 	void inject(PanicResponderActivity activity);
 
 	void inject(PanicPreferencesActivity activity);
+
+	void inject(ChatActivity activity);
 
 	void inject(KeyAgreementActivity activity);
 

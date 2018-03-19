@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,8 +22,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
+import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.controller.handler.UiResultHandler;
+import org.briarproject.briar.android.sharing.ShareForumActivity;
 import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.regex.Matcher;
@@ -34,6 +37,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
+import static android.widget.Toast.LENGTH_SHORT;
 import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 
 public class SignInFragment extends SetupFragment {
@@ -46,9 +50,11 @@ public class SignInFragment extends SetupFragment {
 	private TextInputEditText passwordInput;
 	private Button signInButton;
 	private Button createAccountButton;
+	private Button resetAccountPassword;
 
 	private FirebaseAuth mAuth;
 
+	private String email;
 
 	public static SignInFragment newInstance() {
 		return new SignInFragment();
@@ -66,9 +72,10 @@ public class SignInFragment extends SetupFragment {
 		passwordInput = v.findViewById(R.id.edit_password);
 		signInButton = v.findViewById(R.id.btn_sign_in);
 		createAccountButton = v.findViewById(R.id.btn_create_account);
-
+		resetAccountPassword = v.findViewById(R.id.btn_reset_password);
 		signInButton.setOnClickListener(this);
 		createAccountButton.setOnClickListener(this);
+		resetAccountPassword.setOnClickListener(this);
 
 		FirebaseApp.initializeApp(this.getContext());
 		mAuth = FirebaseAuth.getInstance();
@@ -97,12 +104,32 @@ public class SignInFragment extends SetupFragment {
 	public void onClick(View view) {
 		switch(view.getId()) {
 			case R.id.btn_sign_in:
-				String email = authorNameInput.getText().toString();
+				email = authorNameInput.getText().toString();
 				String password = passwordInput.getText().toString();
-				signInButton.setVisibility(INVISIBLE);
-				openAccount(email, password);
+				if(email != null && !email.isEmpty() && password !=null && !password.isEmpty()){
+					signInButton.setClickable(false);
+					openAccount(email, password);
+				}else{
+					Toast.makeText(getActivity(), "Fields can't be blank!", Toast.LENGTH_LONG)
+							.show();
+				}
+				break;
 			case R.id.btn_create_account:
 				onCreateAccountClick();
+				break;
+			case R.id.btn_reset_password:
+				email = authorNameInput.getText().toString();
+				if(email==null || email.isEmpty()) {
+					Toast.makeText(getActivity(),
+							"Fill in the email above", Toast.LENGTH_LONG)
+							.show();
+				} else{
+					resetPassword(email);
+					Toast.makeText(getActivity(),
+							"Email Reset Password sent", Toast.LENGTH_LONG)
+							.show();
+				}
+				break;
 		}
 
 	}
@@ -130,7 +157,7 @@ public class SignInFragment extends SetupFragment {
 							setupController.setAuthorName(authorNameInput.getText().toString());
 							setupController.setPassword(passwordInput.getText().toString());
 							if (!setupController.needToShowDozeFragment()) {
-								signInButton.setVisibility(INVISIBLE);
+								signInButton.setClickable(false);
 							}
 							setupController.setPassword(password);
 
@@ -147,13 +174,26 @@ public class SignInFragment extends SetupFragment {
 
 	private void tryAgain() {
 		UiUtils.setError(passwordWrapper, getString(R.string.try_again), true);
-		signInButton.setVisibility(VISIBLE);
+		signInButton.setClickable(true);
 
 	}
-
+	
 	public void onCreateAccountClick() {
 		//go to the Create Account page (AuthorNameFragment.java)
 		showNextFragment(AuthorNameFragment.newInstance());
 
+	}
+	
+	public void resetPassword(String emailAddress){
+
+		mAuth.sendPasswordResetEmail(emailAddress)
+				.addOnCompleteListener(new OnCompleteListener<Void>() {
+					@Override
+					public void onComplete(@NonNull Task<Void> task) {
+						if (task.isSuccessful()) {
+							Log.d(TAG, "Email sent.");
+						}
+					}
+				});
 	}
 }
