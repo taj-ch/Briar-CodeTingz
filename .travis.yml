@@ -40,14 +40,8 @@ android:
 before_install:
     - yes | sdkmanager "platforms;android-27"
 
-before_cache:
-    - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-    - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+# Avoid cache related problems during installation
+cache: false
 
 jobs:
   include:
@@ -76,7 +70,7 @@ jobs:
         - adb shell input keyevent 82 &
       script:
         - chmod +x ./gradlew;
-        - travis_wait 60 ./gradlew clean connectedAndroidTest --full-stacktrace
+        - travis_wait 60 ./gradlew connectedAndroidTest --full-stacktrace -PdisablePreDex
         - ./gradlew test --stacktrace
     - stage: package
       install: true
@@ -88,9 +82,4 @@ jobs:
       script:
         chmod +x ./gradlew;
         ./gradlew deviceCheck
-
-after_script:
-    # this file changes every time but should not be cached
-    - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-    - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
