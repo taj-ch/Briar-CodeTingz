@@ -43,7 +43,10 @@ before_install:
 # Avoid cache related problems during installation
 cache: false
 
-
+jobs:
+  include:
+    - stage: compile
+      install: true
       script:
         chmod +x ./gradlew;
         ./gradlew compileDebugSources;
@@ -66,6 +69,15 @@ cache: false
         - adb shell input keyevent 82 &
       script:
         - chmod +x ./gradlew;
-        - travis_wait 60 connectedAndroidTest --full-stacktrace
+        - travis_wait 60 ./gradlew connectedAndroidTest --full-stacktrace
         - ./gradlew test --stacktrace
-
+    - stage: package
+      install: true
+      script:
+        chmod +x ./gradlew;
+        ./gradlew jar;
+    - stage: device check
+      install: true
+      script:
+        chmod +x ./gradlew;
+        ./gradlew deviceCheck
