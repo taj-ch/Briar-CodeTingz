@@ -70,7 +70,7 @@ jobs:
         - adb shell input keyevent 82 &
       script:
         - chmod +x ./gradlew;
-        - travis_wait 60 clean build connectedCheck -PdisablePreDex --full-stacktrace
+        - travis_wait 60 ./gradlew clean build connectedCheck -PdisablePreDex --full-stacktrace
         - ./gradlew test --stacktrace
     - stage: package
       install: true
