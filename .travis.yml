@@ -1,6 +1,5 @@
 language: android
 jdk: oraclejdk8
-dist: precise
 # Make it so that no state persists between builds. I.e. tests run in an environment built from scratch
 # https://docs.travis-ci.com/user/reference/trusty/
 sudo: required
