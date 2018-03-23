@@ -7,11 +7,11 @@ sudo: required
 env:
   global:
     - ANDROID_API_LEVEL=26
-    - EMULATOR_API_LEVEL=21
+    - EMULATOR_API_LEVEL=22
     - ANDROID_BUILD_TOOLS_VERSION=26.0.2
     - ANDROID_ABI=armeabi-v7a
     - ANDROID_TAG=google_apis
-    - ADB_INSTALL_TIMEOUT=30 # Give emulator more time to start (Default 2 minutes)
+    - ADB_INSTALL_TIMEOUT=20 # Give emulator more time to start (Default 2 minutes)
 
 android:
   components:
