@@ -24,13 +24,23 @@
 			android:textSize="@dimen/text_size_medium"
 			tools:text="This is a long long long message that spans over several lines.\n\nIt ends here."/>
 
+		<TextView
+			android:id="@+id/file"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/text"
+			android:textColor="?attr/briar_text_primary"
+			android:textIsSelectable="true"
+			android:textSize="@dimen/text_size_medium"
+			tools:text="file.docx"/>
+
 		<ImageView
 			android:id="@+id/image"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
-			android:layout_below="@+id/text"
+			android:layout_below="@+id/file"
 			android:padding="0dp"
 			android:scaleType="centerCrop"/>
 

@@ -50,6 +50,14 @@ public class Message {
 		this.type = type;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public long getTime() {
 		return time;
 	}
