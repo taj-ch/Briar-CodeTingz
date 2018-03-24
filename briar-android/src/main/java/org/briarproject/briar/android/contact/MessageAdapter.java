@@ -77,7 +77,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			viewHolder.messageText.setVisibility(View.VISIBLE);
 			viewHolder.messageText.setText(c.getMessage());
 			viewHolder.messageImage.setVisibility(View.GONE);
-		} else {
+		} else if (message_type.equals("image")) {
 			viewHolder.messageText.setVisibility(View.GONE);
 			viewHolder.messageImage.setVisibility(View.VISIBLE);
 			viewHolder.messageImage.setOnClickListener(
@@ -94,6 +94,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 					.fit()
 					.centerCrop()
 					.into(viewHolder.messageImage);
+		} else {
+			//Displaying file logic goes here
 		}
 
 		viewHolder.timeText.setText(

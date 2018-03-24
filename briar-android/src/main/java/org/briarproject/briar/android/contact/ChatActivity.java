@@ -1,13 +1,12 @@
 package org.briarproject.briar.android.contact;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Color;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
-import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +15,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -49,9 +48,7 @@ import com.google.firebase.storage.UploadTask;
 import com.google.firebase.database.Query;
 
 import org.briarproject.briar.R;
-import org.briarproject.briar.android.introduction.IntroductionActivity;
 import org.briarproject.briar.android.profile.ProfileActivity;
-import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
 
@@ -60,10 +57,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
-import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {
@@ -72,6 +65,7 @@ public class ChatActivity extends BriarActivity {
 	private EditText messageArea;
 	private ScrollView scrollView;
 	private ImageButton addImageButton;
+	private ImageButton addFileButton;
 	private Firebase reference;
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
 	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
@@ -83,6 +77,7 @@ public class ChatActivity extends BriarActivity {
 	private ProgressDialog mProgressDialog;
 
 	private static final int GALLERY_PICK = 1;
+	private static final int FILE_PICK = 2;
 
 	// Storage Firebase
 	private StorageReference mImageStorage;
@@ -114,6 +109,7 @@ public class ChatActivity extends BriarActivity {
 		sendButton = (ImageView)findViewById(R.id.sendButton);
 		messageArea = (EditText)findViewById(R.id.messageArea);
 		addImageButton = (ImageButton)findViewById(R.id.addImageButton);
+		addFileButton = (ImageButton)findViewById(R.id.addFileButton);
 
 		sendButton.setEnabled(false);
 
@@ -176,6 +172,29 @@ public class ChatActivity extends BriarActivity {
 				galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
 				startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+			}
+		});
+
+		addFileButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String[] mimeTypes =
+						{"application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .doc & .docx
+								"application/vnd.ms-powerpoint","application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
+								"application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+								"text/plain",
+								"application/pdf",
+								"application/zip"};
+
+				// ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file browser.
+				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+				// Choose only files from the mime types defined above
+				intent.setType("*/*");
+				intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+				intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+				startActivityForResult(intent, FILE_PICK);
 			}
 		});
 		
@@ -380,6 +399,62 @@ public class ChatActivity extends BriarActivity {
 					}
 				}
 			});
+		} else if (request == FILE_PICK && result == RESULT_OK) {
+			mProgressDialog = new ProgressDialog(ChatActivity.this);
+			mProgressDialog.setTitle("Uploading File...");
+			mProgressDialog.setMessage("Please wait while we upload and process the file.");
+			mProgressDialog.setCanceledOnTouchOutside(false);
+			mProgressDialog.show();
+
+			Uri fileUri = data.getData();
+			final MimeTypeMap mime = MimeTypeMap.getSingleton();
+			String mimeType = getMimeType(fileUri);
+			String extension = mime.getExtensionFromMimeType(mimeType);
+
+			String name = getFileName(fileUri);
+
+			final String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+
+			DatabaseReference user_message_push = mRootRef.child("messages")
+					.child(UserDetails.username).child(UserDetails.chatWith).push();
+
+			final String push_id = user_message_push.getKey();
+
+			StorageReference filepath = mImageStorage.child("message_files").child(push_id + "." + extension);
+
+			filepath.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+				@Override
+				public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+					if(task.isSuccessful()){
+						String download_url = task.getResult().getDownloadUrl().toString();
+
+						Map messageMap = new HashMap();
+						messageMap.put("message", download_url);
+						messageMap.put("seen", false);
+						messageMap.put("type", "file");
+						messageMap.put("name", name);
+						messageMap.put("time", ServerValue.TIMESTAMP);
+						messageMap.put("from", UserDetails.username);
+
+						Map messageUserMap = new HashMap();
+						messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+
+						messageArea.setText("");
+
+						mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+							@Override
+							public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+								mProgressDialog.dismiss();
+								if(databaseError != null){
+									Log.d("CHAT_LOG", databaseError.getMessage().toString());
+								}
+							}
+						});
+					}
+				}
+			});
 		}
 	}
 	
@@ -411,5 +486,41 @@ public class ChatActivity extends BriarActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private String getMimeType(Uri uri) {
+		String mimeType = null;
+		if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+			ContentResolver cr = getApplicationContext().getContentResolver();
+			mimeType = cr.getType(uri);
+		} else {
+			String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
+					.toString());
+			mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+					fileExtension.toLowerCase());
+		}
+		return mimeType;
+	}
+
+	private String getFileName(Uri uri) {
+		String result = null;
+		if (uri.getScheme().equals("content")) {
+			Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		if (result == null) {
+			result = uri.getPath();
+			int cut = result.lastIndexOf('/');
+			if (cut != -1) {
+				result = result.substring(cut + 1);
+			}
+		}
+		return result;
 	}
 }
