@@ -56,23 +56,23 @@ jobs:
         ./gradlew compileReleaseSources;
         ./gradlew compileDebugAndroidTestSources;
     - stage: android test
-          before_script:
-            # Emulator Management: Create, Start and Wait
-            - chmod +x ./gradlew
-            - echo no | android create avd --force -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG
-            - emulator -avd test -no-window &
-            - android-wait-for-emulator
-            # Disable animations on the emulator (Improve performance)
-            - adb shell settings put global window_animation_scale 0 &
-            - adb shell settings put global transition_animation_scale 0 &
-            - adb shell settings put global animator_duration_scale 0 &
-            # Disable keyboard (Reduces test errors)
-            # - adb shell settings put secure show_ime_with_hard_keyboard 0
-            # Unlock phone
-            - adb shell input keyevent 82 &
-          script:
-            - chmod +x ./gradlew;
-            - travis_retry travis_wait 45 ./gradlew connectedAndroidTest --stacktrace
+      before_script:
+        # Emulator Management: Create, Start and Wait
+        - chmod +x ./gradlew
+        - echo no | android create avd --force -n test -t "android-"$EMULATOR_API_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG
+        - emulator -avd test -no-window &
+        - android-wait-for-emulator
+        # Disable animations on the emulator (Improve performance)
+        - adb shell settings put global window_animation_scale 0 &
+        - adb shell settings put global transition_animation_scale 0 &
+        - adb shell settings put global animator_duration_scale 0 &
+        # Disable keyboard (Reduces test errors)
+        # - adb shell settings put secure show_ime_with_hard_keyboard 0
+        # Unlock phone
+        - adb shell input keyevent 82 &
+      script:
+        - chmod +x ./gradlew;
+        - travis_retry travis_wait 45 ./gradlew connectedAndroidTest --stacktrace
     - stage: test
       script:
         - chmod +x ./gradlew;
