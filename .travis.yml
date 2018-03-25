@@ -52,15 +52,16 @@ cache:
 jobs:
   include:
     - stage: SonarQube Inspection
-      sudo: false
-      install: true
-      addons:
-      sonarcloud:
-      organization: "codetaj-github"
-      token:
-        secure: "65d68182ed9adc1b9e1a91e17b0febad48d536e6"
-      branches:
-      - setupSonarCloud #activate on branch for testing
+      before_script:
+        sudo: false
+        install: true
+        addons:
+          sonarcloud:
+          organization: "codetaj-github"
+          token:
+            secure: "65d68182ed9adc1b9e1a91e17b0febad48d536e6"
+          branches:
+          - setupSonarCloud #activate on branch for testing
       script:
         - chmod +x ./gradlew;
         - ./gradlew sonarqube
