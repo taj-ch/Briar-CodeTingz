@@ -18,21 +18,13 @@ buildscript {
 		classpath 'com.google.gms:google-services:3.1.1'
 		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
 	}
-	
-	sonarqube {
-		properties {
-			property "sonar.projectName", "Briar-CodeTingz"
-			property "sonar.projectKey", "codetaj-github"
-		}
-	}
 }
 
 plugins {
-	id "org.sonarqube" version "2.6.2" apply false
+	id "org.sonarqube" version "2.6.2"
 }
 
 allprojects {
-    apply plugin: 'org.sonarqube'
 	repositories {
 		jcenter()
 		mavenLocal()
