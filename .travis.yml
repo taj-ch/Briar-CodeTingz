@@ -1,6 +1,9 @@
 language: android
 jdk: oraclejdk8
 
+sudo: false
+install: true
+
 env:
   global:
     - ANDROID_API_LEVEL=26
@@ -60,9 +63,6 @@ cache:
 jobs:
   include:
     - stage: SonarQube Inspection
-      before_script:
-        sudo: false
-        install: true
       script:
         - chmod +x ./gradlew;
         - ./gradlew sonarqube
