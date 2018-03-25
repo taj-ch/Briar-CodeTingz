@@ -2,17 +2,6 @@
 
 
 
-allprojects {
-    apply plugin: 'org.sonarqube'
-	repositories {
-		jcenter()
-		mavenLocal()
-		google()
-		maven{
-			url "https://maven.google.com" // Google's Maven repository
-		}
-	}
-}
 
 buildscript {
 	repositories {
@@ -37,6 +26,18 @@ buildscript {
 		properties {
 			property "sonar.projectName", "Briar-CodeTingz"
 			property "sonar.projectKey", "codetaj-github"
+		}
+	}
+}
+
+allprojects {
+    apply plugin: 'org.sonarqube'
+	repositories {
+		jcenter()
+		mavenLocal()
+		google()
+		maven{
+			url "https://maven.google.com" // Google's Maven repository
 		}
 	}
 }
