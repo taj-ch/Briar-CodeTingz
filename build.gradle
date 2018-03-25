@@ -1,8 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-
-
-
 buildscript {
 	repositories {
 		jcenter()
@@ -30,6 +27,10 @@ buildscript {
 	}
 }
 
+plugins {
+	id "org.sonarqube" version "2.6.2" apply false
+}
+
 allprojects {
     apply plugin: 'org.sonarqube'
 	repositories {
@@ -41,11 +42,6 @@ allprojects {
 		}
 	}
 }
-
-plugins {
-	id "org.sonarqube" version "2.6.2" apply false
-}
-
 
 // If a Java 6 JRE is available, check we're not using any Java 7 or 8 APIs
 ext.useJava6StandardLibrary = { task ->
