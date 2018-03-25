@@ -1,5 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+plugins {
+	id "org.sonarqube" version "2.6.2"
+}
+
 allprojects {
 	repositories {
 		jcenter()
@@ -12,11 +16,6 @@ allprojects {
 }
 
 buildscript {
-
-	plugins {
-    	id "org.sonarqube" version "2.6.2"
-	}
-
 	repositories {
 		jcenter()
 		mavenLocal()
