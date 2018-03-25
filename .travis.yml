@@ -52,7 +52,7 @@ addons:
     token:
       secure: "65d68182ed9adc1b9e1a91e17b0febad48d536e6"
     branches:
-    - setupSonarCloud #activate on branch for testing
+      - setupSonarCloud #activate on branch for testing
 
 cache:
   directories:
