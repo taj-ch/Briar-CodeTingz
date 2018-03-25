@@ -33,11 +33,13 @@ buildscript {
 	apply plugin: "org.sonarqube"
 	
 	sonarqube {
-    properties {
-        property "sonar.projectName", "Briar-CodeTingz"
-        property "sonar.projectKey", "codetaj-github"
-    }
+		properties {
+			property "sonar.projectName", "Briar-CodeTingz"
+			property "sonar.projectKey", "codetaj-github"
+		}
+	}
 }
+
 
 
 
