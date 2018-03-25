@@ -24,10 +24,6 @@ buildscript {
 		}
 	}
 
-plugins {
-	id "org.sonarqube" version "2.6.2" apply false
-	}
-
 	dependencies {
 		classpath 'com.android.tools.build:gradle:3.0.1'
 		classpath 'net.ltgt.gradle:gradle-apt-plugin:0.9'
@@ -45,7 +41,9 @@ plugins {
 	}
 }
 
-
+plugins {
+	id "org.sonarqube" version "2.6.2" apply false
+}
 
 
 // If a Java 6 JRE is available, check we're not using any Java 7 or 8 APIs
