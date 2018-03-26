@@ -246,7 +246,7 @@ public class ProfileFragment extends BaseFragment implements
 
 
 	// Store the users profile image into file
-	public void writeProfileImage(Bitmap bitmap, String userId, Context context){
+	private void writeProfileImage(Bitmap bitmap, String userId, Context context){
 
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -279,7 +279,7 @@ public class ProfileFragment extends BaseFragment implements
 	}
 
 	// Store the users profile image into file
-	public void readProfileImage(){
+	private void readProfileImage(){
 
 		final long ONE_MEGABYTE = 1024 * 1024;
 		profileImageStorageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -305,7 +305,7 @@ public class ProfileFragment extends BaseFragment implements
 			}
 		});
 	}
-	public void writeProfileInfo(String nickname, String firstName, String lastName,
+	private void writeProfileInfo(String nickname, String firstName, String lastName,
 			String email, String description) {
 		User user = new User(nickname, firstName, lastName, email, description);
 		profileInfoDbRef.setValue(user);
@@ -314,7 +314,7 @@ public class ProfileFragment extends BaseFragment implements
 	}
 
 	// Read the users profile info from file and store in hash map
-	public void readProfileInfo(){
+	private void readProfileInfo(){
 		ValueEventListener postListener = new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
@@ -356,7 +356,7 @@ public class ProfileFragment extends BaseFragment implements
 	}
 
 	// Get the author of the app
-	public String getUserName() {
+	private String getUserName() {
 		try {
 			author = identityManager.getLocalAuthor();
 			userName = author.getName();

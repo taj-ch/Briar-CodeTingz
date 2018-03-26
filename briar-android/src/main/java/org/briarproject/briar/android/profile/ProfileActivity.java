@@ -137,7 +137,7 @@ public class ProfileActivity extends BriarActivity {
 	}
 
 	// Store the users profile image into file
-	public void readProfileImage(){
+	private void readProfileImage(){
 
 		final long ONE_MEGABYTE = 1024 * 1024;
 		profileImageStorageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -168,7 +168,7 @@ public class ProfileActivity extends BriarActivity {
 	Read the users profile info from firebase and set the layout with the results if
 	there is data.
 	*/
-	public void readProfileInfo(){
+	private void readProfileInfo(){
 		ValueEventListener postListener = new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
