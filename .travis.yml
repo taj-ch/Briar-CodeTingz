@@ -1,5 +1,8 @@
 language: android
 jdk: oraclejdk8
+# Make it so that no state persists between builds. I.e. tests run in an environment built from scratch
+# https://docs.travis-ci.com/user/reference/trusty/
+sudo: required
 
 env:
   global:
@@ -20,21 +23,16 @@ android:
     - android-$EMULATOR_API_LEVEL
 
     # Google APIs
-    - addon-google_apis-google-$ANDROID_API_LEVEL
     - addon-google_apis-google-$EMULATOR_API_LEVEL
 
     # Google Play Services
     - extra-google-google_play_services
-
-    # Android support library
-    - extra-android-support
 
     # Latest artifacts in local repository
     - extra-google-m2repository
     - extra-android-m2repository
 
     # Specify at least one system image
-    - sys-img-armeabi-v7a-google_apis-$ANDROID_API_LEVEL
     - sys-img-armeabi-v7a-google_apis-$EMULATOR_API_LEVEL
 
 before_install:
@@ -52,14 +50,12 @@ cache:
 jobs:
   include:
     - stage: compile
-      install: true
       script:
         chmod +x ./gradlew;
         ./gradlew compileDebugSources;
         ./gradlew compileReleaseSources;
         ./gradlew compileDebugAndroidTestSources;
-    - stage: test
-      install: true
+    - stage: user interface test
       before_script:
         # Emulator Management: Create, Start and Wait
         - chmod +x ./gradlew
@@ -76,15 +72,16 @@ jobs:
         - adb shell input keyevent 82 &
       script:
         - chmod +x ./gradlew;
-        - travis_wait 60 ./gradlew clean connectedAndroidTest --full-stacktrace
+        - travis_retry travis_wait 45 ./gradlew connectedAndroidTest --stacktrace
+    - stage: unit test
+      script:
+        - chmod +x ./gradlew;
         - ./gradlew test --stacktrace
     - stage: package
-      install: true
       script:
         chmod +x ./gradlew;
         ./gradlew jar;
     - stage: device check
-      install: true
       script:
         chmod +x ./gradlew;
         ./gradlew deviceCheck
@@ -93,4 +90,3 @@ after_script:
     # this file changes every time but should not be cached
     - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
     - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
