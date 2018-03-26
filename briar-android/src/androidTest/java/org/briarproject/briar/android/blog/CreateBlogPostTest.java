@@ -133,7 +133,7 @@ public class CreateBlogPostTest {
 	public void CreateBlogPostTest() {
 
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(15000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
