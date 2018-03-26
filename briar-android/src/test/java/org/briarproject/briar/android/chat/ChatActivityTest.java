@@ -116,6 +116,7 @@ public class ChatActivityTest {
 
 		assertEquals(View.VISIBLE,  v.itemView.findViewById(R.id.text).getVisibility());
 		assertEquals(View.GONE, v.itemView.findViewById(R.id.image).getVisibility());
+		assertEquals(View.GONE, v.itemView.findViewById(R.id.file).getVisibility());
 	}
 
 	@Test
@@ -129,7 +130,21 @@ public class ChatActivityTest {
 		ImageView image = v.itemView.findViewById(R.id.image);
 
 		assertEquals(View.GONE, v.itemView.findViewById(R.id.text).getVisibility());
+		assertEquals(View.GONE,  v.itemView.findViewById(R.id.file).getVisibility());
 		assertEquals(View.VISIBLE, image.getVisibility());
 
+	}
+
+	@Test
+	public void testFileMessageDisplayed() {
+		Message message = new Message("./placeholder.pdf", "file", "placeholder.pdf", 1245415502, false);
+		message.setFrom("testing");
+		chatActivity.addToMessagesList(message);
+		messagesList.getAdapter().notifyDataSetChanged();
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(3);
+
+		assertEquals(View.VISIBLE,  v.itemView.findViewById(R.id.file).getVisibility());
+		assertEquals(View.GONE,  v.itemView.findViewById(R.id.text).getVisibility());
+		assertEquals(View.GONE, v.itemView.findViewById(R.id.image).getVisibility());
 	}
 }
