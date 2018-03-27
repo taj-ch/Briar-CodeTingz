@@ -39,11 +39,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 				View v1 = LayoutInflater.from(parent.getContext())
 						.inflate(R.layout.list_item_conversation_msg_in, parent,
 								false);
+				System.out.println("hello in");
 				return new MessageViewHolder(v1);
 			case MSG_OUT:
 				View v2 = LayoutInflater.from(parent.getContext())
 						.inflate(R.layout.list_item_conversation_msg_out, parent,
 								false);
+				System.out.println("hello out");
 				return new MessageViewHolder(v2);
 			default:
 				throw new IllegalArgumentException("Unknown Message Type");
@@ -54,12 +56,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 		public TextView messageText;
 		public TextView timeText;
 		public ImageView messageImage;
+		public ImageView messageSeen;
 
 		public MessageViewHolder(View view) {
 			super(view);
 			messageText = (TextView) view.findViewById(R.id.text);
 			timeText = (TextView) view.findViewById(R.id.time);
 			messageImage = (ImageView) view.findViewById(R.id.image);
+			messageSeen = (ImageView) view.findViewById(R.id.status);
 			messageText.setAutoLinkMask(15);
 		}
 	}
@@ -96,6 +100,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 					.into(viewHolder.messageImage);
 		}
 
+		//display the white message checkmarks on an message_out
+		int res = R.drawable.message_delivered_white;
+		if (viewHolder.messageSeen != null) {
+			viewHolder.messageSeen.setImageResource(res);
+		}
 		viewHolder.timeText.setText(
 				UiUtils.formatDate(viewHolder.timeText.getContext(), c.getTime()));
 	}
