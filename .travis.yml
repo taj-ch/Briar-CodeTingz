@@ -68,8 +68,7 @@ jobs:
     - stage: SonarQube inspection
       install: true
       script:
-        - chmod +x ./gradlew;
-        - ./gradlew sonarqube;
+        - sonar-scanner
     - stage: compile
       install: true
       script:
