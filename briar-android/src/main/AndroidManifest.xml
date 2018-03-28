@@ -29,6 +29,10 @@
 		android:logo="@mipmap/ic_launcher_round"
 		android:theme="@style/BriarTheme">
 
+		<meta-data
+			android:name="com.google.android.geo.API_KEY"
+			android:value="AIzaSyBxfAj1n5bVqMqA9gmQdMwv4BmShhVypE4"/>
+
 		<service
 			android:name="org.briarproject.briar.android.fcm.FcmMessageService">
 			<intent-filter>
