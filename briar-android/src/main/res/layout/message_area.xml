@@ -12,6 +12,12 @@
 		android:src="@android:drawable/ic_menu_gallery"
 		android:id="@+id/addImageButton"/>
 
+	<ImageButton
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@android:drawable/ic_menu_directions"
+		android:id="@+id/addLocationButton"/>
+
 	<EditText
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

@@ -28,6 +28,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import android.widget.TextView;
@@ -81,6 +83,7 @@ public class ChatActivity extends BriarActivity {
 	private LinearLayoutManager mLinearLayout;
 	private MessageAdapter mAdapter;
 	private ProgressDialog mProgressDialog;
+	private FusedLocationProviderClient mFusedLocationClient;
 
 	private static final int GALLERY_PICK = 1;
 
@@ -108,6 +111,7 @@ public class ChatActivity extends BriarActivity {
 
 		FirebaseApp.initializeApp(this);
 		Firebase.setAndroidContext(this);
+		mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
 
