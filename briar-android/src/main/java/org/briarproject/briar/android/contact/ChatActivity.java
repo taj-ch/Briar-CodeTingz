@@ -136,6 +136,7 @@ public class ChatActivity extends BriarActivity {
 
 		FirebaseApp.initializeApp(this);
 		Firebase.setAndroidContext(this);
+
 		startLocationUpdates();
 
 		layout = (LinearLayout) findViewById(R.id.layout1);
@@ -381,40 +382,32 @@ public class ChatActivity extends BriarActivity {
 		});
 	}
 
-	// Trigger new location updates at interval
 	protected void startLocationUpdates() {
 
-		// Create the location request to start receiving updates
 		mLocationRequest = new LocationRequest();
 		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 		mLocationRequest.setInterval(UPDATE_INTERVAL);
 		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-		// Create LocationSettingsRequest object using location request
 		LocationSettingsRequest.Builder builder =
 				new LocationSettingsRequest.Builder();
 		builder.addLocationRequest(mLocationRequest);
 		LocationSettingsRequest locationSettingsRequest = builder.build();
 
-		// Check whether location settings are satisfied
-		// https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
 		SettingsClient settingsClient =
 				LocationServices.getSettingsClient(this);
 		settingsClient.checkLocationSettings(locationSettingsRequest);
 
-		// new Google API SDK v11 uses getFusedLocationProviderClient(this)
 		if (ActivityCompat.checkSelfPermission(this,
 				Manifest.permission.ACCESS_FINE_LOCATION) !=
 				PackageManager.PERMISSION_GRANTED && ActivityCompat
 				.checkSelfPermission(this,
 						Manifest.permission.ACCESS_COARSE_LOCATION) !=
 				PackageManager.PERMISSION_GRANTED) {
+
 			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
 					Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-				// Show an explanation to the user *asynchronously* -- don't block
-				// this thread waiting for the user's response! After the user
-				// sees the explanation, try again to request the permission.
 				new AlertDialog.Builder(this)
 						.setTitle("Permission Required")
 						.setMessage("Briar needs your permission to use your location")
@@ -431,8 +424,8 @@ public class ChatActivity extends BriarActivity {
 						.show();
 
 
-			} else {
-				// No explanation needed, we can request the permission.
+			}
+			else {
 				ActivityCompat.requestPermissions(this,
 						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 						MY_PERMISSIONS_REQUEST_LOCATION);
@@ -445,7 +438,6 @@ public class ChatActivity extends BriarActivity {
 							@Override
 							public void onLocationResult(
 									LocationResult locationResult) {
-								// do work here
 								onLocationChanged(
 										locationResult.getLastLocation());
 							}
@@ -454,7 +446,6 @@ public class ChatActivity extends BriarActivity {
 	}
 
 	public void onLocationChanged(Location location) {
-		// New location has now been determined
 		String msg = "Updated Location: " +
 				Double.toString(location.getLatitude()) + "," +
 				Double.toString(location.getLongitude());
@@ -481,9 +472,6 @@ public class ChatActivity extends BriarActivity {
 			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
 					Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-				// Show an explanation to the user *asynchronously* -- don't block
-				// this thread waiting for the user's response! After the user
-				// sees the explanation, try again to request the permission.
 				new AlertDialog.Builder(this)
 						.setTitle("Permission Required")
 						.setMessage("Briar needs your permission to use your location")
@@ -500,14 +488,15 @@ public class ChatActivity extends BriarActivity {
 						.show();
 
 
-			} else {
-				// No explanation needed, we can request the permission.
+			}
+			else {
 				ActivityCompat.requestPermissions(this,
 						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 						MY_PERMISSIONS_REQUEST_LOCATION);
 			}
 			return;
 		}
+
 		locationClient.getLastLocation()
 				.addOnSuccessListener(this, new OnSuccessListener<Location>() {
 					@Override
@@ -516,8 +505,6 @@ public class ChatActivity extends BriarActivity {
 								mRootRef.child("messages")
 										.child(UserDetails.username)
 										.child(UserDetails.chatWith).push();
-						Double latitude = location.getLatitude();
-						Double longitude = location.getLongitude();
 						String message = "https://www.google.ca/maps/?q=" +
 								Double.toString(location.getLatitude()) + "," +
 								Double.toString(location.getLongitude());
