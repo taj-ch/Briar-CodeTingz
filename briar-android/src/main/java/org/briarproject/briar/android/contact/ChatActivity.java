@@ -466,14 +466,13 @@ public class ChatActivity extends BriarActivity {
 				.addOnSuccessListener(this, new OnSuccessListener<Location>() {
 					@Override
 					public void onSuccess(Location location) {
-						System.out.println("1111111111111111111");
 						DatabaseReference user_message_push =
 								mRootRef.child("messages")
 										.child(UserDetails.username)
 										.child(UserDetails.chatWith).push();
 						Double latitude = location.getLatitude();
 						Double longitude = location.getLongitude();
-						String message = "Location: " +
+						String message = "https://www.google.ca/maps/?q=" +
 								Double.toString(location.getLatitude()) + "," +
 								Double.toString(location.getLongitude());
 
@@ -498,7 +497,6 @@ public class ChatActivity extends BriarActivity {
 									public void onComplete(
 											DatabaseError databaseError,
 											DatabaseReference databaseReference) {
-										System.out.println("2222222222222222222");
 										if (databaseError != null) {
 											Log.d("CHAT_LOG",
 													databaseError.getMessage()
@@ -506,8 +504,6 @@ public class ChatActivity extends BriarActivity {
 										}
 									}
 								});
-
-
 
 					}
 				});
