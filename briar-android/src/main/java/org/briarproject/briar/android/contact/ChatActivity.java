@@ -289,18 +289,13 @@ public class ChatActivity extends BriarActivity {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
-
 				itemPos++;
 				if(itemPos == 1){
-
 					String messageKey = dataSnapshot.getKey();
-
 					mLastKey = messageKey;
 					mPrevKey = messageKey;
-					dataSnapshot.child("seen").getRef().setValue("true");
-
-
 				}
+				dataSnapshot.child("seen").getRef().setValue(true);
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
 				mMessagesList.scrollToPosition(messageList.size() - 1);

@@ -39,13 +39,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 				View v1 = LayoutInflater.from(parent.getContext())
 						.inflate(R.layout.list_item_conversation_msg_in, parent,
 								false);
-				System.out.println("hello in");
 				return new MessageViewHolder(v1);
 			case MSG_OUT:
 				View v2 = LayoutInflater.from(parent.getContext())
 						.inflate(R.layout.list_item_conversation_msg_out, parent,
 								false);
-				System.out.println("hello out");
 				return new MessageViewHolder(v2);
 			default:
 				throw new IllegalArgumentException("Unknown Message Type");
