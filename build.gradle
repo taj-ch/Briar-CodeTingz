@@ -1,16 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-allprojects {
-	repositories {
-		jcenter()
-		mavenLocal()
-		google()
-		maven{
-			url "https://maven.google.com" // Google's Maven repository
-		}
-	}
-}
-
 buildscript {
 	repositories {
 		jcenter()
@@ -27,6 +16,22 @@ buildscript {
 		classpath 'de.undercouch:gradle-download-task:3.2.0'
 		classpath files('libs/gradle-witness.jar')
 		classpath 'com.google.gms:google-services:3.1.1'
+		classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
+	}
+}
+
+plugins {
+	id "org.sonarqube" version "2.6.2"
+}
+
+allprojects {
+	repositories {
+		jcenter()
+		mavenLocal()
+		google()
+		maven{
+			url "https://maven.google.com" // Google's Maven repository
+		}
 	}
 }
 
