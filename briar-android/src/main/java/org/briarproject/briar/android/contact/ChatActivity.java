@@ -1,7 +1,9 @@
 package org.briarproject.briar.android.contact;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -105,6 +107,8 @@ public class ChatActivity extends BriarActivity {
 
 	private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
 	private long FASTEST_INTERVAL = 2000; /* 2 sec */
+
+	public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 	private static final int GALLERY_PICK = 1;
 
@@ -405,13 +409,34 @@ public class ChatActivity extends BriarActivity {
 				.checkSelfPermission(this,
 						Manifest.permission.ACCESS_COARSE_LOCATION) !=
 				PackageManager.PERMISSION_GRANTED) {
-			// TODO: Consider calling
-			//    ActivityCompat#requestPermissions
-			// here to request the missing permissions, and then overriding
-			//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-			//                                          int[] grantResults)
-			// to handle the case where the user grants the permission. See the documentation
-			// for ActivityCompat#requestPermissions for more details.
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+					Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+				// Show an explanation to the user *asynchronously* -- don't block
+				// this thread waiting for the user's response! After the user
+				// sees the explanation, try again to request the permission.
+				new AlertDialog.Builder(this)
+						.setTitle("Permission Required")
+						.setMessage("Briar needs your permission to use your location")
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								//Prompt the user once explanation has been shown
+								ActivityCompat.requestPermissions(ChatActivity.this,
+										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+										MY_PERMISSIONS_REQUEST_LOCATION);
+							}
+						})
+						.create()
+						.show();
+
+
+			} else {
+				// No explanation needed, we can request the permission.
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_LOCATION);
+			}
 			return;
 		}
 		getFusedLocationProviderClient(this)
@@ -453,13 +478,34 @@ public class ChatActivity extends BriarActivity {
 						Manifest.permission.ACCESS_COARSE_LOCATION) !=
 				PackageManager.PERMISSION_GRANTED) {
 			System.out.println("Inside Location Permission Check");
-			// TODO: Consider calling
-			//    ActivityCompat#requestPermissions
-			// here to request the missing permissions, and then overriding
-			//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-			//                                          int[] grantResults)
-			// to handle the case where the user grants the permission. See the documentation
-			// for ActivityCompat#requestPermissions for more details.
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+					Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+				// Show an explanation to the user *asynchronously* -- don't block
+				// this thread waiting for the user's response! After the user
+				// sees the explanation, try again to request the permission.
+				new AlertDialog.Builder(this)
+						.setTitle("Permission Required")
+						.setMessage("Briar needs your permission to use your location")
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								//Prompt the user once explanation has been shown
+								ActivityCompat.requestPermissions(ChatActivity.this,
+										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+										MY_PERMISSIONS_REQUEST_LOCATION);
+							}
+						})
+						.create()
+						.show();
+
+
+			} else {
+				// No explanation needed, we can request the permission.
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_LOCATION);
+			}
 			return;
 		}
 		locationClient.getLastLocation()
