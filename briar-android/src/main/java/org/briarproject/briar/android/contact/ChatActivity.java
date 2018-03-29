@@ -43,6 +43,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -289,13 +290,14 @@ public class ChatActivity extends BriarActivity {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
+
 				itemPos++;
 				if(itemPos == 1){
 					String messageKey = dataSnapshot.getKey();
 					mLastKey = messageKey;
 					mPrevKey = messageKey;
 				}
-				dataSnapshot.child("seen").getRef().setValue(true);
+				//dataSnapshot.child("seen").getRef().setValue(true);
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
 				mMessagesList.scrollToPosition(messageList.size() - 1);
@@ -304,7 +306,32 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+				String key = dataSnapshot.getKey();
+				String message = dataSnapshot.child("message").getValue().toString();
+				System.out.println(message);
+				DatabaseReference ref = mRootRef.child("messages").child(UserDetails.chatWith).child(UserDetails.username).child(key);
 
+				ref.addValueEventListener(new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnap) {
+						//System.out.println("lala " + dataSnap.child("message").getValue());
+
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+
+					}
+				});
+
+
+				//System.out.println(ref.child(key).child("message").getValue());
+
+				//System.out.println(dataSnapshot);
+				//System.out.println(dataSnapshot.getKey());
+				//System.out.println(dataSnapshot.child("message").getValue());
+				//System.out.println(dataSnapshot.child("seen").getValue());
+				//System.out.println(ref.child(dataSnapshot.getKey()).child("message").)
 			}
 
 			@Override
