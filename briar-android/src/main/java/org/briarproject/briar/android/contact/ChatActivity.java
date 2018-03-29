@@ -216,7 +216,7 @@ public class ChatActivity extends BriarActivity {
 		addLocationButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				requestLocation();
+				getLocation();
 			}
 		});
 
@@ -394,24 +394,21 @@ public class ChatActivity extends BriarActivity {
 		builder.addLocationRequest(mLocationRequest);
 		LocationSettingsRequest locationSettingsRequest = builder.build();
 
-		SettingsClient settingsClient =
-				LocationServices.getSettingsClient(this);
+		SettingsClient settingsClient =	LocationServices.getSettingsClient(this);
 		settingsClient.checkLocationSettings(locationSettingsRequest);
 
-		if (ActivityCompat.checkSelfPermission(this,
-				Manifest.permission.ACCESS_FINE_LOCATION) !=
-				PackageManager.PERMISSION_GRANTED && ActivityCompat
-				.checkSelfPermission(this,
-						Manifest.permission.ACCESS_COARSE_LOCATION) !=
-				PackageManager.PERMISSION_GRANTED) {
+		// Check if App-Level Location Permission is enabled
+		if (ActivityCompat.checkSelfPermission(this,	Manifest.permission.ACCESS_FINE_LOCATION) !=
+				PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+						Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-					Manifest.permission.ACCESS_FINE_LOCATION)) {
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,	Manifest.permission.ACCESS_FINE_LOCATION)) {
 
 				new AlertDialog.Builder(this)
 						.setTitle("Permission Required")
 						.setMessage("Briar needs your permission to use your location")
 						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
 							@Override
 							public void onClick(DialogInterface dialogInterface, int i) {
 								//Prompt the user once explanation has been shown
@@ -422,16 +419,17 @@ public class ChatActivity extends BriarActivity {
 						})
 						.create()
 						.show();
-
-
 			}
+
 			else {
 				ActivityCompat.requestPermissions(this,
 						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 						MY_PERMISSIONS_REQUEST_LOCATION);
 			}
+
 			return;
 		}
+
 		getFusedLocationProviderClient(this)
 				.requestLocationUpdates(mLocationRequest,
 						new LocationCallback() {
@@ -449,10 +447,11 @@ public class ChatActivity extends BriarActivity {
 		String msg = "Updated Location: " +
 				Double.toString(location.getLatitude()) + "," +
 				Double.toString(location.getLongitude());
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+		Log.d("LOCATION", msg);
+
 	}
 
-	private void requestLocation() {
+	private void getLocation() {
 
 		FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
 
@@ -462,20 +461,18 @@ public class ChatActivity extends BriarActivity {
 				"messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 
-		if (ActivityCompat.checkSelfPermission(this,
-				Manifest.permission.ACCESS_FINE_LOCATION) !=
-				PackageManager.PERMISSION_GRANTED && ActivityCompat
-				.checkSelfPermission(this,
-						Manifest.permission.ACCESS_COARSE_LOCATION) !=
-				PackageManager.PERMISSION_GRANTED) {
+		if (ActivityCompat.checkSelfPermission(this,	Manifest.permission.ACCESS_FINE_LOCATION) !=
+				PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+						Manifest.permission.ACCESS_COARSE_LOCATION) !=	PackageManager.PERMISSION_GRANTED) {
+
 			System.out.println("Inside Location Permission Check");
-			if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-					Manifest.permission.ACCESS_FINE_LOCATION)) {
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
 
 				new AlertDialog.Builder(this)
 						.setTitle("Permission Required")
 						.setMessage("Briar needs your permission to use your location")
 						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
 							@Override
 							public void onClick(DialogInterface dialogInterface, int i) {
 								//Prompt the user once explanation has been shown
@@ -486,19 +483,20 @@ public class ChatActivity extends BriarActivity {
 						})
 						.create()
 						.show();
-
-
 			}
+
 			else {
 				ActivityCompat.requestPermissions(this,
 						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 						MY_PERMISSIONS_REQUEST_LOCATION);
 			}
+
 			return;
 		}
 
 		locationClient.getLastLocation()
 				.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+
 					@Override
 					public void onSuccess(Location location) {
 						DatabaseReference user_message_push =
@@ -521,8 +519,7 @@ public class ChatActivity extends BriarActivity {
 						Map messageUserMap = new HashMap();
 						messageUserMap.put(current_user_ref + "/" + push_id,
 								messageMap);
-						messageUserMap
-								.put(chat_user_ref + "/" + push_id, messageMap);
+						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
 
 						mRootRef.updateChildren(messageUserMap,
 								new DatabaseReference.CompletionListener() {
@@ -532,8 +529,7 @@ public class ChatActivity extends BriarActivity {
 											DatabaseReference databaseReference) {
 										if (databaseError != null) {
 											Log.d("CHAT_LOG",
-													databaseError.getMessage()
-															.toString());
+													databaseError.getMessage().toString());
 										}
 									}
 								});
