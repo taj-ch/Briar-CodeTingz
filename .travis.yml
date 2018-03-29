@@ -77,6 +77,12 @@ jobs:
       script:
         - chmod +x ./gradlew;
         - ./gradlew test --stacktrace
+    - stage: static analysis
+      script:
+        chmod +x ./gradlew;
+        ./gradlew checkstyle;
+        ./gradlew pmd;
+        ./gradlew findbugs;
     - stage: package
       script:
         chmod +x ./gradlew;
