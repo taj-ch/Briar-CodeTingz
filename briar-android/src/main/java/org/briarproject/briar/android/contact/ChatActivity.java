@@ -297,7 +297,9 @@ public class ChatActivity extends BriarActivity {
 					mLastKey = messageKey;
 					mPrevKey = messageKey;
 				}
-				//dataSnapshot.child("seen").getRef().setValue(true);
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)){
+					dataSnapshot.child("seen").getRef().setValue(true); // TODO make sure this is only applied to incoming messages
+				}
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
 				mMessagesList.scrollToPosition(messageList.size() - 1);
@@ -315,7 +317,7 @@ public class ChatActivity extends BriarActivity {
 					@Override
 					public void onDataChange(DataSnapshot dataSnap) {
 						//System.out.println("lala " + dataSnap.child("message").getValue());
-
+						dataSnap.child("seen").getRef().setValue(true);
 					}
 
 					@Override
