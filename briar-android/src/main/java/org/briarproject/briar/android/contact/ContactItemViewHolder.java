@@ -79,13 +79,18 @@ public class ContactItemViewHolder<I extends ContactItem>
 		author = item.getContact().getAuthor();
 		authorName = author.getName();
 
+		// Set listener on avatar circle to open profile intent when clicked
+		avatar.setOnClickListener(v -> {
+			Intent profileIntent = new Intent(layout.getContext(), ProfileActivity.class);
+			profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
+			layout.getContext().startActivity(profileIntent);
+		});
+
 		// Read the contacts profile image from storage if they have one
 		try {
 			profileImageStorageRef = FirebaseStorage.getInstance().getReference()
 					.child("profile/images/"+authorName+"/profile.jpg");
-
 			readProfileImage();
-
 		} catch(Exception e) {
 			Log.w(TAG, "Error reading profile image from firebase \n" + e.toString(), e);
 		}
@@ -108,7 +113,7 @@ public class ContactItemViewHolder<I extends ContactItem>
 		});
 	}
 
-	// Store the users profile image into file
+	// Retrieve the users profile image from firebase and replace briar avatar
 	private void readProfileImage(){
 
 		final long ONE_MEGABYTE = 1024 * 1024;
@@ -117,10 +122,8 @@ public class ContactItemViewHolder<I extends ContactItem>
 			public void onSuccess(byte[] bytes) {
 				Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 				if(bitmap != null) {
-
 					avatar.setImageBitmap(bitmap);
 				}else{
-
 					avatar.setImageDrawable(
 							new IdenticonDrawable(author.getId().getBytes()));
 				}
@@ -137,7 +140,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 				if (LOG.isLoggable(INFO)) {
 					LOG.info("Error getting profile image from Firebase");
 				}
-
 				avatar.setImageDrawable(
 						new IdenticonDrawable(author.getId().getBytes()));
 			}
