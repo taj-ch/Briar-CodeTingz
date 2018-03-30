@@ -1,7 +1,10 @@
 package org.briarproject.briar.android.profile;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import org.briarproject.briar.R;
 
@@ -14,6 +17,7 @@ public class ProfileFirebaseMock {
 	private EditText nickname;
 	private EditText description;
 	private User user = new User();
+	private ImageView selectedImage;
 
 	/* Similar to the firebase writeProfileInfo. This method will just create a user
 	   object instead of writing to firebase */
@@ -39,6 +43,14 @@ public class ProfileFirebaseMock {
 		description.setText(user.getDescription());
 	}
 
+	// Set the users profile image
+	public void readProfileImage(){
+		Bitmap bitmap = BitmapFactory.decodeFile("./profileAvatarTest.jpg");
+		if(bitmap != null) {
+			selectedImage.setImageBitmap(bitmap);
+		}
+	}
+
 	/* Since writeProfileInfo automatically changes the view we need the references
 	   to the layouts */
 	public void setView(View view) {
@@ -47,5 +59,6 @@ public class ProfileFirebaseMock {
 		lastName = view.findViewById(R.id.profile_last_name);
 		email = view.findViewById(R.id.profile_email);
 		description = view.findViewById(R.id.profile_description);
+		selectedImage = view.findViewById(R.id.profilePic);
 	}
 }
