@@ -103,7 +103,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			viewHolder.messageImage.setVisibility(View.GONE);
 			viewHolder.messageText.setVisibility(View.GONE);
 			viewHolder.fileText.setText(c.getName());
-					//Html.fromHtml("<a href=\"" + c.getMessage() + "\">" + c.getName() + "</a>"));
 			viewHolder.fileText.setMovementMethod(LinkMovementMethod.getInstance());
 			viewHolder.fileText.setOnClickListener(
 					new View.OnClickListener() {
@@ -111,6 +110,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 						public void onClick(View v) {
 							Intent intent = (new Intent(mContext, WebviewFile.class));
 							intent.putExtra("url",c.getMessage());
+							intent.putExtra("file_name",c.getName());
 							mContext.startActivity(intent);
 						}
 					});
