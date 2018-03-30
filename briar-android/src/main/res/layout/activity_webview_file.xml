@@ -13,9 +13,12 @@
 	android:id="@+id/activity_webview_file">
 
 	<WebView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:id="@+id/webview1">
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/webview1"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true">
 	</WebView>
 
 </RelativeLayout>

@@ -430,4 +430,7 @@
 	<string name="fullscreen_image">Fullscreen Image</string>
 	<string name="search_contacts">Search Contacts</string>
 
+	<!-- File viewer image -->
+	<string name="activity_webview_file">Download File</string>
+
 </resources>

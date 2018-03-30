@@ -3,9 +3,7 @@ package org.briarproject.briar.android.contact;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,9 +102,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			viewHolder.fileText.setVisibility(View.VISIBLE);
 			viewHolder.messageImage.setVisibility(View.GONE);
 			viewHolder.messageText.setVisibility(View.GONE);
-			viewHolder.fileText.setText(
-					Html.fromHtml("<a href=\"" + c.getMessage() + "\">" + c.getName() + "</a>"));
+			viewHolder.fileText.setText(c.getName());
+					//Html.fromHtml("<a href=\"" + c.getMessage() + "\">" + c.getName() + "</a>"));
 			viewHolder.fileText.setMovementMethod(LinkMovementMethod.getInstance());
+			viewHolder.fileText.setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = (new Intent(mContext, WebviewFile.class));
+							intent.putExtra("url",c.getMessage());
+							mContext.startActivity(intent);
+						}
+					});
 		}
 
 		viewHolder.timeText.setText(
