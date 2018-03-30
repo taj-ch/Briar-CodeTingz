@@ -242,16 +242,18 @@ public class ChatActivity extends BriarActivity {
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
 				String messageKey = dataSnapshot.getKey();
-
 				if(!mPrevKey.equals(messageKey)){
 					messageList.add(itemPos++, message);
-				} else {
+				}
+				else {
 					mPrevKey = mLastKey;
 				}
 				if(itemPos == 1) {
 					mLastKey = messageKey;
 				}
-
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)){
+					dataSnapshot.child("seen").getRef().setValue(true);
+				}
 				Log.d("TOTALKEYS", "Last Key : " + mLastKey + " | Prev Key : " + mPrevKey + " | Message Key : " + messageKey);
 				mAdapter.notifyDataSetChanged();
 				mRefreshLayout.setRefreshing(false);
@@ -260,7 +262,23 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+				String key = dataSnapshot.getKey();
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)) {
+					DatabaseReference ref = mRootRef.child("messages")
+							.child(UserDetails.chatWith)
+							.child(UserDetails.username).child(key);
+					ref.addValueEventListener(new ValueEventListener() {
+						@Override
+						public void onDataChange(DataSnapshot dataSnap) {
+							dataSnap.child("seen").getRef().setValue(true);
+						}
 
+						@Override
+						public void onCancelled(DatabaseError databaseError) {
+
+						}
+					});
+				}
 			}
 
 			@Override
@@ -298,7 +316,7 @@ public class ChatActivity extends BriarActivity {
 					mPrevKey = messageKey;
 				}
 				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)){
-					dataSnapshot.child("seen").getRef().setValue(true); // TODO make sure this is only applied to incoming messages
+					dataSnapshot.child("seen").getRef().setValue(true);
 				}
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
@@ -309,31 +327,22 @@ public class ChatActivity extends BriarActivity {
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 				String key = dataSnapshot.getKey();
-				String message = dataSnapshot.child("message").getValue().toString();
-				System.out.println(message);
-				DatabaseReference ref = mRootRef.child("messages").child(UserDetails.chatWith).child(UserDetails.username).child(key);
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)) {
+					DatabaseReference ref = mRootRef.child("messages")
+							.child(UserDetails.chatWith)
+							.child(UserDetails.username).child(key);
+					ref.addValueEventListener(new ValueEventListener() {
+						@Override
+						public void onDataChange(DataSnapshot dataSnap) {
+							dataSnap.child("seen").getRef().setValue(true);
+						}
 
-				ref.addValueEventListener(new ValueEventListener() {
-					@Override
-					public void onDataChange(DataSnapshot dataSnap) {
-						//System.out.println("lala " + dataSnap.child("message").getValue());
-						dataSnap.child("seen").getRef().setValue(true);
-					}
+						@Override
+						public void onCancelled(DatabaseError databaseError) {
 
-					@Override
-					public void onCancelled(DatabaseError databaseError) {
-
-					}
-				});
-
-
-				//System.out.println(ref.child(key).child("message").getValue());
-
-				//System.out.println(dataSnapshot);
-				//System.out.println(dataSnapshot.getKey());
-				//System.out.println(dataSnapshot.child("message").getValue());
-				//System.out.println(dataSnapshot.child("seen").getValue());
-				//System.out.println(ref.child(dataSnapshot.getKey()).child("message").)
+						}
+					});
+				}
 			}
 
 			@Override
