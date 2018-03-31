@@ -244,8 +244,7 @@ public class ChatActivity extends BriarActivity {
 				String messageKey = dataSnapshot.getKey();
 				if(!mPrevKey.equals(messageKey)){
 					messageList.add(itemPos++, message);
-				}
-				else {
+				} else {
 					mPrevKey = mLastKey;
 				}
 				if(itemPos == 1) {

@@ -107,8 +107,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 				if (viewHolder.messageSeen != null) {
 					viewHolder.messageSeen.setImageResource(res);
 				}
-			}
-			else{
+			} else{
 				int res = 0;
 				viewHolder.messageSeen.setImageResource(res);
 			}
