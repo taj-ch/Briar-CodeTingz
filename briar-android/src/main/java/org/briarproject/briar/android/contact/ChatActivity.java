@@ -299,7 +299,6 @@ public class ChatActivity extends BriarActivity {
 
 	}
 
-
 	private void loadMessages() {
 
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
@@ -308,7 +307,7 @@ public class ChatActivity extends BriarActivity {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
-
+				message.setId(dataSnapshot.getKey());
 				itemPos++;
 				if(itemPos == 1){
 					String messageKey = dataSnapshot.getKey();
@@ -327,6 +326,8 @@ public class ChatActivity extends BriarActivity {
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 				String key = dataSnapshot.getKey();
+
+				// if incoming message
 				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)) {
 					DatabaseReference ref = mRootRef.child("messages")
 							.child(UserDetails.chatWith)
@@ -334,6 +335,7 @@ public class ChatActivity extends BriarActivity {
 					ref.addValueEventListener(new ValueEventListener() {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
+							// database message is set to seen
 							dataSnap.child("seen").getRef().setValue(true);
 						}
 
@@ -343,6 +345,21 @@ public class ChatActivity extends BriarActivity {
 						}
 					});
 				}
+
+				// if outgoing message
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.username)) {
+					if(dataSnapshot.child("seen").getValue().toString() == "true") {
+						for (int i = 0; i < messageList.size(); i++) {
+							Message m = messageList.get(i);
+							if (m.getId().equals(key)) {
+								//physical message is set to seen
+								m.setSeen(true);
+								mAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
+
 			}
 
 			@Override

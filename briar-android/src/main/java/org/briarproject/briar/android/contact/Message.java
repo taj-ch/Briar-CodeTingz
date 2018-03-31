@@ -6,16 +6,9 @@ public class Message {
 	private long  time;
 	private boolean seen;
 	private String from;
+	private String id = "";
 
 	public Message(String from) {
-		this.from = from;
-	}
-
-	public String getFrom() {
-		return from;
-	}
-
-	public void setFrom(String from) {
 		this.from = from;
 	}
 
@@ -58,7 +51,17 @@ public class Message {
 		this.seen = seen;
 	}
 
-	public Message() {
+	public String getId(){ return id; }
 
+	public void setId(String id){ this.id = id; }
+
+	public String getFrom() {
+		return from;
 	}
+
+	public void setFrom(String from) {
+		this.from = from;
+	}
+
+	public Message() {}
 }
