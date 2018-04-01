@@ -43,6 +43,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -241,7 +242,6 @@ public class ChatActivity extends BriarActivity {
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
 				String messageKey = dataSnapshot.getKey();
-
 				if(!mPrevKey.equals(messageKey)){
 					messageList.add(itemPos++, message);
 				} else {
@@ -250,7 +250,9 @@ public class ChatActivity extends BriarActivity {
 				if(itemPos == 1) {
 					mLastKey = messageKey;
 				}
-
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)){
+					dataSnapshot.child("seen").getRef().setValue(true);
+				}
 				Log.d("TOTALKEYS", "Last Key : " + mLastKey + " | Prev Key : " + mPrevKey + " | Message Key : " + messageKey);
 				mAdapter.notifyDataSetChanged();
 				mRefreshLayout.setRefreshing(false);
@@ -259,7 +261,23 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+				String key = dataSnapshot.getKey();
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)) {
+					DatabaseReference ref = mRootRef.child("messages")
+							.child(UserDetails.chatWith)
+							.child(UserDetails.username).child(key);
+					ref.addValueEventListener(new ValueEventListener() {
+						@Override
+						public void onDataChange(DataSnapshot dataSnap) {
+							dataSnap.child("seen").getRef().setValue(true);
+						}
 
+						@Override
+						public void onCancelled(DatabaseError databaseError) {
+
+						}
+					});
+				}
 			}
 
 			@Override
@@ -280,7 +298,6 @@ public class ChatActivity extends BriarActivity {
 
 	}
 
-
 	private void loadMessages() {
 
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
@@ -289,14 +306,15 @@ public class ChatActivity extends BriarActivity {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
+				message.setId(dataSnapshot.getKey());
 				itemPos++;
 				if(itemPos == 1){
-
 					String messageKey = dataSnapshot.getKey();
-
 					mLastKey = messageKey;
 					mPrevKey = messageKey;
-
+				}
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)){
+					dataSnapshot.child("seen").getRef().setValue(true);
 				}
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
@@ -306,6 +324,40 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+				String key = dataSnapshot.getKey();
+
+				// if incoming message
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)) {
+					DatabaseReference ref = mRootRef.child("messages")
+							.child(UserDetails.chatWith)
+							.child(UserDetails.username).child(key);
+					ref.addValueEventListener(new ValueEventListener() {
+						@Override
+						public void onDataChange(DataSnapshot dataSnap) {
+							// database message is set to seen
+							dataSnap.child("seen").getRef().setValue(true);
+						}
+
+						@Override
+						public void onCancelled(DatabaseError databaseError) {
+
+						}
+					});
+				}
+
+				// if outgoing message
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.username)) {
+					if(dataSnapshot.child("seen").getValue().toString() == "true") {
+						for (int i = 0; i < messageList.size(); i++) {
+							Message m = messageList.get(i);
+							if (m.getId().equals(key)) {
+								//physical message is set to seen
+								m.setSeen(true);
+								mAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
 
 			}
 
