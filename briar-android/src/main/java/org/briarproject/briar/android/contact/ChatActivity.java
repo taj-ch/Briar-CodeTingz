@@ -5,12 +5,13 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
-
-import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -25,32 +26,27 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firebase.database.Query;
 
 import org.briarproject.briar.R;
-import org.briarproject.briar.android.profile.ProfileActivity;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
+import org.briarproject.briar.android.profile.ProfileActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -220,8 +216,8 @@ public class ChatActivity extends BriarActivity {
 
 		if(!TextUtils.isEmpty(message)){
 
-			String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
-			String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+			String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 			DatabaseReference user_message_push = mRootRef.child("messages")
 					.child(UserDetails.username).child(UserDetails.chatWith).push();
@@ -236,8 +232,8 @@ public class ChatActivity extends BriarActivity {
 			messageMap.put("from", UserDetails.username);
 
 			Map messageUserMap = new HashMap();
-			messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-			messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+			messageUserMap.put(CURRENT_USER_REF + "/" + push_id, messageMap);
+			messageUserMap.put(CHAT_USER_REF + "/" + push_id, messageMap);
 
 			messageArea.setText("");
 
@@ -358,15 +354,15 @@ public class ChatActivity extends BriarActivity {
 
 			Uri imageUri = data.getData();
 
-			final String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
-			final String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+			final String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 			DatabaseReference user_message_push = mRootRef.child("messages")
 					.child(UserDetails.username).child(UserDetails.chatWith).push();
 
-			final String push_id = user_message_push.getKey();
+			final String PUSH_ID = user_message_push.getKey();
 
-			StorageReference filepath = mImageStorage.child("message_images").child(push_id + ".jpg");
+			StorageReference filepath = mImageStorage.child("message_images").child(PUSH_ID + ".jpg");
 
 			filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
 				@Override
@@ -382,8 +378,8 @@ public class ChatActivity extends BriarActivity {
 						messageMap.put("from", UserDetails.username);
 
 						Map messageUserMap = new HashMap();
-						messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+						messageUserMap.put(CURRENT_USER_REF + "/" + PUSH_ID, messageMap);
+						messageUserMap.put(CHAT_USER_REF + "/" + PUSH_ID, messageMap);
 
 						messageArea.setText("");
 
@@ -407,21 +403,21 @@ public class ChatActivity extends BriarActivity {
 			mProgressDialog.show();
 
 			Uri fileUri = data.getData();
-			final MimeTypeMap mime = MimeTypeMap.getSingleton();
+			final MimeTypeMap MIME = MimeTypeMap.getSingleton();
 			String mimeType = getMimeType(fileUri);
-			String extension = mime.getExtensionFromMimeType(mimeType);
+			String extension = MIME.getExtensionFromMimeType(mimeType);
 
 			String name = getFileName(fileUri);
 
-			final String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
-			final String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+			final String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 			DatabaseReference user_message_push = mRootRef.child("messages")
 					.child(UserDetails.username).child(UserDetails.chatWith).push();
 
-			final String push_id = user_message_push.getKey();
+			final String PUSH_ID = user_message_push.getKey();
 
-			StorageReference filepath = mImageStorage.child("message_files").child(push_id + "." + extension);
+			StorageReference filepath = mImageStorage.child("message_files").child(PUSH_ID + "." + extension);
 
 			filepath.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
 				@Override
@@ -438,8 +434,8 @@ public class ChatActivity extends BriarActivity {
 						messageMap.put("from", UserDetails.username);
 
 						Map messageUserMap = new HashMap();
-						messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+						messageUserMap.put(CURRENT_USER_REF + "/" + PUSH_ID, messageMap);
+						messageUserMap.put(CHAT_USER_REF + "/" + PUSH_ID, messageMap);
 
 						messageArea.setText("");
 
