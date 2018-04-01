@@ -25,6 +25,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
@@ -147,4 +148,19 @@ public class ChatActivityTest {
 		assertEquals(View.GONE,  v.itemView.findViewById(R.id.text).getVisibility());
 		assertEquals(View.GONE, v.itemView.findViewById(R.id.image).getVisibility());
 	}
+  
+  @Test
+	public void testMessageSeen(){
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(0);
+		ImageView status = v.itemView.findViewById(R.id.status);
+		assertNotNull(status);
+	}
+
+	@Test
+	public void testMessageNotSeen(){
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(1);
+		ImageView status = v.itemView.findViewById(R.id.status);
+		assertNull(status);
+	}
+
 }

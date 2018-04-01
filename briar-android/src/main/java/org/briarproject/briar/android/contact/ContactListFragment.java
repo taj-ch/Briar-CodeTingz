@@ -187,6 +187,12 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	}
 
 	@Override
+	public void onResume(){
+		super.onResume();
+		UserDetails.changeChatWith("");
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.contact_list_actions, menu);
 		super.onCreateOptionsMenu(menu, inflater);
