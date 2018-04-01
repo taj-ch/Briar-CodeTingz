@@ -51,11 +51,11 @@ public class ProfileActivityTest {
 
 	@Test
 	public void testContactProfileUIisVisible() {
-		assertEquals(nickname.getVisibility(), View.VISIBLE);
-		assertEquals(firstName.getVisibility(), View.VISIBLE);
-		assertEquals(lastName.getVisibility(), View.VISIBLE);
-		assertEquals(email.getVisibility(), View.VISIBLE);
-		assertEquals(description.getVisibility(), View.VISIBLE);
-		assertEquals(profileImage.getVisibility(), View.VISIBLE);
+		assertEquals(View.VISIBLE, nickname.getVisibility());
+		assertEquals(View.VISIBLE, firstName.getVisibility());
+		assertEquals(View.VISIBLE, lastName.getVisibility());
+		assertEquals(View.VISIBLE, email.getVisibility());
+		assertEquals(View.VISIBLE, description.getVisibility());
+		assertEquals(View.VISIBLE, profileImage.getVisibility());
 	}
 }

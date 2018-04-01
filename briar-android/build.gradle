@@ -235,6 +235,13 @@ android {
 			useProguard true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
 		}
+
+		// This enables long timeouts required on slow environments, e.g. Travis
+		// From Google Maps build.gradle https://github.com/googlemaps/android-maps-utils/blob/master/library/build.gradle
+		adbOptions {
+			timeOutInMs 20 * 60 * 1000  // 10 minutes
+			installOptions "-d","-t"
+		}
 	}
 
 	compileOptions {
