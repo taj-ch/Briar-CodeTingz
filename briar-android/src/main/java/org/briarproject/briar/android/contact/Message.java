@@ -2,7 +2,7 @@ package org.briarproject.briar.android.contact;
 
 public class Message {
 
-	private String message, type;
+	private String message, type, name;
 	private long  time;
 	private boolean seen;
 	private String from;
@@ -15,6 +15,14 @@ public class Message {
 	public Message(String message, String type, long time, boolean seen) {
 		this.message = message;
 		this.type = type;
+		this.time = time;
+		this.seen = seen;
+	}
+
+	public Message(String message, String type, String name, long time, boolean seen) {
+		this.message = message;
+		this.type = type;
+		this.name = name;
 		this.time = time;
 		this.seen = seen;
 	}
@@ -33,6 +41,14 @@ public class Message {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public long getTime() {
