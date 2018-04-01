@@ -16,26 +16,29 @@ import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-
-
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
+import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -54,27 +57,26 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.Toast;
 
-
 import com.firebase.client.Firebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firebase.database.Query;
 
 import org.briarproject.briar.R;
-import org.briarproject.briar.android.introduction.IntroductionActivity;
-import org.briarproject.briar.android.profile.ProfileActivity;
-import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
+import org.briarproject.briar.android.profile.ProfileActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,6 +88,7 @@ import static android.view.View.VISIBLE;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {
@@ -95,6 +98,7 @@ public class ChatActivity extends BriarActivity {
 	private ScrollView scrollView;
 	private ImageButton addImageButton;
 	private ImageButton addLocationButton;
+	private ImageButton addFileButton;
 	private Firebase reference;
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
 	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
@@ -112,6 +116,7 @@ public class ChatActivity extends BriarActivity {
 	public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 	private static final int GALLERY_PICK = 1;
+	private static final int FILE_PICK = 2;
 
 	// Storage Firebase
 	private StorageReference mImageStorage;
@@ -146,6 +151,7 @@ public class ChatActivity extends BriarActivity {
 		messageArea = (EditText) findViewById(R.id.messageArea);
 		addImageButton = (ImageButton) findViewById(R.id.addImageButton);
 		addLocationButton = (ImageButton) findViewById(R.id.addLocationButton);
+		addFileButton = (ImageButton)findViewById(R.id.addFileButton);
 
 		sendButton.setEnabled(false);
 
@@ -220,6 +226,29 @@ public class ChatActivity extends BriarActivity {
 			}
 		});
 
+		addFileButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String[] mimeTypes =
+						{"application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .doc & .docx
+								"application/vnd.ms-powerpoint","application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
+								"application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+								"text/plain",
+								"application/pdf",
+								"application/zip"};
+
+				// ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file browser.
+				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+				// Choose only files from the mime types defined above
+				intent.setType("*/*");
+				intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+				intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+				startActivityForResult(intent, FILE_PICK);
+			}
+		});
+		
 		mRefreshLayout.setOnRefreshListener(
 				new SwipeRefreshLayout.OnRefreshListener() {
 					@Override
@@ -246,6 +275,8 @@ public class ChatActivity extends BriarActivity {
 					UserDetails.chatWith;
 			String chat_user_ref = "messages/" + UserDetails.chatWith + "/" +
 					UserDetails.username;
+			String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 			DatabaseReference user_message_push = mRootRef.child("messages")
 					.child(UserDetails.username).child(UserDetails.chatWith)
@@ -261,8 +292,8 @@ public class ChatActivity extends BriarActivity {
 			messageMap.put("from", UserDetails.username);
 
 			Map messageUserMap = new HashMap();
-			messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-			messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+			messageUserMap.put(CURRENT_USER_REF + "/" + push_id, messageMap);
+			messageUserMap.put(CHAT_USER_REF + "/" + push_id, messageMap);
 
 			messageArea.setText("");
 
@@ -599,15 +630,15 @@ public class ChatActivity extends BriarActivity {
 
 			Uri imageUri = data.getData();
 
-			final String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
-			final String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+			final String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 			DatabaseReference user_message_push = mRootRef.child("messages")
 					.child(UserDetails.username).child(UserDetails.chatWith).push();
 
-			final String push_id = user_message_push.getKey();
+			final String PUSH_ID = user_message_push.getKey();
 
-			StorageReference filepath = mImageStorage.child("message_images").child(push_id + ".jpg");
+			StorageReference filepath = mImageStorage.child("message_images").child(PUSH_ID + ".jpg");
 
 			filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
 				@Override
@@ -623,8 +654,64 @@ public class ChatActivity extends BriarActivity {
 						messageMap.put("from", UserDetails.username);
 
 						Map messageUserMap = new HashMap();
-						messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+						messageUserMap.put(CURRENT_USER_REF + "/" + PUSH_ID, messageMap);
+						messageUserMap.put(CHAT_USER_REF + "/" + PUSH_ID, messageMap);
+
+						messageArea.setText("");
+
+						mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+							@Override
+							public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+								mProgressDialog.dismiss();
+								if(databaseError != null){
+									Log.d("CHAT_LOG", databaseError.getMessage().toString());
+								}
+							}
+						});
+					}
+				}
+			});
+		} else if (request == FILE_PICK && result == RESULT_OK) {
+			mProgressDialog = new ProgressDialog(ChatActivity.this);
+			mProgressDialog.setTitle("Uploading File...");
+			mProgressDialog.setMessage("Please wait while we upload and process the file.");
+			mProgressDialog.setCanceledOnTouchOutside(false);
+			mProgressDialog.show();
+
+			Uri fileUri = data.getData();
+			final MimeTypeMap MIME = MimeTypeMap.getSingleton();
+			String mimeType = getMimeType(fileUri);
+			String extension = MIME.getExtensionFromMimeType(mimeType);
+
+			String name = getFileName(fileUri);
+
+			final String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+
+			DatabaseReference user_message_push = mRootRef.child("messages")
+					.child(UserDetails.username).child(UserDetails.chatWith).push();
+
+			final String PUSH_ID = user_message_push.getKey();
+
+			StorageReference filepath = mImageStorage.child("message_files").child(PUSH_ID + "." + extension);
+
+			filepath.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+				@Override
+				public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+					if(task.isSuccessful()){
+						String download_url = task.getResult().getDownloadUrl().toString();
+
+						Map messageMap = new HashMap();
+						messageMap.put("message", download_url);
+						messageMap.put("seen", false);
+						messageMap.put("type", "file");
+						messageMap.put("name", name);
+						messageMap.put("time", ServerValue.TIMESTAMP);
+						messageMap.put("from", UserDetails.username);
+
+						Map messageUserMap = new HashMap();
+						messageUserMap.put(CURRENT_USER_REF + "/" + PUSH_ID, messageMap);
+						messageUserMap.put(CHAT_USER_REF + "/" + PUSH_ID, messageMap);
 
 						messageArea.setText("");
 
@@ -671,5 +758,41 @@ public class ChatActivity extends BriarActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private String getMimeType(Uri uri) {
+		String mimeType = null;
+		if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+			ContentResolver cr = getApplicationContext().getContentResolver();
+			mimeType = cr.getType(uri);
+		} else {
+			String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
+					.toString());
+			mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+					fileExtension.toLowerCase());
+		}
+		return mimeType;
+	}
+
+	private String getFileName(Uri uri) {
+		String result = null;
+		if (uri.getScheme().equals("content")) {
+			Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		if (result == null) {
+			result = uri.getPath();
+			int cut = result.lastIndexOf('/');
+			if (cut != -1) {
+				result = result.substring(cut + 1);
+			}
+		}
+		return result;
 	}
 }

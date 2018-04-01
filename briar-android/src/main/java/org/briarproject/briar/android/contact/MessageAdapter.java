@@ -3,7 +3,7 @@ package org.briarproject.briar.android.contact;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +54,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 		public TextView messageText;
 		public TextView timeText;
 		public ImageView messageImage;
+		public TextView fileText;
 		public ImageView messageSeen;
 
 		public MessageViewHolder(View view) {
@@ -61,6 +62,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			messageText = (TextView) view.findViewById(R.id.text);
 			timeText = (TextView) view.findViewById(R.id.time);
 			messageImage = (ImageView) view.findViewById(R.id.image);
+			fileText = (TextView) view.findViewById(R.id.file);
 			messageSeen = (ImageView) view.findViewById(R.id.status);
 			messageText.setAutoLinkMask(15);
 		}
@@ -80,8 +82,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			viewHolder.messageText.setVisibility(View.VISIBLE);
 			viewHolder.messageText.setText(c.getMessage());
 			viewHolder.messageImage.setVisibility(View.GONE);
-		} else {
+			viewHolder.fileText.setVisibility(View.GONE);
+		} else if (message_type.equals("image")) {
 			viewHolder.messageText.setVisibility(View.GONE);
+			viewHolder.fileText.setVisibility(View.GONE);
 			viewHolder.messageImage.setVisibility(View.VISIBLE);
 			viewHolder.messageImage.setOnClickListener(
 					new View.OnClickListener() {
@@ -99,6 +103,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 					.fit()
 					.centerCrop()
 					.into(viewHolder.messageImage);
+		} else {
+			viewHolder.fileText.setVisibility(View.VISIBLE);
+			viewHolder.messageImage.setVisibility(View.GONE);
+			viewHolder.messageText.setVisibility(View.GONE);
+			viewHolder.fileText.setText(c.getName());
+			viewHolder.fileText.setMovementMethod(LinkMovementMethod.getInstance());
+			viewHolder.fileText.setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = (new Intent(mContext, WebviewFile.class));
+							intent.putExtra("url",c.getMessage());
+							intent.putExtra("file_name",c.getName());
+							mContext.startActivity(intent);
+						}
+					});
 		}
 		if (c.getFrom().equals(UserDetails.username)) {
 			if (c.isSeen()) {

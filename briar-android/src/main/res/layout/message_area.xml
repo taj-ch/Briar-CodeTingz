@@ -9,6 +9,12 @@
 	<ImageButton
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:src="@android:drawable/ic_menu_upload"
+		android:id="@+id/addFileButton"/>
+
+	<ImageButton
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:src="@android:drawable/ic_menu_gallery"
 		android:id="@+id/addImageButton"/>
 
@@ -19,9 +25,9 @@
 		android:id="@+id/addLocationButton"/>
 
 	<EditText
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_weight="1"
+		android:layout_weight="10"
 		android:textColorHint="?attr/briar_text_primary"
 		android:textColor="?attr/briar_text_primary"
 		android:hint="Write a message..."
@@ -31,7 +37,7 @@
 
 	<ImageView
 		android:id="@+id/sendButton"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_weight="2"
 		android:padding="4dp"
