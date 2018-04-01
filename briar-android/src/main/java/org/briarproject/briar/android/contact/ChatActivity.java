@@ -155,8 +155,7 @@ public class ChatActivity extends BriarActivity {
 
 		mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
 		mLinearLayout = new LinearLayoutManager(this);
-		mRefreshLayout =
-				(SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
+		mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
 
 		mMessagesList.setHasFixedSize(true);
 		mMessagesList.setLayoutManager(mLinearLayout);
@@ -282,11 +281,9 @@ public class ChatActivity extends BriarActivity {
 
 	private void loadMoreMessages() {
 
-		DatabaseReference messageRef =
-				mRootRef.child("messages").child(UserDetails.username)
-						.child(UserDetails.chatWith);
-		Query messageQuery =
-				messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -302,8 +299,7 @@ public class ChatActivity extends BriarActivity {
 					mLastKey = messageKey;
 				}
 
-				Log.d("TOTALKEYS",
-						"Last Key : " + mLastKey + " | Prev Key : " + mPrevKey +
+				Log.d("TOTALKEYS","Last Key : " + mLastKey + " | Prev Key : " + mPrevKey +
 								" | Message Key : " + messageKey);
 				mAdapter.notifyDataSetChanged();
 				mRefreshLayout.setRefreshing(false);
@@ -336,11 +332,9 @@ public class ChatActivity extends BriarActivity {
 
 	private void loadMessages() {
 
-		DatabaseReference messageRef =
-				mRootRef.child("messages").child(UserDetails.username)
-						.child(UserDetails.chatWith);
-		Query messageQuery =
-				messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
+		DatabaseReference messageRef =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
+		
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -388,7 +382,6 @@ public class ChatActivity extends BriarActivity {
 		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 		mLocationRequest.setInterval(UPDATE_INTERVAL);
 		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
 		LocationSettingsRequest.Builder builder =
 				new LocationSettingsRequest.Builder();
 		builder.addLocationRequest(mLocationRequest);
