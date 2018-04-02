@@ -3,7 +3,7 @@ package org.briarproject.briar.android.contact;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,12 +54,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 		public TextView messageText;
 		public TextView timeText;
 		public ImageView messageImage;
+		public TextView fileText;
+		public ImageView messageSeen;
 
 		public MessageViewHolder(View view) {
 			super(view);
 			messageText = (TextView) view.findViewById(R.id.text);
 			timeText = (TextView) view.findViewById(R.id.time);
 			messageImage = (ImageView) view.findViewById(R.id.image);
+			fileText = (TextView) view.findViewById(R.id.file);
+			messageSeen = (ImageView) view.findViewById(R.id.status);
 			messageText.setAutoLinkMask(15);
 		}
 	}
@@ -67,37 +71,70 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 	@Override
 	public void onBindViewHolder(MessageViewHolder viewHolder, int i) {
 		Message c = mMessageList.get(i);
-
 		String from_user = c.getFrom();
 		String message_type = c.getType();
 
-		mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
+		mUserDatabase =
+				FirebaseDatabase.getInstance().getReference().child("Users")
+						.child(from_user);
 
 		if (message_type.equals("text")) {
 			viewHolder.messageText.setVisibility(View.VISIBLE);
 			viewHolder.messageText.setText(c.getMessage());
 			viewHolder.messageImage.setVisibility(View.GONE);
-		} else {
+			viewHolder.fileText.setVisibility(View.GONE);
+		} else if (message_type.equals("image")) {
 			viewHolder.messageText.setVisibility(View.GONE);
+			viewHolder.fileText.setVisibility(View.GONE);
 			viewHolder.messageImage.setVisibility(View.VISIBLE);
 			viewHolder.messageImage.setOnClickListener(
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							Intent intent = (new Intent(mContext, FullScreenImageActivity.class));
-							intent.putExtra("url",c.getMessage());
+							Intent intent = (new Intent(mContext,
+									FullScreenImageActivity.class));
+							intent.putExtra("url", c.getMessage());
 							mContext.startActivity(intent);
 						}
 					});
-			Picasso.with(viewHolder.messageImage.getContext()).load(c.getMessage())
+			Picasso.with(viewHolder.messageImage.getContext())
+					.load(c.getMessage())
 					.placeholder(R.drawable.placeholder_thumbnail)
 					.fit()
 					.centerCrop()
 					.into(viewHolder.messageImage);
+		} else {
+			viewHolder.fileText.setVisibility(View.VISIBLE);
+			viewHolder.messageImage.setVisibility(View.GONE);
+			viewHolder.messageText.setVisibility(View.GONE);
+			viewHolder.fileText.setText(c.getName());
+			viewHolder.fileText.setMovementMethod(LinkMovementMethod.getInstance());
+			viewHolder.fileText.setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = (new Intent(mContext, WebviewFile.class));
+							intent.putExtra("url",c.getMessage());
+							intent.putExtra("file_name",c.getName());
+							mContext.startActivity(intent);
+						}
+					});
 		}
-
-		viewHolder.timeText.setText(
-				UiUtils.formatDate(viewHolder.timeText.getContext(), c.getTime()));
+		if (c.getFrom().equals(UserDetails.username)) {
+			if (c.isSeen()) {
+				//display the white message checkmarks on an message_out
+				int res = R.drawable.message_delivered_white;
+				if (viewHolder.messageSeen != null) {
+					viewHolder.messageSeen.setImageResource(res);
+				}
+			} else{
+				int res = 0;
+				viewHolder.messageSeen.setImageResource(res);
+			}
+			viewHolder.timeText.setText(
+					UiUtils.formatDate(viewHolder.timeText.getContext(),
+							c.getTime()));
+		}
 	}
 
 	@Override
