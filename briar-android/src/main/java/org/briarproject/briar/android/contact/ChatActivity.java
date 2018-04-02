@@ -1,10 +1,23 @@
 package org.briarproject.briar.android.contact;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
@@ -26,7 +39,23 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,6 +83,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {
@@ -62,6 +97,7 @@ public class ChatActivity extends BriarActivity {
 	private EditText messageArea;
 	private ScrollView scrollView;
 	private ImageButton addImageButton;
+	private ImageButton addLocationButton;
 	private ImageButton addFileButton;
 	private Firebase reference;
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
@@ -72,6 +108,12 @@ public class ChatActivity extends BriarActivity {
 	private LinearLayoutManager mLinearLayout;
 	private MessageAdapter mAdapter;
 	private ProgressDialog mProgressDialog;
+	private LocationRequest mLocationRequest;
+
+	private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+	private long FASTEST_INTERVAL = 2000; /* 2 sec */
+
+	public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 	private static final int GALLERY_PICK = 1;
 	private static final int FILE_PICK = 2;
@@ -82,7 +124,7 @@ public class ChatActivity extends BriarActivity {
 	private TextView toolbarContactName;
 	private TextView toolbarTitle;
 	private SwipeRefreshLayout mRefreshLayout;
-	private static final int  TOTAL_ITEMS_TO_LOAD = 10;
+	private static final int TOTAL_ITEMS_TO_LOAD = 10;
 	private int mCurrentPage = 1;
 	private int itemPos = 0;
 	private String mLastKey = "";
@@ -101,11 +143,14 @@ public class ChatActivity extends BriarActivity {
 		FirebaseApp.initializeApp(this);
 		Firebase.setAndroidContext(this);
 
+		startLocationUpdates();
+
 		layout = (LinearLayout) findViewById(R.id.layout1);
 
-		sendButton = (ImageView)findViewById(R.id.sendButton);
-		messageArea = (EditText)findViewById(R.id.messageArea);
-		addImageButton = (ImageButton)findViewById(R.id.addImageButton);
+		sendButton = (ImageView) findViewById(R.id.sendButton);
+		messageArea = (EditText) findViewById(R.id.messageArea);
+		addImageButton = (ImageButton) findViewById(R.id.addImageButton);
+		addLocationButton = (ImageButton) findViewById(R.id.addLocationButton);
 		addFileButton = (ImageButton)findViewById(R.id.addFileButton);
 
 		sendButton.setEnabled(false);
@@ -168,7 +213,16 @@ public class ChatActivity extends BriarActivity {
 				galleryIntent.setType("image/*");
 				galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
-				startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+				startActivityForResult(
+						Intent.createChooser(galleryIntent, "SELECT IMAGE"),
+						GALLERY_PICK);
+			}
+		});
+
+		addLocationButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getLocation();
 			}
 		});
 
@@ -215,13 +269,18 @@ public class ChatActivity extends BriarActivity {
 	private void sendMessage() {
 		String message = messageArea.getText().toString();
 
-		if(!TextUtils.isEmpty(message)){
+		if (!TextUtils.isEmpty(message)) {
 
+			String current_user_ref = "messages/" + UserDetails.username + "/" +
+					UserDetails.chatWith;
+			String chat_user_ref = "messages/" + UserDetails.chatWith + "/" +
+					UserDetails.username;
 			String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
 			String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 			DatabaseReference user_message_push = mRootRef.child("messages")
-					.child(UserDetails.username).child(UserDetails.chatWith).push();
+					.child(UserDetails.username).child(UserDetails.chatWith)
+					.push();
 
 			String push_id = user_message_push.getKey();
 
@@ -238,33 +297,40 @@ public class ChatActivity extends BriarActivity {
 
 			messageArea.setText("");
 
-			mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
-				@Override
-				public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-					if(databaseError != null){
-						Log.d("CHAT_LOG", databaseError.getMessage().toString());
-					}
-				}
-			});
+			mRootRef.updateChildren(messageUserMap,
+					new DatabaseReference.CompletionListener() {
+						@Override
+						public void onComplete(DatabaseError databaseError,
+								DatabaseReference databaseReference) {
+							if (databaseError != null) {
+								Log.d("CHAT_LOG",
+										databaseError.getMessage().toString());
+							}
+						}
+					});
 		}
 	}
+
 	private void loadMoreMessages() {
 
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 		Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
 				String messageKey = dataSnapshot.getKey();
+
 				if(!mPrevKey.equals(messageKey)){
 					messageList.add(itemPos++, message);
 				} else {
 					mPrevKey = mLastKey;
 				}
-				if(itemPos == 1) {
+				if (itemPos == 1) {
 					mLastKey = messageKey;
 				}
+
 				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)){
 					dataSnapshot.child("seen").getRef().setValue(true);
 				}
@@ -315,14 +381,16 @@ public class ChatActivity extends BriarActivity {
 
 	private void loadMessages() {
 
-		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		DatabaseReference messageRef =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 		Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
+		
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
 				message.setId(dataSnapshot.getKey());
 				itemPos++;
+
 				if(itemPos == 1){
 					String messageKey = dataSnapshot.getKey();
 					mLastKey = messageKey;
@@ -391,6 +459,162 @@ public class ChatActivity extends BriarActivity {
 
 			}
 		});
+	}
+
+	protected void startLocationUpdates() {
+
+		mLocationRequest = new LocationRequest();
+		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		mLocationRequest.setInterval(UPDATE_INTERVAL);
+		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+		LocationSettingsRequest.Builder builder =
+				new LocationSettingsRequest.Builder();
+		builder.addLocationRequest(mLocationRequest);
+		LocationSettingsRequest locationSettingsRequest = builder.build();
+
+		SettingsClient settingsClient =	LocationServices.getSettingsClient(this);
+		settingsClient.checkLocationSettings(locationSettingsRequest);
+
+		// Check if App-Level Location Permission is enabled
+		if (ActivityCompat.checkSelfPermission(this,	Manifest.permission.ACCESS_FINE_LOCATION) !=
+				PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+						Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,	Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+				new AlertDialog.Builder(this)
+						.setTitle("Permission Required")
+						.setMessage("Briar needs your permission to use your location")
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								//Prompt the user once explanation has been shown
+								ActivityCompat.requestPermissions(ChatActivity.this,
+										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+										MY_PERMISSIONS_REQUEST_LOCATION);
+							}
+						})
+						.create()
+						.show();
+			}
+
+			else {
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_LOCATION);
+			}
+
+			return;
+		}
+
+		getFusedLocationProviderClient(this)
+				.requestLocationUpdates(mLocationRequest,
+						new LocationCallback() {
+							@Override
+							public void onLocationResult(
+									LocationResult locationResult) {
+								onLocationChanged(
+										locationResult.getLastLocation());
+							}
+						},
+						Looper.myLooper());
+	}
+
+	public void onLocationChanged(Location location) {
+		String msg = "Updated Location: " +
+				Double.toString(location.getLatitude()) + "," +
+				Double.toString(location.getLongitude());
+		Log.d("LOCATION", msg);
+
+	}
+
+	private void getLocation() {
+
+		FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+
+		String current_user_ref =
+				"messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+		String chat_user_ref =
+				"messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+
+
+		if (ActivityCompat.checkSelfPermission(this,	Manifest.permission.ACCESS_FINE_LOCATION) !=
+				PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+						Manifest.permission.ACCESS_COARSE_LOCATION) !=	PackageManager.PERMISSION_GRANTED) {
+
+			System.out.println("Inside Location Permission Check");
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+				new AlertDialog.Builder(this)
+						.setTitle("Permission Required")
+						.setMessage("Briar needs your permission to use your location")
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								//Prompt the user once explanation has been shown
+								ActivityCompat.requestPermissions(ChatActivity.this,
+										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+										MY_PERMISSIONS_REQUEST_LOCATION);
+							}
+						})
+						.create()
+						.show();
+			}
+
+			else {
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_LOCATION);
+			}
+
+			return;
+		}
+
+		locationClient.getLastLocation()
+				.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+
+					@Override
+					public void onSuccess(Location location) {
+						DatabaseReference user_message_push =
+								mRootRef.child("messages")
+										.child(UserDetails.username)
+										.child(UserDetails.chatWith).push();
+						String message = "https://www.google.ca/maps/?q=" +
+								Double.toString(location.getLatitude()) + "," +
+								Double.toString(location.getLongitude());
+
+						String push_id = user_message_push.getKey();
+
+						Map messageMap = new HashMap();
+						messageMap.put("message", message);
+						messageMap.put("seen", false);
+						messageMap.put("type", "text");
+						messageMap.put("time", ServerValue.TIMESTAMP);
+						messageMap.put("from", UserDetails.username);
+
+						Map messageUserMap = new HashMap();
+						messageUserMap.put(current_user_ref + "/" + push_id,
+								messageMap);
+						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+
+						mRootRef.updateChildren(messageUserMap,
+								new DatabaseReference.CompletionListener() {
+									@Override
+									public void onComplete(
+											DatabaseError databaseError,
+											DatabaseReference databaseReference) {
+										if (databaseError != null) {
+											Log.d("CHAT_LOG",
+													databaseError.getMessage().toString());
+										}
+									}
+								});
+
+					}
+				});
+
 	}
 
 	@Override
@@ -505,7 +729,7 @@ public class ChatActivity extends BriarActivity {
 			});
 		}
 	}
-	
+
 	//For testing purposes
 	public void addToMessagesList(Message message) {
 		messageList.add(message);
