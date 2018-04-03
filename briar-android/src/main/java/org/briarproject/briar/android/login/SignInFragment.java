@@ -19,6 +19,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.briarproject.bramble.api.db.DbException;
@@ -54,6 +56,7 @@ public class SignInFragment extends SetupFragment {
 	private Button createAccountButton;
 	private Button resetAccountPassword;
 
+
 	private FirebaseAuth mAuth;
 
 	private String email;
@@ -81,7 +84,6 @@ public class SignInFragment extends SetupFragment {
 
 		FirebaseApp.initializeApp(this.getContext());
 		mAuth = FirebaseAuth.getInstance();
-
 		return v;
 	}
 
