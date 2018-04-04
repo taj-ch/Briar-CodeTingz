@@ -61,6 +61,7 @@ import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -99,12 +100,10 @@ public class ChatActivity extends BriarActivity {
 	private ImageButton addImageButton;
 	private ImageButton addLocationButton;
 	private ImageButton addFileButton;
-	private ImageView toolbarStatus;
 	private Firebase reference;
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
 	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
 	private DatabaseReference mRootRef;
-	private DatabaseReference userStatus;
 	private RecyclerView mMessagesList;
 	private final List<Message> messageList = new ArrayList<>();
 	private LinearLayoutManager mLinearLayout;
@@ -158,35 +157,6 @@ public class ChatActivity extends BriarActivity {
 		sendButton.setEnabled(false);
 
 		mRootRef = FirebaseDatabase.getInstance().getReference();
-
-		userStatus = FirebaseDatabase.getInstance().getReference("users/<user_id>/status");
-		userStatus.setValue("online");
-		userStatus.onDisconnect().setValue("offline");
-
-		userStatus.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(DataSnapshot snapshot) {
-				boolean connected = snapshot.getValue(Boolean.class);
-				if (connected) {
-					toolbarStatus.setImageDrawable(ContextCompat
-							.getDrawable(ChatActivity.this,
-									R.drawable.contact_online));
-					toolbarStatus
-							.setContentDescription(getString(R.string.online));
-				} else {
-					toolbarStatus.setImageDrawable(ContextCompat
-							.getDrawable(ChatActivity.this,
-									R.drawable.contact_offline));
-					toolbarStatus
-							.setContentDescription(getString(R.string.offline));
-				}
-			}
-
-			@Override
-			public void onCancelled(DatabaseError error) {
-				System.err.println("Listener was cancelled");
-			}
-		});
 
 		mImageStorage = FirebaseStorage.getInstance().getReference();
 
@@ -831,10 +801,6 @@ public class ChatActivity extends BriarActivity {
 	@Override
 	public void onStart(){
 		super.onStart();
-		//displayContactOnlineStatus();
 	}
 
-	private void displayContactOnlineStatus() {
-
-	}
 }

@@ -18,6 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.contact.ContactManager;
@@ -94,6 +101,12 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	@Inject
 	volatile ConversationManager conversationManager;
 
+	private DatabaseReference mUsersDatabase;
+	private FirebaseAuth mAuth;
+	boolean connected;
+
+	private String mCurrent_user_id;
+
 	public static ContactListFragment newInstance() {
 		Bundle args = new Bundle();
 		ContactListFragment fragment = new ContactListFragment();
@@ -120,6 +133,12 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container,
 			@Nullable Bundle savedInstanceState) {
+
+
+		mAuth = FirebaseAuth.getInstance();
+		mCurrent_user_id = mAuth.getCurrentUser().getUid();
+		mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+		mUsersDatabase.keepSynced(true);
 
 		getActivity().setTitle(R.string.contact_list_button);
 
@@ -154,28 +173,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					i.putExtra(CONTACT_ID, contactId.getInt());
 
 					startActivity(i);
-					/*
-					if (Build.VERSION.SDK_INT >= 23) {
-						ContactListItemViewHolder holder =
-								(ContactListItemViewHolder) list
-										.getRecyclerView()
-										.findViewHolderForAdapterPosition(
-												adapter.findItemPosition(item));
-						Pair<View, String> avatar =
-								Pair.create(holder.avatar,
-										getTransitionName(holder.avatar));
-						Pair<View, String> bulb =
-								Pair.create(holder.bulb,
-										getTransitionName(holder.bulb));
-						ActivityOptionsCompat options =
-								makeSceneTransitionAnimation(getActivity(),
-										avatar, bulb);
-						ActivityCompat.startActivity(getActivity(), i,
-								options.toBundle());
-					} else {
-						// work-around for android bug #224270
-						startActivity(i);
-					}*/
 				};
 		adapter = new ContactListAdapter(getContext(), onContactClickListener);
 		list = contentView.findViewById(R.id.list);
@@ -284,8 +281,21 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						ContactId id = c.getId();
 						GroupCount count =
 								conversationManager.getGroupCount(id);
-						boolean connected =
-								connectionRegistry.isConnected(c.getId());
+
+						mUsersDatabase.addValueEventListener(
+								new ValueEventListener() {
+									@Override
+									public void onDataChange(DataSnapshot dataSnapshot) {
+										if (dataSnapshot.hasChild("online")){
+											connected =  (boolean) dataSnapshot.child("online").getValue();
+										}
+									}
+
+									@Override
+									public void onCancelled(DatabaseError databaseError) {
+
+									}
+								});
 						contacts.add(new ContactListItem(c, connected, count));
 					} catch (NoSuchContactException e) {
 						// Continue
