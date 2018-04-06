@@ -24,6 +24,7 @@ import org.briarproject.bramble.api.lifecycle.LifecycleManager;
 import org.briarproject.bramble.api.lifecycle.LifecycleManager.StartResult;
 import org.briarproject.bramble.api.system.AndroidExecutor;
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.navdrawer.NavDrawerActivity;
 
 import java.util.concurrent.CountDownLatch;
@@ -90,7 +91,7 @@ public class BriarService extends Service {
 
 		mAuth = FirebaseAuth.getInstance();
 		mUserDatabase = FirebaseDatabase.getInstance()
-				.getReference().child("users").child(mAuth.getCurrentUser().getUid());
+				.getReference().child("messages").child(UserDetails.username);
 
 		mUserDatabase.addValueEventListener(new ValueEventListener() {
 			@Override
@@ -99,8 +100,6 @@ public class BriarService extends Service {
 				if(dataSnapshot !=null) {
 					mUserDatabase.child("online").onDisconnect().setValue(false);
 					mUserDatabase.child("online").setValue(true);
-
-					System.out.println("Inside BriarServie !!!");
 				}
 			}
 

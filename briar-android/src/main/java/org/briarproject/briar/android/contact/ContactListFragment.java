@@ -103,7 +103,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 	private DatabaseReference mUsersDatabase;
 	private FirebaseAuth mAuth;
-	boolean connected;
 
 	private String mCurrent_user_id;
 
@@ -137,7 +136,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 		mAuth = FirebaseAuth.getInstance();
 		mCurrent_user_id = mAuth.getCurrentUser().getUid();
-		mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+		mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("messages");
 		mUsersDatabase.keepSynced(true);
 
 		getActivity().setTitle(R.string.contact_list_button);
@@ -279,24 +278,36 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				for (Contact c : contactManager.getActiveContacts()) {
 					try {
 						ContactId id = c.getId();
+						String email = c.getAuthor().getName();
+						String firstPartOfEmail = email.split("\\@")[0];
+						String dbEmail = email.replaceAll("\\.", ",");
+						System.out.println(dbEmail);
+
 						GroupCount count =
 								conversationManager.getGroupCount(id);
-
-						mUsersDatabase.addValueEventListener(
-								new ValueEventListener() {
-									@Override
-									public void onDataChange(DataSnapshot dataSnapshot) {
-										if (dataSnapshot.hasChild("online")){
-											connected =  (boolean) dataSnapshot.child("online").getValue();
-										}
-									}
-
-									@Override
-									public void onCancelled(DatabaseError databaseError) {
-
-									}
-								});
+						boolean connected = connectionRegistry.isConnected(c.getId());
 						contacts.add(new ContactListItem(c, connected, count));
+						System.out.println(mUsersDatabase.child(dbEmail).child("online"));
+
+						mUsersDatabase.addValueEventListener (new ValueEventListener() {
+							@Override
+							public void onDataChange(DataSnapshot dataSnapshot) {
+								if (dataSnapshot.child(dbEmail).child("online").getValue().toString() == "true"){
+									setConnected(c.getId(), true);
+								}
+
+								else if(dataSnapshot.child(dbEmail).child("online").getValue().toString() == "false"){
+									setConnected(c.getId(), false);
+								}
+							}
+
+							@Override
+							public void onCancelled(DatabaseError databaseError) {
+
+							}
+						});
+
+
 					} catch (NoSuchContactException e) {
 						// Continue
 					}
