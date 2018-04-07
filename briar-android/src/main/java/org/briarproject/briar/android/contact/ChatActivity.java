@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.content.Intent;
@@ -446,7 +447,7 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+				mAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -749,6 +750,29 @@ public class ChatActivity extends BriarActivity {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				onBackPressed();
+				return true;
+			case R.id.action_delete_message:
+				AlertDialog.Builder builder;
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+				} else {
+					builder = new AlertDialog.Builder(this);
+				}
+				builder.setTitle("Delete entry")
+						.setMessage("Are you sure you want to delete this entry?: "+ mAdapter.getMessageFocusKey())
+						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								System.out.println("i have clicked on delete");// continue with delete
+
+							}
+						})
+						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								System.out.println("i have clicked on cancel");// do nothing
+							}
+						})
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.show();
 				return true;
 			case R.id.action_view_profile:
 				Intent profileIntent = new Intent(this, ProfileActivity.class);
