@@ -96,7 +96,6 @@ public class BriarService extends Service {
 		mUserDatabase.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
-
 				if(dataSnapshot !=null) {
 					mUserDatabase.child("online").onDisconnect().setValue(false);
 					mUserDatabase.child("online").setValue(true);

@@ -281,8 +281,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						String email = c.getAuthor().getName();
 						String firstPartOfEmail = email.split("\\@")[0];
 						String dbEmail = email.replaceAll("\\.", ",");
-						System.out.println(dbEmail);
-
 						GroupCount count =
 								conversationManager.getGroupCount(id);
 						boolean connected = connectionRegistry.isConnected(c.getId());
@@ -292,11 +290,14 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						mUsersDatabase.addValueEventListener (new ValueEventListener() {
 							@Override
 							public void onDataChange(DataSnapshot dataSnapshot) {
-								if (dataSnapshot.child(dbEmail).child("online").getValue().toString() == "true"){
+								if(dataSnapshot.child(dbEmail).child("online").getValue() == null) {
+									//Do nothing, creating test data
+								}
+								else if (dataSnapshot.child(dbEmail).child("online").getValue().toString().equals("true")){
 									setConnected(c.getId(), true);
 								}
 
-								else if(dataSnapshot.child(dbEmail).child("online").getValue().toString() == "false"){
+								else if(dataSnapshot.child(dbEmail).child("online").getValue().toString().equals("false")){
 									setConnected(c.getId(), false);
 								}
 							}
@@ -309,7 +310,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 
 					} catch (NoSuchContactException e) {
-						// Continue
+						//continue
 					}
 				}
 				long duration = System.currentTimeMillis() - now;
@@ -328,7 +329,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				adapter.incrementRevision();
 				if (contacts.isEmpty()) list.showData();
 				else adapter.setItems(contacts);
-			} else {
+			}
+			else {
 				LOG.info("Concurrent update, reloading");
 				loadContacts();
 			}

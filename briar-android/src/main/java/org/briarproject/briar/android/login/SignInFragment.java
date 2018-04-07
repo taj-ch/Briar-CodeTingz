@@ -1,6 +1,5 @@
 package org.briarproject.briar.android.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -17,32 +16,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.ProviderQueryResult;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
-import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.contact.UserDetails;
-import org.briarproject.briar.android.controller.handler.UiResultHandler;
-import org.briarproject.briar.android.sharing.ShareForumActivity;
 import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
-import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
-import static android.widget.Toast.LENGTH_SHORT;
-import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 
 public class SignInFragment extends SetupFragment {
 
@@ -102,8 +85,6 @@ public class SignInFragment extends SetupFragment {
 		return getString(R.string.setup_name_explanation);
 	}
 
-
-
 	@Override
 	public void onClick(View view) {
 		switch(view.getId()) {
@@ -113,7 +94,8 @@ public class SignInFragment extends SetupFragment {
 				if(email != null && !email.isEmpty() && password !=null && !password.isEmpty()){
 					signInButton.setClickable(false);
 					openAccount(email, password);
-				}else{
+				}
+				else{
 					Toast.makeText(getActivity(), "Fields can't be blank!", Toast.LENGTH_LONG)
 							.show();
 				}
@@ -127,7 +109,8 @@ public class SignInFragment extends SetupFragment {
 					Toast.makeText(getActivity(),
 							"Fill in the email above", Toast.LENGTH_LONG)
 							.show();
-				} else{
+				}
+				else{
 					userExists(email);
 				}
 				break;
@@ -150,8 +133,6 @@ public class SignInFragment extends SetupFragment {
 						//the mAuth state listener will be notified and logic to handle the
 						//signed in user can be handled in the listener.
 						if (task.isSuccessful()){
-							//sign in successful
-
 							String tkn = FirebaseInstanceId.getInstance().getToken();
 							Log.d("TOKEN_REFRESH_login", tkn);
 
@@ -164,8 +145,8 @@ public class SignInFragment extends SetupFragment {
 
 							setupController.showDozeOrCreateAccount();
 
-						} else {
-							//there was an error
+						}
+						else {
 							tryAgain();
 						}
 					}
