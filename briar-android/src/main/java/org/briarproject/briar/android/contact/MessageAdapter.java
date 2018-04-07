@@ -83,6 +83,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			viewHolder.messageText.setText(c.getMessage());
 			viewHolder.messageImage.setVisibility(View.GONE);
 			viewHolder.fileText.setVisibility(View.GONE);
+			viewHolder.messageText.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+				@Override
+				public void onFocusChange(View view, boolean hasFocus){
+					if(hasFocus){
+						System.out.println("this message has focus: " + c.getMessage());
+					} else{
+						System.out.println("this message lost focus: " + c.getMessage());
+					}
+				}
+			});
 		} else if (message_type.equals("image")) {
 			viewHolder.messageText.setVisibility(View.GONE);
 			viewHolder.fileText.setVisibility(View.GONE);
