@@ -451,6 +451,12 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildRemoved(DataSnapshot dataSnapshot) {
+				String key = dataSnapshot.getKey();
+				for(int i=0 ; i < messageList.size() ; i++){
+					if(messageList.get(i).getId().equals(key)){
+						messageList.remove(i);
+					}
+				}
 				mAdapter.notifyDataSetChanged();
 			}
 
@@ -757,30 +763,46 @@ public class ChatActivity extends BriarActivity {
 				return true;
 			case R.id.action_delete_message:
 				String displayMessage;
-				if(mAdapter.getMessageFocusKey() == ""){
-					displayMessage = "Everything";
-				}else{
-					displayMessage = mAdapter.getMessageFocusText();
-				}
-				AlertDialog.Builder builder;
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-					builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+				displayMessage = mAdapter.getMessageFocusText();
+				if(displayMessage != "") {
+					AlertDialog.Builder builder;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+					} else {
+						builder = new AlertDialog.Builder(this);
+					}
+					builder.setTitle("Delete entry")
+							.setMessage("Are you sure you want to delete : " + displayMessage)
+							.setPositiveButton(android.R.string.yes,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											onMessageDelete();
+										}
+									})
+							.setNegativeButton(android.R.string.no,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+										}
+									})
+							.setIcon(android.R.drawable.ic_dialog_alert)
+							.show();
 				} else {
-					builder = new AlertDialog.Builder(this);
+					AlertDialog.Builder builder;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+					} else {
+						builder = new AlertDialog.Builder(this);
+					}
+					builder.setTitle("Delete entry")
+							.setMessage("To delete, hold on a specific message then press the delete button.")
+							.setPositiveButton(android.R.string.yes,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+										}
+									})
+							.setIcon(android.R.drawable.ic_dialog_alert)
+							.show();
 				}
-				builder.setTitle("Delete entry")
-						.setMessage("Are you sure you want to delete : "+ displayMessage)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								onMessageDelete();
-							}
-						})
-						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-							}
-						})
-						.setIcon(android.R.drawable.ic_dialog_alert)
-						.show();
 				return true;
 			case R.id.action_view_profile:
 				Intent profileIntent = new Intent(this, ProfileActivity.class);
@@ -794,12 +816,6 @@ public class ChatActivity extends BriarActivity {
 
 	private void onMessageDelete(){
 		String key = mAdapter.getMessageFocusKey();
-		for(int i=0 ; i < messageList.size() ; i++){
-			if(messageList.get(i).getId().equals(key)){
-				messageList.remove(i);
-			}
-		}
-
 		DatabaseReference messageRef1 =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 		messageRef1.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
