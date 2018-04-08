@@ -169,6 +169,9 @@ public class ContactItemViewHolder<I extends ContactItem>
 
 	// Retrieve and set the latest message in the conversation
 	private void setLatestMessage(I item){
+		message.setText("Send a message!");
+		date.setText("");
+
 		String chatWith = item.getContact().getAuthor().getName()
 				.replaceAll("\\s","")
 				.replaceAll("\\.", ",");
@@ -181,7 +184,11 @@ public class ContactItemViewHolder<I extends ContactItem>
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message lastMessage = dataSnapshot.getValue(Message.class);
-				message.setText(lastMessage.getMessage());
+				if (lastMessage.getFrom().equals(UserDetails.username)) {
+					message.setText("You: " + lastMessage.getMessage());
+				} else {
+					message.setText(lastMessage.getMessage());
+				}
 				date.setText(formatDate(date.getContext(),lastMessage.getTime()));
 			}
 
