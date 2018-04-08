@@ -763,7 +763,7 @@ public class ChatActivity extends BriarActivity {
 						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								System.out.println("i have clicked on delete");// continue with delete
-
+								onMessageDelete();
 							}
 						})
 						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -782,6 +782,14 @@ public class ChatActivity extends BriarActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void onMessageDelete(){
+		DatabaseReference messageRef1 =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		messageRef1.child(mAdapter.getMessageFocusKey()).removeValue();
+		DatabaseReference messageRef2 =	mRootRef.child("messages").child(UserDetails.chatWith).child(UserDetails.username);
+		messageRef2.child(mAdapter.getMessageFocusKey()).removeValue();
+
 	}
 
 	private String getMimeType(Uri uri) {
