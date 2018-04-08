@@ -26,6 +26,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 	private final int MSG_IN = 1;
 	private Context mContext;
 	private String messageFocusKey = "";
+	private String messageFocusText = "";
 
 
 	public MessageAdapter(List<Message> mMessageList, Context context) {
@@ -88,6 +89,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 				@Override
 				public boolean onLongClick(View v) {
 					System.out.println("this message has focus: " + c.getMessage());
+					messageFocusText = c.getMessage();
 					messageFocusKey = c.getId();
 					return true;
 				}
@@ -169,4 +171,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 	public String getMessageFocusKey(){
 		return messageFocusKey;
 	}
+
+	public String getMessageFocusText() { return messageFocusText; }
 }

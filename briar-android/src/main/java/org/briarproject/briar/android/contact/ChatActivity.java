@@ -756,6 +756,12 @@ public class ChatActivity extends BriarActivity {
 				onBackPressed();
 				return true;
 			case R.id.action_delete_message:
+				String displayMessage;
+				if(mAdapter.getMessageFocusKey() == ""){
+					displayMessage = "Everything";
+				}else{
+					displayMessage = mAdapter.getMessageFocusText();
+				}
 				AlertDialog.Builder builder;
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 					builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
@@ -763,7 +769,7 @@ public class ChatActivity extends BriarActivity {
 					builder = new AlertDialog.Builder(this);
 				}
 				builder.setTitle("Delete entry")
-						.setMessage("Are you sure you want to delete this entry?: "+ mAdapter.getMessageFocusKey())
+						.setMessage("Are you sure you want to delete : "+ displayMessage)
 						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								onMessageDelete();
