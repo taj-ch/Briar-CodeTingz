@@ -351,7 +351,9 @@ public class ChatActivity extends BriarActivity {
 					ref.addValueEventListener(new ValueEventListener() {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
-							dataSnap.child("seen").getRef().setValue(true);
+							if (dataSnap.hasChild("message")) {
+								dataSnap.child("seen").getRef().setValue(true);
+							}
 						}
 
 						@Override
@@ -419,7 +421,9 @@ public class ChatActivity extends BriarActivity {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
 							// database message is set to seen
-							dataSnap.child("seen").getRef().setValue(true);
+							if(dataSnap.hasChild("message")) {
+								dataSnap.child("seen").getRef().setValue(true);
+							}
 						}
 
 						@Override
