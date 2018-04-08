@@ -1,6 +1,8 @@
 package org.briarproject.briar.android.contact;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import org.briarproject.bramble.api.contact.Contact;
@@ -16,8 +18,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowDrawable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,6 +94,15 @@ public class ContactListFragmentTest {
 		List<ContactListItem> filteredContacts = contactListFragment.filter("Tom", getDummyData());
 		assertEquals(1, filteredContacts.size());
 		assertEquals("Tom", filteredContacts.get(0).getContact().getAuthor().getName());
+	}
+
+	@Test
+	public void testConnectedContact() {
+		List<ContactListItem> filteredContacts = contactListFragment.filter("Tom", getDummyData());
+
+		assertEquals(filteredContacts.get(0).isConnected(), false);
+		filteredContacts.get(0).setConnected(true);
+		assertEquals(filteredContacts.get(0).isConnected(), true);
 	}
 
 }

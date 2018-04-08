@@ -1,13 +1,9 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -71,9 +68,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-
-import static android.support.v4.app.ActivityOptionsCompat.makeSceneTransitionAnimation;
-import static android.support.v4.view.ViewCompat.getTransitionName;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.contact.ConversationActivity.CONTACT_ID;
@@ -104,8 +98,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	private DatabaseReference mUsersDatabase;
 	private FirebaseAuth mAuth;
 
-	private String mCurrent_user_id;
-
 	public static ContactListFragment newInstance() {
 		Bundle args = new Bundle();
 		ContactListFragment fragment = new ContactListFragment();
@@ -133,9 +125,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			@Nullable ViewGroup container,
 			@Nullable Bundle savedInstanceState) {
 
-
+		FirebaseApp.initializeApp(this.getContext());
 		mAuth = FirebaseAuth.getInstance();
-		mCurrent_user_id = mAuth.getCurrentUser().getUid();
 		mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("messages");
 		mUsersDatabase.keepSynced(true);
 
@@ -279,7 +270,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					try {
 						ContactId id = c.getId();
 						String email = c.getAuthor().getName();
-						String firstPartOfEmail = email.split("\\@")[0];
 						String dbEmail = email.replaceAll("\\.", ",");
 						GroupCount count =
 								conversationManager.getGroupCount(id);
