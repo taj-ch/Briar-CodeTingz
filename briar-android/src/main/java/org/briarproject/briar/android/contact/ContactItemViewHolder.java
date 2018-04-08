@@ -59,8 +59,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 	protected final ViewGroup layout;
 	protected final ImageView avatar;
 	protected final TextView name;
-	protected final TextView message;
-	protected final TextView date;
 
 	@Nullable
 	protected final ImageView bulb;
@@ -73,18 +71,14 @@ public class ContactItemViewHolder<I extends ContactItem>
 	// Reference to profile image in Firebase
 	private StorageReference profileImageStorageRef;
 
-	private DatabaseReference mRootRef;
-
 	public ContactItemViewHolder(View v) {
 		super(v);
 
 		layout = (ViewGroup) v;
 		avatar = v.findViewById(R.id.avatarView);
 		name = v.findViewById(R.id.nameView);
-		message = v.findViewById(R.id.messageView);
 		// this can be null as not all layouts that use this ViewHolder have it
 		bulb = v.findViewById(R.id.bulbView);
-		date = v.findViewById(R.id.dateView);
 
 	}
 
@@ -94,7 +88,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 
 		author = item.getContact().getAuthor();
 		authorName = author.getName();
-		mRootRef = FirebaseDatabase.getInstance().getReference();
 
 		// Set listener on avatar circle to open profile intent when clicked
 		avatar.setOnClickListener(v -> {
@@ -115,8 +108,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 		String contactName = author.getName();
 
 		name.setText(contactName);
-
-		setLatestMessage(item);
 
 		if (bulb != null) {
 			// online/offline
@@ -163,67 +154,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 				}
 				avatar.setImageDrawable(
 						new IdenticonDrawable(author.getId().getBytes()));
-			}
-		});
-	}
-
-	// Retrieve and set the latest message in the conversation
-	private void setLatestMessage(I item){
-		message.setText("Send a message!");
-		date.setText("");
-
-		String chatWith = item.getContact().getAuthor().getName()
-				.replaceAll("\\s","")
-				.replaceAll("\\.", ",");
-		String username = UserDetails.username;
-
-		DatabaseReference messageRef = mRootRef.child("messages").child(username).child(chatWith);
-		Query messageQuery = messageRef.orderByKey().limitToLast(1);
-
-		messageQuery.addChildEventListener(new ChildEventListener() {
-			@Override
-			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-				Message lastMessage = dataSnapshot.getValue(Message.class);
-				if (lastMessage.getFrom().equals(UserDetails.username)) {
-					message.setText("You: " + lastMessage.getMessage());
-				} else {
-					message.setText(lastMessage.getMessage());
-				}
-				date.setText(formatDate(date.getContext(),lastMessage.getTime()));
-			}
-
-			@Override
-			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-				String key = dataSnapshot.getKey();
-				DatabaseReference ref = messageRef;
-				ref.addValueEventListener(new ValueEventListener() {
-					@Override
-					public void onDataChange(DataSnapshot dataSnap) {
-						Message lastMessage = dataSnapshot.getValue(Message.class);
-						message.setText(lastMessage.getMessage());
-						date.setText(formatDate(date.getContext(),lastMessage.getTime()));
-					}
-
-					@Override
-					public void onCancelled(DatabaseError databaseError) {
-
-					}
-				});
-			}
-
-			@Override
-			public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-			}
-
-			@Override
-			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-			}
-
-			@Override
-			public void onCancelled(DatabaseError databaseError) {
-
 			}
 		});
 	}

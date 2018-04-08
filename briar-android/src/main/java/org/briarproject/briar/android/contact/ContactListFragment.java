@@ -18,6 +18,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
 import org.briarproject.bramble.api.contact.ContactManager;
@@ -70,6 +78,7 @@ import static android.support.v4.view.ViewCompat.getTransitionName;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.contact.ConversationActivity.CONTACT_ID;
+import static org.briarproject.briar.android.util.UiUtils.formatDate;
 
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
@@ -87,6 +96,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 	private ContactListAdapter adapter;
 	private BriarRecyclerView list;
+	private DatabaseReference mRootRef;
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject
@@ -124,6 +134,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		getActivity().setTitle(R.string.contact_list_button);
 
 		View contentView = inflater.inflate(R.layout.list, container, false);
+
+		mRootRef = FirebaseDatabase.getInstance().getReference();
 
 		OnContactClickListener<ContactListItem> onContactClickListener =
 				(view, item) -> {
@@ -287,6 +299,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						boolean connected =
 								connectionRegistry.isConnected(c.getId());
 						contacts.add(new ContactListItem(c, connected, count));
+						setLatestMessage(c);
 					} catch (NoSuchContactException e) {
 						// Continue
 					}
@@ -398,6 +411,18 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		});
 	}
 
+	private void setLastMessage(ContactId c, String lastMessage) {
+		runOnUiThreadUnlessDestroyed(() -> {
+			adapter.incrementRevision();
+			int position = adapter.findItemPosition(c);
+			ContactListItem item = adapter.getItemAt(position);
+			if (item != null) {
+				item.setLastMessage(lastMessage);
+				adapter.notifyItemChanged(position);
+			}
+		});
+	}
+
 	private void filter(String charText) {
 		int revision = adapter.getRevision();
 		final String CHAR_TEXT_LOWER = charText.toLowerCase(Locale.getDefault());
@@ -429,6 +454,68 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				} catch (DbException e) {
 					if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
 				}
+			}
+		});
+	}
+
+	// Retrieve and set the latest message in the conversation
+	private void setLatestMessage(Contact c){
+		String chatWith = c.getAuthor().getName()
+				.replaceAll("\\s","")
+				.replaceAll("\\.", ",");
+		String username = UserDetails.username;
+
+		DatabaseReference messageRef = mRootRef.child("messages").child(username).child(chatWith);
+		Query messageQuery = messageRef.orderByKey().limitToLast(1);
+		messageRef.keepSynced(true);
+
+		messageQuery.addChildEventListener(new ChildEventListener() {
+			@Override
+			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+				Message lastMessage = dataSnapshot.getValue(Message.class);
+				if (lastMessage.getFrom().equals(UserDetails.username)) {
+					setLastMessage(c.getId(), "You: " + lastMessage.getMessage());
+				} else {
+					setLastMessage(c.getId(), lastMessage.getMessage());
+				}
+				// setDate(c.getId(), lastMessage.getTime());
+			}
+
+			@Override
+			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+				DatabaseReference ref = messageRef;
+				ref.addValueEventListener(new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnap) {
+						Message lastMessage = dataSnapshot.getValue(Message.class);
+						if (lastMessage.getFrom().equals(UserDetails.username)) {
+							setLastMessage(c.getId(), "You: " + lastMessage.getMessage());
+						} else {
+							setLastMessage(c.getId(), lastMessage.getMessage());
+						}
+						// setDate(c.getId(), lastMessage.getTime());
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+
+					}
+				});
+			}
+
+			@Override
+			public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+			}
+
+			@Override
+			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
 			}
 		});
 	}
