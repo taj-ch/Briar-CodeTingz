@@ -2,6 +2,7 @@ package org.briarproject.briar.android.contact;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -110,6 +111,8 @@ public class ChatActivity extends BriarActivity {
 	private MessageAdapter mAdapter;
 	private ProgressDialog mProgressDialog;
 	private LocationRequest mLocationRequest;
+	private AlertDialog dialog;
+	private String displayDeleteMessage;
 
 	private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
 	private long FASTEST_INTERVAL = 2000; /* 2 sec */
@@ -762,9 +765,8 @@ public class ChatActivity extends BriarActivity {
 				onBackPressed();
 				return true;
 			case R.id.action_delete_message:
-				String displayMessage;
-				displayMessage = mAdapter.getMessageFocusText();
-				if(displayMessage != "") {
+				if(mAdapter.getMessageFocusText() != "") {
+					displayDeleteMessage = "Are you sure you want to delete: "+ mAdapter.getMessageFocusText();
 					AlertDialog.Builder builder;
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
@@ -772,7 +774,7 @@ public class ChatActivity extends BriarActivity {
 						builder = new AlertDialog.Builder(this);
 					}
 					builder.setTitle("Delete entry")
-							.setMessage("Are you sure you want to delete : " + displayMessage)
+							.setMessage(displayDeleteMessage)
 							.setPositiveButton(android.R.string.yes,
 									new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {
@@ -784,9 +786,11 @@ public class ChatActivity extends BriarActivity {
 										public void onClick(DialogInterface dialog, int which) {
 										}
 									})
-							.setIcon(android.R.drawable.ic_dialog_alert)
-							.show();
+							.setIcon(android.R.drawable.ic_dialog_alert);
+					dialog = builder.create();
+					dialog.show();
 				} else {
+					displayDeleteMessage = "To delete, hold on a specific message then press the delete button.";
 					AlertDialog.Builder builder;
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
@@ -794,14 +798,15 @@ public class ChatActivity extends BriarActivity {
 						builder = new AlertDialog.Builder(this);
 					}
 					builder.setTitle("Delete entry")
-							.setMessage("To delete, hold on a specific message then press the delete button.")
+							.setMessage(displayDeleteMessage)
 							.setPositiveButton(android.R.string.yes,
 									new DialogInterface.OnClickListener() {
 										public void onClick(DialogInterface dialog, int which) {
 										}
 									})
-							.setIcon(android.R.drawable.ic_dialog_alert)
-							.show();
+							.setIcon(android.R.drawable.ic_dialog_alert);
+					dialog = builder.create();
+					dialog.show();
 				}
 				return true;
 			case R.id.action_view_profile:
@@ -884,4 +889,9 @@ public class ChatActivity extends BriarActivity {
 		}
 		return result;
 	}
+
+	//Getters for testing purposes
+	public AlertDialog getDialog(){ return dialog; }
+
+	public String getDisplayDeleteMessage(){ return displayDeleteMessage; }
 }
