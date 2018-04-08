@@ -762,13 +762,11 @@ public class ChatActivity extends BriarActivity {
 						.setMessage("Are you sure you want to delete this entry?: "+ mAdapter.getMessageFocusKey())
 						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
-								System.out.println("i have clicked on delete");// continue with delete
 								onMessageDelete();
 							}
 						})
 						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
-								System.out.println("i have clicked on cancel");// do nothing
 							}
 						})
 						.setIcon(android.R.drawable.ic_dialog_alert)
@@ -785,10 +783,43 @@ public class ChatActivity extends BriarActivity {
 	}
 
 	private void onMessageDelete(){
+		String key = mAdapter.getMessageFocusKey();
+		for(int i=0 ; i < messageList.size() ; i++){
+			if(messageList.get(i).getId().equals(key)){
+				messageList.remove(i);
+			}
+		}
+
 		DatabaseReference messageRef1 =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
-		messageRef1.child(mAdapter.getMessageFocusKey()).removeValue();
+		messageRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				if(dataSnapshot.child(key).exists()) {
+					messageRef1.child(key).removeValue();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
 		DatabaseReference messageRef2 =	mRootRef.child("messages").child(UserDetails.chatWith).child(UserDetails.username);
-		messageRef2.child(mAdapter.getMessageFocusKey()).removeValue();
+		messageRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				String key = mAdapter.getMessageFocusKey();
+				if(dataSnapshot.child(key).exists()) {
+					messageRef2.child(key).removeValue();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
 
 	}
 
