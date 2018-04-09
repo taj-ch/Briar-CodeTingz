@@ -89,6 +89,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	private ContactListAdapter adapter;
 	private BriarRecyclerView list;
 	private DatabaseReference mRootRef;
+	private ChildEventListener childEventListener;
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject
@@ -404,25 +405,14 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		});
 	}
 
-	private void setLastMessage(ContactId c, String lastMessage) {
-		runOnUiThreadUnlessDestroyed(() -> {
-			adapter.incrementRevision();
-			int position = adapter.findItemPosition(c);
-			ContactListItem item = adapter.getItemAt(position);
-			if (item != null) {
-				item.setLastMessage(lastMessage);
-				adapter.notifyItemChanged(position);
-			}
-		});
-	}
-
-	private void setDate(ContactId c, Long date){
+	private void setLastMessageAndDate(ContactId c, String lastMessage, long date) {
 		runOnUiThreadUnlessDestroyed(() -> {
 			adapter.incrementRevision();
 			int position = adapter.findItemPosition(c);
 			ContactListItem item = adapter.getItemAt(position);
 			if (item != null) {
 				item.setDate(date);
+				item.setLastMessage(lastMessage);
 				adapter.notifyItemChanged(position);
 			}
 		});
@@ -474,38 +464,25 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		Query messageQuery = messageRef.orderByKey().limitToLast(1);
 		messageRef.keepSynced(true);
 
-		messageQuery.addChildEventListener(new ChildEventListener() {
+		if (childEventListener != null) {
+			messageQuery.removeEventListener(childEventListener);
+		}
+
+
+		childEventListener = new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message lastMessage = dataSnapshot.getValue(Message.class);
 				if (lastMessage.getFrom().equals(UserDetails.username)) {
-					setLastMessage(c.getId(), "You: " + lastMessage.getMessage());
+					setLastMessageAndDate(c.getId(), "You: " + lastMessage.getMessage(), lastMessage.getTime());
 				} else {
-					setLastMessage(c.getId(), lastMessage.getMessage());
+					setLastMessageAndDate(c.getId(), lastMessage.getMessage(), lastMessage.getTime());
 				}
-				 setDate(c.getId(), lastMessage.getTime());
 			}
 
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-				DatabaseReference ref = messageRef;
-				ref.addValueEventListener(new ValueEventListener() {
-					@Override
-					public void onDataChange(DataSnapshot dataSnap) {
-						Message lastMessage = dataSnapshot.getValue(Message.class);
-						if (lastMessage.getFrom().equals(UserDetails.username)) {
-							setLastMessage(c.getId(), "You: " + lastMessage.getMessage());
-						} else {
-							setLastMessage(c.getId(), lastMessage.getMessage());
-						}
-						 setDate(c.getId(), lastMessage.getTime());
-					}
 
-					@Override
-					public void onCancelled(DatabaseError databaseError) {
-
-					}
-				});
 			}
 
 			@Override
@@ -522,6 +499,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			public void onCancelled(DatabaseError databaseError) {
 
 			}
-		});
+		};
+
+		messageQuery.addChildEventListener(childEventListener);
 	}
 }
