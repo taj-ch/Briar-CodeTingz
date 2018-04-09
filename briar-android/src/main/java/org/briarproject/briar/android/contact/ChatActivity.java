@@ -2,6 +2,7 @@ package org.briarproject.briar.android.contact;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.content.Intent;
@@ -109,6 +111,8 @@ public class ChatActivity extends BriarActivity {
 	private MessageAdapter mAdapter;
 	private ProgressDialog mProgressDialog;
 	private LocationRequest mLocationRequest;
+	private AlertDialog dialog;
+	private String displayDeleteMessage;
 
 	private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
 	private long FASTEST_INTERVAL = 2000; /* 2 sec */
@@ -350,7 +354,9 @@ public class ChatActivity extends BriarActivity {
 					ref.addValueEventListener(new ValueEventListener() {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
-							dataSnap.child("seen").getRef().setValue(true);
+							if (dataSnap.hasChild("message")) {
+								dataSnap.child("seen").getRef().setValue(true);
+							}
 						}
 
 						@Override
@@ -418,7 +424,9 @@ public class ChatActivity extends BriarActivity {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
 							// database message is set to seen
-							dataSnap.child("seen").getRef().setValue(true);
+							if(dataSnap.hasChild("message")) {
+								dataSnap.child("seen").getRef().setValue(true);
+							}
 						}
 
 						@Override
@@ -446,7 +454,13 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+				String key = dataSnapshot.getKey();
+				for(int i=0 ; i < messageList.size() ; i++){
+					if(messageList.get(i).getId().equals(key)){
+						messageList.remove(i);
+					}
+				}
+				mAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -750,6 +764,51 @@ public class ChatActivity extends BriarActivity {
 			case android.R.id.home:
 				onBackPressed();
 				return true;
+			case R.id.action_delete_message:
+				if(mAdapter.getMessageFocusText() != "") {
+					displayDeleteMessage = "Are you sure you want to delete: "+ mAdapter.getMessageFocusText();
+					AlertDialog.Builder builder;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+					} else {
+						builder = new AlertDialog.Builder(this);
+					}
+					builder.setTitle("Delete entry")
+							.setMessage(displayDeleteMessage)
+							.setPositiveButton(android.R.string.yes,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											onMessageDelete();
+										}
+									})
+							.setNegativeButton(android.R.string.no,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+										}
+									})
+							.setIcon(android.R.drawable.ic_dialog_alert);
+					dialog = builder.create();
+					dialog.show();
+				} else {
+					displayDeleteMessage = "To delete, hold on a specific message then press the delete button.";
+					AlertDialog.Builder builder;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+					} else {
+						builder = new AlertDialog.Builder(this);
+					}
+					builder.setTitle("Delete entry")
+							.setMessage(displayDeleteMessage)
+							.setPositiveButton(android.R.string.yes,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+										}
+									})
+							.setIcon(android.R.drawable.ic_dialog_alert);
+					dialog = builder.create();
+					dialog.show();
+				}
+				return true;
 			case R.id.action_view_profile:
 				Intent profileIntent = new Intent(this, ProfileActivity.class);
 				profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
@@ -758,6 +817,41 @@ public class ChatActivity extends BriarActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void onMessageDelete(){
+		String key = mAdapter.getMessageFocusKey();
+		DatabaseReference messageRef1 =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		messageRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				if(dataSnapshot.child(key).exists()) {
+					messageRef1.child(key).removeValue();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+		DatabaseReference messageRef2 =	mRootRef.child("messages").child(UserDetails.chatWith).child(UserDetails.username);
+		messageRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				String key = mAdapter.getMessageFocusKey();
+				if(dataSnapshot.child(key).exists()) {
+					messageRef2.child(key).removeValue();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
 	}
 
 	private String getMimeType(Uri uri) {
@@ -795,4 +889,9 @@ public class ChatActivity extends BriarActivity {
 		}
 		return result;
 	}
+
+	//Getters for testing purposes
+	public AlertDialog getDialog(){ return dialog; }
+
+	public String getDisplayDeleteMessage(){ return displayDeleteMessage; }
 }

@@ -25,6 +25,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 	private final int MSG_OUT = 0;
 	private final int MSG_IN = 1;
 	private Context mContext;
+	private String messageFocusKey = "";
+	private String messageFocusText = "";
 
 
 	public MessageAdapter(List<Message> mMessageList, Context context) {
@@ -83,6 +85,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 			viewHolder.messageText.setText(c.getMessage());
 			viewHolder.messageImage.setVisibility(View.GONE);
 			viewHolder.fileText.setVisibility(View.GONE);
+			viewHolder.messageText.setOnLongClickListener(new View.OnLongClickListener(){
+				@Override
+				public boolean onLongClick(View v) {
+					System.out.println("this message has focus: " + c.getMessage());
+					messageFocusText = c.getMessage();
+					messageFocusKey = c.getId();
+					return true;
+				}
+			});
 		} else if (message_type.equals("image")) {
 			viewHolder.messageText.setVisibility(View.GONE);
 			viewHolder.fileText.setVisibility(View.GONE);
@@ -156,4 +167,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 		}
 		return -1;
 	}
+
+	public String getMessageFocusKey(){
+		return messageFocusKey;
+	}
+
+	public String getMessageFocusText() { return messageFocusText; }
 }
