@@ -47,7 +47,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 	protected final ViewGroup layout;
 	protected final ImageView avatar;
 	protected final TextView name;
-
 	@Nullable
 	protected final ImageView bulb;
 	private int contactConnected;
@@ -67,7 +66,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 		name = v.findViewById(R.id.nameView);
 		// this can be null as not all layouts that use this ViewHolder have it
 		bulb = v.findViewById(R.id.bulbView);
-
 	}
 
 	protected void bind(I item, @Nullable OnContactClickListener<I> listener) {
@@ -109,8 +107,6 @@ public class ContactItemViewHolder<I extends ContactItem>
 		layout.setOnClickListener(v -> {
 			if (listener != null) listener.onItemClick(avatar, item);
 		});
-
-
 	}
 
 	// Retrieve the users profile image from firebase and replace briar avatar
