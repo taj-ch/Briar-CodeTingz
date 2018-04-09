@@ -1,14 +1,8 @@
 package org.briarproject.briar.android.contact;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
-import android.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.SearchView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
@@ -73,13 +68,9 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
-
-import static android.support.v4.app.ActivityOptionsCompat.makeSceneTransitionAnimation;
-import static android.support.v4.view.ViewCompat.getTransitionName;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static org.briarproject.briar.android.contact.ConversationActivity.CONTACT_ID;
-import static org.briarproject.briar.android.util.UiUtils.formatDate;
 
 @MethodsNotNullByDefault
 @ParametersNotNullByDefault
@@ -425,6 +416,18 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		});
 	}
 
+	private void setDate(ContactId c, Long date){
+		runOnUiThreadUnlessDestroyed(() -> {
+			adapter.incrementRevision();
+			int position = adapter.findItemPosition(c);
+			ContactListItem item = adapter.getItemAt(position);
+			if (item != null) {
+				item.setDate(date);
+				adapter.notifyItemChanged(position);
+			}
+		});
+	}
+
 	private void filter(String charText) {
 		int revision = adapter.getRevision();
 		final String CHAR_TEXT_LOWER = charText.toLowerCase(Locale.getDefault());
@@ -480,7 +483,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				} else {
 					setLastMessage(c.getId(), lastMessage.getMessage());
 				}
-				// setDate(c.getId(), lastMessage.getTime());
+				 setDate(c.getId(), lastMessage.getTime());
 			}
 
 			@Override
@@ -495,7 +498,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 						} else {
 							setLastMessage(c.getId(), lastMessage.getMessage());
 						}
-						// setDate(c.getId(), lastMessage.getTime());
+						 setDate(c.getId(), lastMessage.getTime());
 					}
 
 					@Override

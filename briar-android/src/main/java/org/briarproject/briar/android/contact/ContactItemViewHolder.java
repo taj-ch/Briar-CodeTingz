@@ -1,10 +1,8 @@
 package org.briarproject.briar.android.contact;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
@@ -16,13 +14,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
@@ -33,7 +24,6 @@ import org.briarproject.briar.R;
 import org.briarproject.briar.android.Theme;
 import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactClickListener;
 import org.briarproject.briar.android.profile.ProfileActivity;
-import org.briarproject.briar.android.profile.ProfileFragment;
 
 import java.util.logging.Logger;
 
@@ -43,8 +33,6 @@ import im.delight.android.identicons.IdenticonDrawable;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
-import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
-import static org.briarproject.briar.android.util.UiUtils.formatDate;
 
 @UiThread
 @NotNullByDefault
