@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -135,6 +136,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 		View contentView = inflater.inflate(R.layout.list, container, false);
 
+		FirebaseApp.initializeApp(this.getContext());
 		mRootRef = FirebaseDatabase.getInstance().getReference();
 
 		OnContactClickListener<ContactListItem> onContactClickListener =

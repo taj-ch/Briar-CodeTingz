@@ -1,6 +1,10 @@
 package org.briarproject.briar.android.contact;
 
 
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+
 import org.briarproject.bramble.api.contact.Contact;
 
 import java.util.ArrayList;
@@ -20,5 +24,15 @@ public class TestableContactListFragment extends ContactListFragment {
 			}
 		}
 		return contacts;
+	}
+
+	public String getLastMessage(Message mockMessage){
+		String username = UserDetails.username;
+
+		if (mockMessage.getFrom().equals(username)) {
+			return "You: " + mockMessage.getMessage();
+		} else {
+			return mockMessage.getMessage();
+		}
 	}
 }
