@@ -2,6 +2,7 @@ package org.briarproject.briar.android.contact;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.content.Intent;
@@ -73,6 +75,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.briarproject.bramble.api.contact.ContactId;
+import org.briarproject.bramble.api.contact.ContactManager;
+import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
@@ -82,16 +87,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+
+import javax.inject.Inject;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static android.widget.Toast.LENGTH_SHORT;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+import static java.util.logging.Level.WARNING;
 import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
 
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {
+
+    private static final Logger LOG =
+            Logger.getLogger(ChatActivity.class.getName());
+
 	private LinearLayout layout;
 	private ImageView sendButton;
 	private EditText messageArea;
@@ -109,6 +123,8 @@ public class ChatActivity extends BriarActivity {
 	private MessageAdapter mAdapter;
 	private ProgressDialog mProgressDialog;
 	private LocationRequest mLocationRequest;
+	private AlertDialog dialog;
+	private String displayDeleteMessage;
 
 	private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
 	private long FASTEST_INTERVAL = 2000; /* 2 sec */
@@ -129,6 +145,12 @@ public class ChatActivity extends BriarActivity {
 	private int itemPos = 0;
 	private String mLastKey = "";
 	private String mPrevKey = "";
+
+    private ContactId contactId;
+
+    // Fields that are accessed from background threads must be volatile
+    @Inject
+    volatile ContactManager contactManager;
 
 	@Override
 	public void injectActivity(ActivityComponent component) {
@@ -176,6 +198,11 @@ public class ChatActivity extends BriarActivity {
 			toolbarTitle = toolbar.findViewById(R.id.contactName);
 		}
 		toolbarTitle.setText(UserDetails.chatWith);
+
+        // Get contact id from contactListFragment
+        Intent retrieveContactId = getIntent();
+        int id = retrieveContactId.getIntExtra(CONTACT_ID, -1);
+        contactId = new ContactId(id);
 
 		loadMessages();
 
@@ -350,7 +377,9 @@ public class ChatActivity extends BriarActivity {
 					ref.addValueEventListener(new ValueEventListener() {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
-							dataSnap.child("seen").getRef().setValue(true);
+							if (dataSnap.hasChild("message")) {
+								dataSnap.child("seen").getRef().setValue(true);
+							}
 						}
 
 						@Override
@@ -418,7 +447,9 @@ public class ChatActivity extends BriarActivity {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
 							// database message is set to seen
-							dataSnap.child("seen").getRef().setValue(true);
+							if(dataSnap.hasChild("message")) {
+								dataSnap.child("seen").getRef().setValue(true);
+							}
 						}
 
 						@Override
@@ -446,7 +477,13 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+				String key = dataSnapshot.getKey();
+				for(int i=0 ; i < messageList.size() ; i++){
+					if(messageList.get(i).getId().equals(key)){
+						messageList.remove(i);
+					}
+				}
+				mAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -750,14 +787,97 @@ public class ChatActivity extends BriarActivity {
 			case android.R.id.home:
 				onBackPressed();
 				return true;
+			case R.id.action_delete_message:
+				if(mAdapter.getMessageFocusText() != "") {
+					displayDeleteMessage = "Are you sure you want to delete: "+ mAdapter.getMessageFocusText();
+					AlertDialog.Builder builder;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+					} else {
+						builder = new AlertDialog.Builder(this);
+					}
+					builder.setTitle("Delete entry")
+							.setMessage(displayDeleteMessage)
+							.setPositiveButton(android.R.string.yes,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+											onMessageDelete();
+										}
+									})
+							.setNegativeButton(android.R.string.no,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+										}
+									})
+							.setIcon(android.R.drawable.ic_dialog_alert);
+					dialog = builder.create();
+					dialog.show();
+				} else {
+					displayDeleteMessage = "To delete, hold on a specific message then press the delete button.";
+					AlertDialog.Builder builder;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+					} else {
+						builder = new AlertDialog.Builder(this);
+					}
+					builder.setTitle("Delete entry")
+							.setMessage(displayDeleteMessage)
+							.setPositiveButton(android.R.string.yes,
+									new DialogInterface.OnClickListener() {
+										public void onClick(DialogInterface dialog, int which) {
+										}
+									})
+							.setIcon(android.R.drawable.ic_dialog_alert);
+					dialog = builder.create();
+					dialog.show();
+				}
+				return true;
 			case R.id.action_view_profile:
 				Intent profileIntent = new Intent(this, ProfileActivity.class);
 				profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
 				startActivityForResult(profileIntent, REQUEST_PROFILE);
 				return true;
+            case R.id.action_social_remove_person:
+                askToRemoveContact();
+                return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void onMessageDelete(){
+		String key = mAdapter.getMessageFocusKey();
+		DatabaseReference messageRef1 =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		messageRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				if(dataSnapshot.child(key).exists()) {
+					messageRef1.child(key).removeValue();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+		DatabaseReference messageRef2 =	mRootRef.child("messages").child(UserDetails.chatWith).child(UserDetails.username);
+		messageRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				String key = mAdapter.getMessageFocusKey();
+				if(dataSnapshot.child(key).exists()) {
+					messageRef2.child(key).removeValue();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
 	}
 
 	private String getMimeType(Uri uri) {
@@ -795,4 +915,44 @@ public class ChatActivity extends BriarActivity {
 		}
 		return result;
 	}
+
+	//Getters for testing purposes
+	public AlertDialog getDialog(){ return dialog; }
+
+	public String getDisplayDeleteMessage(){ return displayDeleteMessage; }
+
+    private void askToRemoveContact() {
+        DialogInterface.OnClickListener okListener =
+                (dialog, which) -> removeContact();
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(ChatActivity.this,
+                        R.style.BriarDialogTheme);
+        builder.setTitle(getString(R.string.dialog_title_delete_contact));
+        builder.setMessage(getString(R.string.dialog_message_delete_contact));
+        builder.setNegativeButton(R.string.delete, okListener);
+        builder.setPositiveButton(R.string.cancel, null);
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    private void removeContact() {
+        runOnDbThread(() -> {
+            try {
+                contactManager.removeContact(contactId);
+            } catch (DbException e) {
+                if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+            } finally {
+                finishAfterContactRemoved();
+            }
+        });
+    }
+
+    private void finishAfterContactRemoved() {
+        runOnUiThreadUnlessDestroyed(() -> {
+            String deleted = getString(R.string.contact_deleted_toast);
+            Toast.makeText(ChatActivity.this, deleted, LENGTH_SHORT)
+                    .show();
+            supportFinishAfterTransition();
+        });
+    }
 }

@@ -14,7 +14,6 @@
 		android:id="@+id/action_social_remove_person"
 		android:icon="@drawable/action_delete_white"
 		android:title="@string/delete_contact"
-		android:visible="false"
 		app:showAsAction="never"/>
 
 	<item
@@ -22,5 +21,12 @@
 		android:icon="@drawable/action_delete_white"
 		android:title="@string/view_profile"
 		app:showAsAction="never"/>
+
+	<item
+		android:id="@+id/action_delete_message"
+		android:icon="@drawable/action_delete_white"
+		android:title="@string/delete_message"
+		android:visible="true"
+		app:showAsAction="always"/>
 
 </menu>

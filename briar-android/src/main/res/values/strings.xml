@@ -425,6 +425,7 @@
 	<string name="profile_image_path_input">profile_image_path_input</string>
 	<string name="profile_data_description_input">profile_data_description_input</string>
 	<string name="view_profile">View Profile</string>
+	<string name="delete_message">Delete Message</string>
 
 	<!-- Full screen image -->
 	<string name="fullscreen_image">Fullscreen Image</string>
