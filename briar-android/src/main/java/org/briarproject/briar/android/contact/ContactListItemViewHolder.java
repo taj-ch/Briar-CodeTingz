@@ -20,13 +20,11 @@ import static org.briarproject.briar.android.util.UiUtils.formatDate;
 class ContactListItemViewHolder extends ContactItemViewHolder<ContactListItem> {
 
 	private final TextView unread;
-	private final TextView message;
 	private final TextView date;
 
 	ContactListItemViewHolder(View v) {
 		super(v);
 		unread = v.findViewById(R.id.unreadCountView);
-		message = v.findViewById(R.id.messageView);
 		date = v.findViewById(R.id.dateView);
 	}
 
@@ -44,14 +42,11 @@ class ContactListItemViewHolder extends ContactItemViewHolder<ContactListItem> {
 			unread.setVisibility(View.INVISIBLE);
 		}
 
-		// last message
-		message.setText(item.getLastMessage());
-
 		// date of last message
-		if (item.getDate() == 0 ) {
-			date.setText("");
+		if (item.isEmpty()) {
+			date.setText(R.string.date_no_private_messages);
 		} else {
-			long timestamp = item.getDate();
+			long timestamp = item.getTimestamp();
 			date.setText(formatDate(date.getContext(), timestamp));
 		}
 
