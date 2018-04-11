@@ -30,7 +30,9 @@
 		<module name="MissingSwitchDefault"/>
 		<module name="OneStatementPerLine"/>
 		<module name="PackageDeclaration"/>
-		<module name="RedundantImport"/>
+		<module name="RedundantImport">
+			<property name="severity" value="warning"/>
+		</module>
 		<module name="RightCurly">
 			<property name="severity" value="warning"/>
 		</module>

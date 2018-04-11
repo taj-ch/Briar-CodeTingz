@@ -198,7 +198,7 @@ public class SignInFragment extends SetupFragment {
 			mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
 				@Override
 				public void onComplete(@NonNull Task<ProviderQueryResult> task) {
-					if (!(task.getResult().getProviders().size() > 0)) {
+					if (task.getResult().getProviders().size() <= 0) {
 						UiUtils.setError(authorNameWrapper,
 								"This email is not associated to a user",
 								true);

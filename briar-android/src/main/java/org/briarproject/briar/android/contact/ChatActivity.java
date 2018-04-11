@@ -432,15 +432,14 @@ public class ChatActivity extends BriarActivity {
 				}
 
 				// if outgoing message
-				if(dataSnapshot.child("from").getValue().equals(UserDetails.username)) {
-					if(dataSnapshot.child("seen").getValue().toString() == "true") {
-						for (int i = 0; i < messageList.size(); i++) {
-							Message m = messageList.get(i);
-							if (m.getId().equals(key)) {
-								//physical message is set to seen
-								m.setSeen(true);
-								mAdapter.notifyDataSetChanged();
-							}
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.username) &&
+						dataSnapshot.child("seen").getValue().toString().equals("true")) {
+					for (int i = 0; i < messageList.size(); i++) {
+						Message m = messageList.get(i);
+						if (m.getId().equals(key)) {
+							//physical message is set to seen
+							m.setSeen(true);
+							mAdapter.notifyDataSetChanged();
 						}
 					}
 				}
