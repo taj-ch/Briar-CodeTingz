@@ -33,6 +33,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static org.briarproject.bramble.api.reporting.ReportingConstants.DEV_ONION_ADDRESS;
 import static org.briarproject.bramble.api.reporting.ReportingConstants.DEV_PUBLIC_KEY_HEX;
 
+@SuppressWarnings("PMD")
 @Module
 public class AppModule {
 

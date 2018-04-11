@@ -158,6 +158,8 @@ public class AuthorNameFragment extends SetupFragment {
 				setupController.showDozeOrCreateAccount();
 			case R.id.btn_log_in:
 				onLogInClick();
+			default:
+				break;
 		}
 	}
 

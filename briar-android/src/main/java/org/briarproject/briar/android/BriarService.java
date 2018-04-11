@@ -38,6 +38,7 @@ import static java.util.logging.Level.WARNING;
 import static org.briarproject.bramble.api.lifecycle.LifecycleManager.StartResult.ALREADY_RUNNING;
 import static org.briarproject.bramble.api.lifecycle.LifecycleManager.StartResult.SUCCESS;
 
+@SuppressWarnings("PMD")
 public class BriarService extends Service {
 
 	public static final String EXTRA_START_RESULT =

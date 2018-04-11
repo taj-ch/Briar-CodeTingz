@@ -204,6 +204,8 @@ public class NavDrawerActivity extends BriarActivity implements
 			case R.id.nav_btn_signout:
 				signOut();
 				break;
+			default:
+				break;
 		}
 	}
 

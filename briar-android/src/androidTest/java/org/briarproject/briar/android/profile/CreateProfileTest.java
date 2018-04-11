@@ -63,7 +63,7 @@ public class CreateProfileTest {
 
         Boolean loginTestSetup = LoginTestSetup.isUserAlreadyLoggedIn();
 
-        if(loginTestSetup == false) {
+        if(!loginTestSetup) {
             try {
                 Thread.sleep(15000);
             } catch (InterruptedException e) {

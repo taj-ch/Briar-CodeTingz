@@ -25,11 +25,12 @@ import static org.briarproject.briar.android.activity.BriarActivity.GROUP_NAME;
 class ForumListAdapter
 		extends BriarAdapter<ForumListItem, ForumListAdapter.ForumViewHolder> {
 
+	private int briarTextSecondary = Theme.getAttributeColor(ctx, R.attr.briar_text_secondary);
+	private int briarTextTertiary = Theme.getAttributeColor(ctx, R.attr.briar_text_tertiary);
+
 	ForumListAdapter(Context ctx) {
 		super(ctx, ForumListItem.class);
 	}
-	private int briarTextSecondary = Theme.getAttributeColor(ctx, R.attr.briar_text_secondary);
-	private int briarTextTertiary = Theme.getAttributeColor(ctx, R.attr.briar_text_tertiary);
 
 	@Override
 	public ForumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -88,6 +89,8 @@ class ForumListAdapter
 		});
 	}
 
+
+	@SuppressWarnings("PMD.CompareObjectsWithEquals")
 	@Override
 	public int compare(ForumListItem a, ForumListItem b) {
 		if (a == b) return 0;

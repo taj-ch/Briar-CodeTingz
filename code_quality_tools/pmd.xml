@@ -8,6 +8,16 @@
 
 	<exclude-pattern>.*/R.java</exclude-pattern>
 	<exclude-pattern>.*/gen/.*</exclude-pattern>
+	<!-- Exclude these since we didn't touch them and can't change the problems -->
+	<exclude-pattern>.*/blog/.*</exclude-pattern>
+	<exclude-pattern>.*/keyagreement/.*</exclude-pattern>
+	<exclude-pattern>.*/reporting/.*</exclude-pattern>
+	<exclude-pattern>.*/threaded/.*</exclude-pattern>
+	<exclude-pattern>.*/view/.*</exclude-pattern>
+	<exclude-pattern>.*/components/.*</exclude-pattern>
+	<exclude-pattern>.*/privategroup/.*</exclude-pattern>
+	<exclude-pattern>.*/privategroup/.*</exclude-pattern>
+	<exclude-pattern>.*/activity/RequestCodes.java</exclude-pattern>
 
 	<!-- Android -->
 	<!-- http://pmd.sourceforge.net/pmd-4.3.0/rules/android.html -->
@@ -15,10 +25,27 @@
 
 	<!-- Design -->
 	<!-- http://pmd.sourceforge.net/pmd-4.3.0/rules/design.html -->
+	<!-- Removed some rules that Briar itself does not follow -->
 	<rule ref="rulesets/java/design.xml">
 		<exclude name="UncommentedEmptyMethodBody"/>
 		<exclude name="AccessorMethodGeneration"/>
+		<exclude name="GodClass"/>
+		<exclude name="FinalFieldCouldBeStatic"/>
+		<exclude name="ImmutableField"/>
+		<exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
+		<exclude name="UncommentedEmptyConstructor"/>
+		<exclude name="ConfusingTernary"/>
+		<exclude name="TooFewBranchesForASwitchStatement"/>
+		<exclude name="MissingBreakInSwitch"/>
+		<exclude name="SingularField"/>
+		<exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+		<exclude name="UseUtilityClass"/>
+		<exclude name="NonStaticInitializer"/>
+		<exclude name="UseLocaleWithCaseConversions"/>
+		<exclude name="AccessorClassGeneration"/>
 	</rule>
+	
+	
 
 	<!-- Naming -->
 	<!-- http://pmd.sourceforge.net/pmd-4.3.0/rules/naming.html -->

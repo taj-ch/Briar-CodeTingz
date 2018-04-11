@@ -130,6 +130,8 @@ public class SignInFragment extends SetupFragment {
 							.show();
 				}
 				break;
+			default:
+				break;
 		}
 
 	}

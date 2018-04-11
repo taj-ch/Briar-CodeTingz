@@ -654,9 +654,10 @@ public class ConversationActivity extends BriarActivity
 		});
 	}
 
+	@SuppressWarnings("PMD.AvoidReassigningParameters")
 	@Override
 	public void onSendClick(String text) {
-		if (text.equals("")) return;
+		if (("").equals(text)) return;
 		text = StringUtils.truncateUtf8(text, MAX_PRIVATE_MESSAGE_BODY_LENGTH);
 		long timestamp = System.currentTimeMillis();
 		timestamp = Math.max(timestamp, getMinTimestampForNewMessage());

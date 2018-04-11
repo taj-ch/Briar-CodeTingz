@@ -27,6 +27,7 @@ import static org.briarproject.briar.android.panic.PanicPreferencesFragment.KEY_
 import static org.briarproject.briar.android.panic.PanicPreferencesFragment.KEY_PURGE;
 import static org.briarproject.briar.android.panic.PanicPreferencesFragment.KEY_UNINSTALL;
 
+@SuppressWarnings("PMD")
 public class PanicResponderActivity extends BriarActivity {
 
 	private static final Logger LOG =

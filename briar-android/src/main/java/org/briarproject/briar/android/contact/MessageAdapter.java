@@ -73,7 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 		mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(from_user);
 
-		if (message_type.equals("text")) {
+		if (("text").equals(message_type)) {
 			viewHolder.messageText.setVisibility(View.VISIBLE);
 			viewHolder.messageText.setText(c.getMessage());
 			viewHolder.messageImage.setVisibility(View.GONE);
