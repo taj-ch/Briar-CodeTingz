@@ -1,8 +1,10 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,7 @@ import org.briarproject.briar.R;
 import org.briarproject.briar.android.Theme;
 import org.briarproject.briar.android.contact.BaseContactListAdapter.OnContactClickListener;
 import org.briarproject.briar.android.profile.ProfileActivity;
+import org.briarproject.briar.android.profile.ProfileFragment;
 
 import java.util.logging.Logger;
 
@@ -33,6 +36,7 @@ import im.delight.android.identicons.IdenticonDrawable;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 @UiThread
 @NotNullByDefault
