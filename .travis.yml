@@ -80,9 +80,9 @@ jobs:
     - stage: static analysis
       script:
         chmod +x ./gradlew;
-        ./gradlew checkstyle;
-        ./gradlew pmd;
-        ./gradlew findbugs;
+        ./gradlew :briar-android:checkstyle;
+        ./gradlew :briar-android:pmd;
+        ./gradlew :briar-android:findbugs;
     - stage: package
       script:
         chmod +x ./gradlew;

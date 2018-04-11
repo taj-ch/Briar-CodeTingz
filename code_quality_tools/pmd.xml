@@ -16,7 +16,8 @@
 	<!-- Design -->
 	<!-- http://pmd.sourceforge.net/pmd-4.3.0/rules/design.html -->
 	<rule ref="rulesets/java/design.xml">
-		<exclude name="UncommentedEmptyMethod"/>
+		<exclude name="UncommentedEmptyMethodBody"/>
+		<exclude name="AccessorMethodGeneration"/>
 	</rule>
 
 	<!-- Naming -->
