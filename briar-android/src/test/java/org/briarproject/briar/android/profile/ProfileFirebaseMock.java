@@ -3,6 +3,7 @@ package org.briarproject.briar.android.profile;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import org.briarproject.briar.R;
 
 public class ProfileFirebaseMock {

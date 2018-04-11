@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import org.briarproject.bramble.api.sync.GroupId;
 import org.briarproject.briar.R;
+import org.briarproject.briar.android.Theme;
 import org.briarproject.briar.android.util.BriarAdapter;
 import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.android.view.TextAvatarView;
 import org.briarproject.briar.api.forum.Forum;
-import org.briarproject.briar.android.Theme;
 
 import static android.support.v7.util.SortedList.INVALID_POSITION;
 import static android.view.View.GONE;

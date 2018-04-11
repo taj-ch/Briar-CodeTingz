@@ -1,7 +1,5 @@
 package org.briarproject.briar.android.contact;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

@@ -2,21 +2,17 @@ package org.briarproject.briar.android.contact;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,44 +22,33 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firebase.database.Query;
 
 import org.briarproject.briar.R;
-import org.briarproject.briar.android.introduction.IntroductionActivity;
-import org.briarproject.briar.android.profile.ProfileActivity;
-import org.briarproject.briar.android.util.UiUtils;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
+import org.briarproject.briar.android.profile.ProfileActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
-import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {

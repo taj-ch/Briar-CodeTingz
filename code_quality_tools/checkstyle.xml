@@ -2,50 +2,59 @@
 	"-//Puppy Crawl//DTD Check Configuration 1.2//EN"
 	"http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
-	<module name="NewlineAtEndOfFile"/>
+	<module name="NewlineAtEndOfFile">
+		<property name="severity" value="warning"/>
+	</module>
 	<module name="Translation"/>
 
 	<module name="TreeWalker">
-		<module name="AnnotationLocation"/>
+		<module name="AnnotationLocation">
+			<property name="severity" value="warning"/>
+		</module>
 		<module name="AvoidNestedBlocks"/>
-		<module name="CommentsIndentation"/>
 		<module name="DefaultComesLast"/>
 		<module name="EmptyStatement"/>
 		<module name="EqualsAvoidNull"/>
-		<module name="FallThrough"/>
 		<module name="GenericWhitespace"/>
 		<module name="IllegalImport"/>
 		<module name="IllegalThrows"/>
 		<module name="IllegalToken"/>
 		<module name="IllegalTokenText"/>
 		<module name="InnerAssignment"/>
-		<module name="LeftCurly"/>
-		<module name="MemberName"/>
+		<module name="LeftCurly">
+			<property name="severity" value="warning"/>
+		</module>
+		<module name="MemberName">
+			<property name="severity" value="warning"/>
+		</module>
 		<module name="MissingSwitchDefault"/>
 		<module name="OneStatementPerLine"/>
 		<module name="PackageDeclaration"/>
 		<module name="RedundantImport"/>
-		<module name="RedundantModifier"/>
-		<module name="RightCurly"/>
+		<module name="RightCurly">
+			<property name="severity" value="warning"/>
+		</module>
 		<module name="SimplifyBooleanExpression"/>
 		<module name="SimplifyBooleanReturn"/>
 		<module name="StringLiteralEquality"/>
-		<module name="UnnecessaryParentheses"/>
 		<module name="UnusedImports"/>
 
 		<!-- Checks briar convention of CONSTANTS_LIKE_THIS -->
 		<module name="ConstantName">
 			<property name="format"
 			          value="^[A-Z]+(?:_[A-Z0-9]+)*$"/>
+			<property name="severity" value="warning"/>
 		</module>
 
 		<module name="LocalFinalVariableName">
 			<property name="format"
 			          value="^[A-Z]+(?:_[A-Z0-9]+)*$"/>
+			<property name="severity" value="warning"/>
 		</module>
 
 		<module name="LineLength">
 			<property name="max" value="120"/>
+			<property name="severity" value="warning"/>
 		</module>
 	</module>
 </module>
