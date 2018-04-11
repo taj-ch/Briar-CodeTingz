@@ -1,14 +1,11 @@
 package org.briarproject.briar.android.contact;
 
-<<<<<<< HEAD
-=======
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
->>>>>>> master
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

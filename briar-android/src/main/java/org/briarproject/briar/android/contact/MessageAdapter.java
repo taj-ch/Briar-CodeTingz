@@ -3,10 +3,7 @@ package org.briarproject.briar.android.contact;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-<<<<<<< HEAD
-=======
 import android.text.method.LinkMovementMethod;
->>>>>>> master
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

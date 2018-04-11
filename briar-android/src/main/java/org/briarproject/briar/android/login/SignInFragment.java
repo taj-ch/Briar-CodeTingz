@@ -16,11 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-<<<<<<< HEAD
-=======
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.ProviderQueryResult;
->>>>>>> master
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.briarproject.bramble.api.db.DbException;
