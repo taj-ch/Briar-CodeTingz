@@ -26,6 +26,9 @@ import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.util.UiUtils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SignInFragment extends SetupFragment {
 
 	private final static String TAG = SignInFragment.class.getName();
