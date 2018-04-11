@@ -3,6 +3,7 @@ package org.briarproject.briar.android.chat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
@@ -38,6 +40,7 @@ public class ChatActivityTest {
 	private ChatActivity chatActivity;
 	private LinearLayout layout;
 	private ImageView sendButton;
+	private ImageView locationButton;
 	private EditText messageArea;
 	private RecyclerView messagesList;
 
@@ -47,6 +50,7 @@ public class ChatActivityTest {
 		chatActivity = Robolectric.setupActivity(ChatActivity.class);
 		layout = (LinearLayout)chatActivity.findViewById(R.id.layout1);
 		sendButton = (ImageView)chatActivity.findViewById(R.id.sendButton);
+		locationButton = (ImageView)chatActivity.findViewById(R.id.addLocationButton);
 		messageArea = (EditText)chatActivity.findViewById(R.id.messageArea);
 		messagesList = (RecyclerView)chatActivity.findViewById(R.id.messages_list);
 
@@ -69,6 +73,11 @@ public class ChatActivityTest {
 		assertEquals(sendButton.isEnabled(), false);
 		messageArea.setText(" ");
 		assertEquals(sendButton.isEnabled(), true);
+	}
+
+	@Test
+	public void testLocationButton() {
+		assertEquals(locationButton.isEnabled(), true);
 	}
 
 	@Test
@@ -113,6 +122,7 @@ public class ChatActivityTest {
 
 		assertEquals(View.VISIBLE,  v.itemView.findViewById(R.id.text).getVisibility());
 		assertEquals(View.GONE, v.itemView.findViewById(R.id.image).getVisibility());
+		assertEquals(View.GONE, v.itemView.findViewById(R.id.file).getVisibility());
 	}
 
 	@Test
@@ -126,7 +136,48 @@ public class ChatActivityTest {
 		ImageView image = v.itemView.findViewById(R.id.image);
 
 		assertEquals(View.GONE, v.itemView.findViewById(R.id.text).getVisibility());
+		assertEquals(View.GONE,  v.itemView.findViewById(R.id.file).getVisibility());
 		assertEquals(View.VISIBLE, image.getVisibility());
+	}
 
+	@Test
+	public void testLocationMessageDisplayed() {
+		Message message = new Message("https://www.google.ca/maps/?q=30.0000,-70.0000", "text", 1245415502, false);
+		message.setFrom("testing");
+		chatActivity.addToMessagesList(message);
+		messagesList.getAdapter().notifyDataSetChanged();
+
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(3);
+		TextView image = v.itemView.findViewById(R.id.text);
+
+		assertEquals(View.VISIBLE, v.itemView.findViewById(R.id.text).getVisibility());
+		assertEquals(View.VISIBLE, image.getVisibility());
+	}
+
+	@Test
+	public void testFileMessageDisplayed() {
+		Message message = new Message("./placeholder.pdf", "file", "placeholder.pdf", 1245415502, false);
+		message.setFrom("testing");
+		chatActivity.addToMessagesList(message);
+		messagesList.getAdapter().notifyDataSetChanged();
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(3);
+
+		assertEquals(View.VISIBLE,  v.itemView.findViewById(R.id.file).getVisibility());
+		assertEquals(View.GONE,  v.itemView.findViewById(R.id.text).getVisibility());
+		assertEquals(View.GONE, v.itemView.findViewById(R.id.image).getVisibility());
+	}
+  
+  @Test
+	public void testMessageSeen(){
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(0);
+		ImageView status = v.itemView.findViewById(R.id.status);
+		assertNotNull(status);
+	}
+
+	@Test
+	public void testMessageNotSeen(){
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(1);
+		ImageView status = v.itemView.findViewById(R.id.status);
+		assertNull(status);
 	}
 }

@@ -16,8 +16,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+<<<<<<< HEAD
+=======
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.ProviderQueryResult;
+>>>>>>> master
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.contact.UserDetails;
@@ -107,10 +113,7 @@ public class SignInFragment extends SetupFragment {
 							"Fill in the email above", Toast.LENGTH_LONG)
 							.show();
 				} else{
-					resetPassword(email);
-					Toast.makeText(getActivity(),
-							"Email Reset Password sent", Toast.LENGTH_LONG)
-							.show();
+					userExists(email);
 				}
 				break;
 			default:
@@ -168,17 +171,51 @@ public class SignInFragment extends SetupFragment {
 		showNextFragment(AuthorNameFragment.newInstance());
 
 	}
-	
-	public void resetPassword(String emailAddress){
 
+	// Send a reset email link to user
+	private void resetPassword(String emailAddress){
 		mAuth.sendPasswordResetEmail(emailAddress)
 				.addOnCompleteListener(new OnCompleteListener<Void>() {
 					@Override
 					public void onComplete(@NonNull Task<Void> task) {
 						if (task.isSuccessful()) {
 							Log.d(TAG, "Email sent.");
+							Toast.makeText(getActivity(),
+									"Email Reset Password sent", Toast.LENGTH_LONG)
+									.show();
 						}
 					}
 				});
+	}
+
+	// Check if user exists in Firebase and then send reset link
+	private void userExists(String email) {
+		if(!isEmailValid(email)){
+			UiUtils.setError(authorNameWrapper, "Enter a valid Email", true);
+		}
+		else {
+			//checks database for existing user
+			mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
+				@Override
+				public void onComplete(@NonNull Task<ProviderQueryResult> task) {
+					if (!(task.getResult().getProviders().size() > 0)) {
+						UiUtils.setError(authorNameWrapper,
+								"This email is not associated to a user",
+								true);
+					} else {
+							resetPassword(email);
+					}
+				}
+
+			});
+		}
+	}
+
+	//checks email pattern
+	private boolean isEmailValid(String email) {
+		String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+		Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
 	}
 }

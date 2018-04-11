@@ -1,9 +1,27 @@
 package org.briarproject.briar.android.contact;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.net.Uri;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,12 +35,30 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
+import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,6 +71,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -49,6 +86,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {
@@ -57,6 +100,8 @@ public class ChatActivity extends BriarActivity {
 	private EditText messageArea;
 	private ScrollView scrollView;
 	private ImageButton addImageButton;
+	private ImageButton addLocationButton;
+	private ImageButton addFileButton;
 	private Firebase reference;
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
 	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
@@ -66,8 +111,15 @@ public class ChatActivity extends BriarActivity {
 	private LinearLayoutManager mLinearLayout;
 	private MessageAdapter mAdapter;
 	private ProgressDialog mProgressDialog;
+	private LocationRequest mLocationRequest;
+
+	private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+	private long FASTEST_INTERVAL = 2000; /* 2 sec */
+
+	public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 	private static final int GALLERY_PICK = 1;
+	private static final int FILE_PICK = 2;
 
 	// Storage Firebase
 	private StorageReference mImageStorage;
@@ -75,7 +127,7 @@ public class ChatActivity extends BriarActivity {
 	private TextView toolbarContactName;
 	private TextView toolbarTitle;
 	private SwipeRefreshLayout mRefreshLayout;
-	private static final int  TOTAL_ITEMS_TO_LOAD = 10;
+	private static final int TOTAL_ITEMS_TO_LOAD = 10;
 	private int mCurrentPage = 1;
 	private int itemPos = 0;
 	private String mLastKey = "";
@@ -94,11 +146,15 @@ public class ChatActivity extends BriarActivity {
 		FirebaseApp.initializeApp(this);
 		Firebase.setAndroidContext(this);
 
+		startLocationUpdates();
+
 		layout = (LinearLayout) findViewById(R.id.layout1);
 
-		sendButton = (ImageView)findViewById(R.id.sendButton);
-		messageArea = (EditText)findViewById(R.id.messageArea);
-		addImageButton = (ImageButton)findViewById(R.id.addImageButton);
+		sendButton = (ImageView) findViewById(R.id.sendButton);
+		messageArea = (EditText) findViewById(R.id.messageArea);
+		addImageButton = (ImageButton) findViewById(R.id.addImageButton);
+		addLocationButton = (ImageButton) findViewById(R.id.addLocationButton);
+		addFileButton = (ImageButton)findViewById(R.id.addFileButton);
 
 		sendButton.setEnabled(false);
 
@@ -160,7 +216,39 @@ public class ChatActivity extends BriarActivity {
 				galleryIntent.setType("image/*");
 				galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
-				startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+				startActivityForResult(
+						Intent.createChooser(galleryIntent, "SELECT IMAGE"),
+						GALLERY_PICK);
+			}
+		});
+
+		addLocationButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getLocation();
+			}
+		});
+
+		addFileButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String[] mimeTypes =
+						{"application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .doc & .docx
+								"application/vnd.ms-powerpoint","application/vnd.openxmlformats-officedocument.presentationml.presentation", // .ppt & .pptx
+								"application/vnd.ms-excel","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xls & .xlsx
+								"text/plain",
+								"application/pdf",
+								"application/zip"};
+
+				// ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file browser.
+				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+				// Choose only files from the mime types defined above
+				intent.setType("*/*");
+				intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+				intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+				startActivityForResult(intent, FILE_PICK);
 			}
 		});
 		
@@ -184,13 +272,18 @@ public class ChatActivity extends BriarActivity {
 	private void sendMessage() {
 		String message = messageArea.getText().toString();
 
-		if(!TextUtils.isEmpty(message)){
+		if (!TextUtils.isEmpty(message)) {
 
-			String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
-			String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+			String current_user_ref = "messages/" + UserDetails.username + "/" +
+					UserDetails.chatWith;
+			String chat_user_ref = "messages/" + UserDetails.chatWith + "/" +
+					UserDetails.username;
+			String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 			DatabaseReference user_message_push = mRootRef.child("messages")
-					.child(UserDetails.username).child(UserDetails.chatWith).push();
+					.child(UserDetails.username).child(UserDetails.chatWith)
+					.push();
 
 			String push_id = user_message_push.getKey();
 
@@ -202,25 +295,30 @@ public class ChatActivity extends BriarActivity {
 			messageMap.put("from", UserDetails.username);
 
 			Map messageUserMap = new HashMap();
-			messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-			messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+			messageUserMap.put(CURRENT_USER_REF + "/" + push_id, messageMap);
+			messageUserMap.put(CHAT_USER_REF + "/" + push_id, messageMap);
 
 			messageArea.setText("");
 
-			mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
-				@Override
-				public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-					if(databaseError != null){
-						Log.d("CHAT_LOG", databaseError.getMessage().toString());
-					}
-				}
-			});
+			mRootRef.updateChildren(messageUserMap,
+					new DatabaseReference.CompletionListener() {
+						@Override
+						public void onComplete(DatabaseError databaseError,
+								DatabaseReference databaseReference) {
+							if (databaseError != null) {
+								Log.d("CHAT_LOG",
+										databaseError.getMessage().toString());
+							}
+						}
+					});
 		}
 	}
+
 	private void loadMoreMessages() {
 
 		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 		Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -232,10 +330,13 @@ public class ChatActivity extends BriarActivity {
 				} else {
 					mPrevKey = mLastKey;
 				}
-				if(itemPos == 1) {
+				if (itemPos == 1) {
 					mLastKey = messageKey;
 				}
 
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)){
+					dataSnapshot.child("seen").getRef().setValue(true);
+				}
 				Log.d("TOTALKEYS", "Last Key : " + mLastKey + " | Prev Key : " + mPrevKey + " | Message Key : " + messageKey);
 				mAdapter.notifyDataSetChanged();
 				mRefreshLayout.setRefreshing(false);
@@ -244,7 +345,23 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+				String key = dataSnapshot.getKey();
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)) {
+					DatabaseReference ref = mRootRef.child("messages")
+							.child(UserDetails.chatWith)
+							.child(UserDetails.username).child(key);
+					ref.addValueEventListener(new ValueEventListener() {
+						@Override
+						public void onDataChange(DataSnapshot dataSnap) {
+							dataSnap.child("seen").getRef().setValue(true);
+						}
 
+						@Override
+						public void onCancelled(DatabaseError databaseError) {
+
+						}
+					});
+				}
 			}
 
 			@Override
@@ -265,23 +382,25 @@ public class ChatActivity extends BriarActivity {
 
 	}
 
-
 	private void loadMessages() {
 
-		DatabaseReference messageRef = mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		DatabaseReference messageRef =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
 		Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
+		
 		messageQuery.addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 				Message message = dataSnapshot.getValue(Message.class);
+				message.setId(dataSnapshot.getKey());
 				itemPos++;
+
 				if(itemPos == 1){
-
 					String messageKey = dataSnapshot.getKey();
-
 					mLastKey = messageKey;
 					mPrevKey = messageKey;
-
+				}
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)){
+					dataSnapshot.child("seen").getRef().setValue(true);
 				}
 				messageList.add(message);
 				mAdapter.notifyDataSetChanged();
@@ -291,6 +410,40 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+				String key = dataSnapshot.getKey();
+
+				// if incoming message
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.chatWith)) {
+					DatabaseReference ref = mRootRef.child("messages")
+							.child(UserDetails.chatWith)
+							.child(UserDetails.username).child(key);
+					ref.addValueEventListener(new ValueEventListener() {
+						@Override
+						public void onDataChange(DataSnapshot dataSnap) {
+							// database message is set to seen
+							dataSnap.child("seen").getRef().setValue(true);
+						}
+
+						@Override
+						public void onCancelled(DatabaseError databaseError) {
+
+						}
+					});
+				}
+
+				// if outgoing message
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.username)) {
+					if(dataSnapshot.child("seen").getValue().toString() == "true") {
+						for (int i = 0; i < messageList.size(); i++) {
+							Message m = messageList.get(i);
+							if (m.getId().equals(key)) {
+								//physical message is set to seen
+								m.setSeen(true);
+								mAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				}
 
 			}
 
@@ -309,6 +462,162 @@ public class ChatActivity extends BriarActivity {
 
 			}
 		});
+	}
+
+	protected void startLocationUpdates() {
+
+		mLocationRequest = new LocationRequest();
+		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		mLocationRequest.setInterval(UPDATE_INTERVAL);
+		mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+		LocationSettingsRequest.Builder builder =
+				new LocationSettingsRequest.Builder();
+		builder.addLocationRequest(mLocationRequest);
+		LocationSettingsRequest locationSettingsRequest = builder.build();
+
+		SettingsClient settingsClient =	LocationServices.getSettingsClient(this);
+		settingsClient.checkLocationSettings(locationSettingsRequest);
+
+		// Check if App-Level Location Permission is enabled
+		if (ActivityCompat.checkSelfPermission(this,	Manifest.permission.ACCESS_FINE_LOCATION) !=
+				PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+						Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this,	Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+				new AlertDialog.Builder(this)
+						.setTitle("Permission Required")
+						.setMessage("Briar needs your permission to use your location")
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								//Prompt the user once explanation has been shown
+								ActivityCompat.requestPermissions(ChatActivity.this,
+										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+										MY_PERMISSIONS_REQUEST_LOCATION);
+							}
+						})
+						.create()
+						.show();
+			}
+
+			else {
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_LOCATION);
+			}
+
+			return;
+		}
+
+		getFusedLocationProviderClient(this)
+				.requestLocationUpdates(mLocationRequest,
+						new LocationCallback() {
+							@Override
+							public void onLocationResult(
+									LocationResult locationResult) {
+								onLocationChanged(
+										locationResult.getLastLocation());
+							}
+						},
+						Looper.myLooper());
+	}
+
+	public void onLocationChanged(Location location) {
+		String msg = "Updated Location: " +
+				Double.toString(location.getLatitude()) + "," +
+				Double.toString(location.getLongitude());
+		Log.d("LOCATION", msg);
+
+	}
+
+	private void getLocation() {
+
+		FusedLocationProviderClient locationClient = getFusedLocationProviderClient(this);
+
+		String current_user_ref =
+				"messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+		String chat_user_ref =
+				"messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+
+
+		if (ActivityCompat.checkSelfPermission(this,	Manifest.permission.ACCESS_FINE_LOCATION) !=
+				PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+						Manifest.permission.ACCESS_COARSE_LOCATION) !=	PackageManager.PERMISSION_GRANTED) {
+
+			System.out.println("Inside Location Permission Check");
+			if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+				new AlertDialog.Builder(this)
+						.setTitle("Permission Required")
+						.setMessage("Briar needs your permission to use your location")
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								//Prompt the user once explanation has been shown
+								ActivityCompat.requestPermissions(ChatActivity.this,
+										new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+										MY_PERMISSIONS_REQUEST_LOCATION);
+							}
+						})
+						.create()
+						.show();
+			}
+
+			else {
+				ActivityCompat.requestPermissions(this,
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						MY_PERMISSIONS_REQUEST_LOCATION);
+			}
+
+			return;
+		}
+
+		locationClient.getLastLocation()
+				.addOnSuccessListener(this, new OnSuccessListener<Location>() {
+
+					@Override
+					public void onSuccess(Location location) {
+						DatabaseReference user_message_push =
+								mRootRef.child("messages")
+										.child(UserDetails.username)
+										.child(UserDetails.chatWith).push();
+						String message = "https://www.google.ca/maps/?q=" +
+								Double.toString(location.getLatitude()) + "," +
+								Double.toString(location.getLongitude());
+
+						String push_id = user_message_push.getKey();
+
+						Map messageMap = new HashMap();
+						messageMap.put("message", message);
+						messageMap.put("seen", false);
+						messageMap.put("type", "text");
+						messageMap.put("time", ServerValue.TIMESTAMP);
+						messageMap.put("from", UserDetails.username);
+
+						Map messageUserMap = new HashMap();
+						messageUserMap.put(current_user_ref + "/" + push_id,
+								messageMap);
+						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+
+						mRootRef.updateChildren(messageUserMap,
+								new DatabaseReference.CompletionListener() {
+									@Override
+									public void onComplete(
+											DatabaseError databaseError,
+											DatabaseReference databaseReference) {
+										if (databaseError != null) {
+											Log.d("CHAT_LOG",
+													databaseError.getMessage().toString());
+										}
+									}
+								});
+
+					}
+				});
+
 	}
 
 	@Override
@@ -324,15 +633,15 @@ public class ChatActivity extends BriarActivity {
 
 			Uri imageUri = data.getData();
 
-			final String current_user_ref = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
-			final String chat_user_ref = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+			final String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
 
 			DatabaseReference user_message_push = mRootRef.child("messages")
 					.child(UserDetails.username).child(UserDetails.chatWith).push();
 
-			final String push_id = user_message_push.getKey();
+			final String PUSH_ID = user_message_push.getKey();
 
-			StorageReference filepath = mImageStorage.child("message_images").child(push_id + ".jpg");
+			StorageReference filepath = mImageStorage.child("message_images").child(PUSH_ID + ".jpg");
 
 			filepath.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
 				@Override
@@ -348,8 +657,64 @@ public class ChatActivity extends BriarActivity {
 						messageMap.put("from", UserDetails.username);
 
 						Map messageUserMap = new HashMap();
-						messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
-						messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+						messageUserMap.put(CURRENT_USER_REF + "/" + PUSH_ID, messageMap);
+						messageUserMap.put(CHAT_USER_REF + "/" + PUSH_ID, messageMap);
+
+						messageArea.setText("");
+
+						mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+							@Override
+							public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+								mProgressDialog.dismiss();
+								if(databaseError != null){
+									Log.d("CHAT_LOG", databaseError.getMessage().toString());
+								}
+							}
+						});
+					}
+				}
+			});
+		} else if (request == FILE_PICK && result == RESULT_OK) {
+			mProgressDialog = new ProgressDialog(ChatActivity.this);
+			mProgressDialog.setTitle("Uploading File...");
+			mProgressDialog.setMessage("Please wait while we upload and process the file.");
+			mProgressDialog.setCanceledOnTouchOutside(false);
+			mProgressDialog.show();
+
+			Uri fileUri = data.getData();
+			final MimeTypeMap MIME = MimeTypeMap.getSingleton();
+			String mimeType = getMimeType(fileUri);
+			String extension = MIME.getExtensionFromMimeType(mimeType);
+
+			String name = getFileName(fileUri);
+
+			final String CURRENT_USER_REF = "messages/" + UserDetails.username + "/" + UserDetails.chatWith;
+			final String CHAT_USER_REF = "messages/" + UserDetails.chatWith + "/" + UserDetails.username;
+
+			DatabaseReference user_message_push = mRootRef.child("messages")
+					.child(UserDetails.username).child(UserDetails.chatWith).push();
+
+			final String PUSH_ID = user_message_push.getKey();
+
+			StorageReference filepath = mImageStorage.child("message_files").child(PUSH_ID + "." + extension);
+
+			filepath.putFile(fileUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+				@Override
+				public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+					if(task.isSuccessful()){
+						String download_url = task.getResult().getDownloadUrl().toString();
+
+						Map messageMap = new HashMap();
+						messageMap.put("message", download_url);
+						messageMap.put("seen", false);
+						messageMap.put("type", "file");
+						messageMap.put("name", name);
+						messageMap.put("time", ServerValue.TIMESTAMP);
+						messageMap.put("from", UserDetails.username);
+
+						Map messageUserMap = new HashMap();
+						messageUserMap.put(CURRENT_USER_REF + "/" + PUSH_ID, messageMap);
+						messageUserMap.put(CHAT_USER_REF + "/" + PUSH_ID, messageMap);
 
 						messageArea.setText("");
 
@@ -367,7 +732,7 @@ public class ChatActivity extends BriarActivity {
 			});
 		}
 	}
-	
+
 	//For testing purposes
 	public void addToMessagesList(Message message) {
 		messageList.add(message);
@@ -396,5 +761,41 @@ public class ChatActivity extends BriarActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private String getMimeType(Uri uri) {
+		String mimeType = null;
+		if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+			ContentResolver cr = getApplicationContext().getContentResolver();
+			mimeType = cr.getType(uri);
+		} else {
+			String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
+					.toString());
+			mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+					fileExtension.toLowerCase());
+		}
+		return mimeType;
+	}
+
+	private String getFileName(Uri uri) {
+		String result = null;
+		if (uri.getScheme().equals("content")) {
+			Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		if (result == null) {
+			result = uri.getPath();
+			int cut = result.lastIndexOf('/');
+			if (cut != -1) {
+				result = result.substring(cut + 1);
+			}
+		}
+		return result;
 	}
 }

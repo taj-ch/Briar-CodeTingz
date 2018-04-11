@@ -13,9 +13,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+<<<<<<< HEAD
+=======
+import static org.mockito.Mockito.*;
+
+>>>>>>> master
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -75,6 +81,15 @@ public class ProfileFragmentTest {
             }})
                 .when(profileFragmentSpy).readProfileInfo();
 
+        // Mock firebase call to read profile image with our custom mock class
+        doAnswer(new Answer() {
+            public Object answer(InvocationOnMock invocation) {
+
+                profileFirebaseMock.readProfileImage();
+                return 1;
+            }})
+                .when(profileFragmentSpy).readProfileImage();
+
         // Start Fragment
         startFragment(profileFragmentSpy, SetupActivity.class);
 
@@ -130,12 +145,11 @@ public class ProfileFragmentTest {
     @Test
     public void testProfileUIisVisible() {
 
-        // Check that all the inputs are visible
-        assertEquals(nickname.getVisibility(), View.VISIBLE);
-        assertEquals(firstName.getVisibility(), View.VISIBLE);
-        assertEquals(lastName.getVisibility(), View.VISIBLE);
-        assertEquals(email.getVisibility(), View.VISIBLE);
-        assertEquals(description.getVisibility(), View.VISIBLE);
-        assertEquals(profileImage.getVisibility(), View.VISIBLE);
+        assertEquals(View.VISIBLE, nickname.getVisibility());
+        assertEquals(View.VISIBLE, firstName.getVisibility());
+        assertEquals(View.VISIBLE, lastName.getVisibility());
+        assertEquals(View.VISIBLE, email.getVisibility());
+        assertEquals(View.VISIBLE, description.getVisibility());
+        assertEquals(View.VISIBLE, profileImage.getVisibility());
     }
 }
