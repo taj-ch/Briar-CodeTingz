@@ -37,7 +37,9 @@
 		<module name="SimplifyBooleanExpression"/>
 		<module name="SimplifyBooleanReturn"/>
 		<module name="StringLiteralEquality"/>
-		<module name="UnusedImports"/>
+		<module name="UnusedImports">
+			<property name="severity" value="warning"/>
+		</module>
 
 		<!-- Checks briar convention of CONSTANTS_LIKE_THIS -->
 		<module name="ConstantName">
