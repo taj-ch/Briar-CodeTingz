@@ -272,7 +272,7 @@ public class ChatActivity extends BriarActivity {
 
 	private void sendMessage() {
 		String message = messageArea.getText().toString();
-
+		//updating the database with the sent message
 		if (!TextUtils.isEmpty(message)) {
 
 			String current_user_ref = "messages/" + UserDetails.username + "/" +
@@ -766,31 +766,33 @@ public class ChatActivity extends BriarActivity {
 				return true;
 			case R.id.action_delete_message:
 				if(mAdapter.getMessageFocusText() != "") {
-					displayDeleteMessage = "Are you sure you want to delete: "+ mAdapter.getMessageFocusText();
-					AlertDialog.Builder builder;
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-					} else {
-						builder = new AlertDialog.Builder(this);
+					if (mAdapter.getmessageValidForDelete()) {
+						displayDeleteMessage = "Are you sure you want to delete: " + mAdapter.getMessageFocusText();
+						AlertDialog.Builder builder;
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+							builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+						} else {
+							builder = new AlertDialog.Builder(this);
+						}
+						builder.setTitle("Delete entry")
+								.setMessage(displayDeleteMessage)
+								.setPositiveButton(android.R.string.yes,
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog, int which) {
+												onMessageDelete();
+											}
+										})
+								.setNegativeButton(android.R.string.no,
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog, int which) {
+											}
+										})
+								.setIcon(android.R.drawable.ic_dialog_alert);
+						dialog = builder.create();
+						dialog.show();
 					}
-					builder.setTitle("Delete entry")
-							.setMessage(displayDeleteMessage)
-							.setPositiveButton(android.R.string.yes,
-									new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-											onMessageDelete();
-										}
-									})
-							.setNegativeButton(android.R.string.no,
-									new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-										}
-									})
-							.setIcon(android.R.drawable.ic_dialog_alert);
-					dialog = builder.create();
-					dialog.show();
 				} else {
-					displayDeleteMessage = "To delete, hold on a specific message then press the delete button.";
+					displayDeleteMessage = "To delete, hold on a specific message you sent then press the delete button.";
 					AlertDialog.Builder builder;
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);

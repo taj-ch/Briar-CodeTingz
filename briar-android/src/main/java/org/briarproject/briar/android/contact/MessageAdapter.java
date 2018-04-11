@@ -27,6 +27,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 	private Context mContext;
 	private String messageFocusKey = "";
 	private String messageFocusText = "";
+	private boolean messageValidForDelete = false;
 
 
 	public MessageAdapter(List<Message> mMessageList, Context context) {
@@ -91,6 +92,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 					System.out.println("this message has focus: " + c.getMessage());
 					messageFocusText = c.getMessage();
 					messageFocusKey = c.getId();
+					if(c.getFrom().equals(UserDetails.username)){
+						messageValidForDelete = true;
+					} else {
+						messageValidForDelete = false;
+					}
 					return true;
 				}
 			});
@@ -172,5 +178,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 		return messageFocusKey;
 	}
 
-	public String getMessageFocusText() { return messageFocusText; }
+	public String getMessageFocusText() {
+		return messageFocusText;
+	}
+
+	public boolean getmessageValidForDelete(){
+		return messageValidForDelete;
+	}
 }
