@@ -17,6 +17,8 @@ public class ContactListItem extends ContactItem {
 	private boolean empty;
 	private long timestamp;
 	private int unread;
+	private long date;
+	private String lastMessage;
 
 	public ContactListItem(Contact contact, boolean connected,
 			GroupCount count) {
@@ -24,6 +26,8 @@ public class ContactListItem extends ContactItem {
 		this.empty = count.getMsgCount() == 0;
 		this.unread = count.getUnreadCount();
 		this.timestamp = count.getLatestMsgTime();
+		this.date = 0;
+		this.lastMessage = "Send a message!";
 	}
 
 	void addMessage(ConversationItem message) {
@@ -43,6 +47,22 @@ public class ContactListItem extends ContactItem {
 
 	int getUnreadCount() {
 		return unread;
+	}
+
+	long getDate() {
+		return date;
+	}
+
+	String getLastMessage() {
+		return lastMessage;
+	}
+
+	public void setDate(long date) {
+		this.date = date;
+	}
+
+	public void setLastMessage(String lastMessage) {
+		this.lastMessage = lastMessage;
 	}
 
 }
