@@ -55,7 +55,7 @@ jobs:
         ./gradlew assemble;
         ./gradlew :briar-android:checkstyle;
         ./gradlew :briar-android:pmd;
-        ./gradlew :briar-android:findbugs -textui;
+        ./gradlew :briar-android:findbugs;
 
 after_script:
     # this file changes every time but should not be cached
