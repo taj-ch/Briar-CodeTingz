@@ -1,6 +1,8 @@
 package org.briarproject.briar.android.chat;
 
+import android.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.fakes.RoboMenuItem;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -179,5 +182,13 @@ public class ChatActivityTest {
 		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(1);
 		ImageView status = v.itemView.findViewById(R.id.status);
 		assertNull(status);
+	}
+
+	@Test
+	public void testDeleteContactOption() {
+		MenuItem removePersonOption = new RoboMenuItem(R.id.action_social_remove_person);
+		chatActivity.onOptionsItemSelected(removePersonOption);
+		AlertDialog dialog = chatActivity.getDialog();
+		assertEquals(true, dialog.isShowing());
 	}
 }

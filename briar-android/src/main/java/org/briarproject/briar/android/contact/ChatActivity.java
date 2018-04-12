@@ -833,14 +833,15 @@ public class ChatActivity extends BriarActivity {
     private void askToRemoveContact() {
         DialogInterface.OnClickListener okListener =
                 (dialog, which) -> removeContact();
-        android.support.v7.app.AlertDialog.Builder builder =
-                new android.support.v7.app.AlertDialog.Builder(ChatActivity.this,
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(ChatActivity.this,
                         R.style.BriarDialogTheme);
         builder.setTitle(getString(R.string.dialog_title_delete_contact));
         builder.setMessage(getString(R.string.dialog_message_delete_contact));
         builder.setNegativeButton(R.string.delete, okListener);
         builder.setPositiveButton(R.string.cancel, null);
-        builder.show();
+        dialog = builder.create();
+        dialog.show();
     }
 
     private void removeContact() {
