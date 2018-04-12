@@ -78,6 +78,7 @@ public abstract class BriarActivity extends BaseActivity {
 		}
 	}
 
+	@SuppressWarnings("PMD.PositionLiteralsFirstInCaseInsensitiveComparisons")
 	public void setSceneTransitionAnimation() {
 		if (SDK_INT < 21) return;
 		// workaround for #1007

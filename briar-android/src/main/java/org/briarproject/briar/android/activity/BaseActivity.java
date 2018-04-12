@@ -2,6 +2,7 @@ package org.briarproject.briar.android.activity;
 
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.UiThread;
 import android.support.v4.app.FragmentManager;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
-import android.preference.PreferenceManager;
 
 import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.briar.R;

@@ -9,10 +9,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
-
-import android.view.View.OnClickListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -97,9 +96,7 @@ public class ProfileFragment extends BaseFragment implements
 
 	// Best practice to create a new fragment instance
 	public static ProfileFragment newInstance() {
-
-		ProfileFragment f = new ProfileFragment();
-		return f;
+		return new ProfileFragment();
 	}
 
 	@Override
@@ -195,6 +192,8 @@ public class ProfileFragment extends BaseFragment implements
 				}
 
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -203,32 +202,29 @@ public class ProfileFragment extends BaseFragment implements
 		super.onActivityResult(requestCode, resultCode, data);
 
 		// Once the user selects an image store the image to file and update the fragment
-		// Make sure correct request
-		if (requestCode == PICK_PROFILE_PICTURE_REQUEST) {
-			// No errors during intent
-			if (resultCode == RESULT_OK) {
-				// Get the URI that points to the image
-				Uri profileUri = data.getData();
+		// Make sure correct request & No errors during intent
+		if (requestCode == PICK_PROFILE_PICTURE_REQUEST && resultCode == RESULT_OK) {
+			// Get the URI that points to the image
+			Uri profileUri = data.getData();
 
-				// If an image was selected
-				if (profileUri != null) {
-					try {
-						// Get the image and set profile fragment with it
-						currentImage = MediaStore.Images.Media.getBitmap(
-								this.getActivity().getContentResolver(), profileUri);
-						selectedImage.setImageBitmap(currentImage);
+			// If an image was selected
+			if (profileUri != null) {
+				try {
+					// Get the image and set profile fragment with it
+					currentImage = MediaStore.Images.Media.getBitmap(
+							this.getActivity().getContentResolver(), profileUri);
+					selectedImage.setImageBitmap(currentImage);
 
-						writeProfileImage(currentImage, userName, getContext());
+					writeProfileImage(currentImage, userName, getContext());
 
-					} catch (IOException e) {
-						e.printStackTrace();
-						Toast.makeText(getActivity(), "There was an error while opening image location!",
-								Toast.LENGTH_LONG).show();
-					} catch (Exception e) {
-						e.printStackTrace();
-						Toast.makeText(getActivity(), "There was an error while saving your image!",
-								Toast.LENGTH_LONG).show();
-					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					Toast.makeText(getActivity(), "There was an error while opening image location!",
+							Toast.LENGTH_LONG).show();
+				} catch (Exception e) {
+					e.printStackTrace();
+					Toast.makeText(getActivity(), "There was an error while saving your image!",
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		}

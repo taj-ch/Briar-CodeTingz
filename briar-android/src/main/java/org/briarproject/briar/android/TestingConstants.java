@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.OFF;
 
+@SuppressWarnings("PMD.ConstantsInInterface")
 public interface TestingConstants {
 
 	/**

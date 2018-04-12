@@ -1,5 +1,6 @@
 package org.briarproject.briar.android;
 
+@SuppressWarnings("PMD")
 class AndroidEagerSingletons {
 
 	static void initEagerSingletons(AndroidComponent c) {

@@ -38,8 +38,8 @@ import org.briarproject.briar.android.fragment.BaseFragment.BaseFragmentListener
 import org.briarproject.briar.android.fragment.SignOutFragment;
 import org.briarproject.briar.android.navdrawer.NavDrawerController.ExpiryWarning;
 import org.briarproject.briar.android.privategroup.list.GroupListFragment;
-import org.briarproject.briar.android.settings.SettingsActivity;
 import org.briarproject.briar.android.profile.ProfileFragment;
+import org.briarproject.briar.android.settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,6 +203,8 @@ public class NavDrawerActivity extends BriarActivity implements
 				break;
 			case R.id.nav_btn_signout:
 				signOut();
+				break;
+			default:
 				break;
 		}
 	}
