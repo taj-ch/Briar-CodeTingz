@@ -18,4 +18,14 @@ public class TestableContactListFragment extends ContactListFragment {
 		}
 		return contacts;
 	}
+
+	public String getLastMessage(Message mockMessage){
+		String username = UserDetails.username;
+
+		if (mockMessage.getFrom().equals(username)) {
+			return "You: " + mockMessage.getMessage();
+		} else {
+			return mockMessage.getMessage();
+		}
+	}
 }
