@@ -9,6 +9,7 @@ allprojects {
 			url "https://maven.google.com" // Google's Maven repository
 		}
 	}
+	apply from: file("${project.rootDir}/code_quality_tools/quality.gradle")
 }
 
 buildscript {

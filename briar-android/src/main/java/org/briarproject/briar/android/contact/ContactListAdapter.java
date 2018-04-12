@@ -40,7 +40,7 @@ public class ContactListAdapter extends
 
 	@Override
 	public int compare(ContactListItem c1, ContactListItem c2) {
-		if (SORT.equals("ALPHA")) {
+		if (("ALPHA").equals(SORT)) {
 			return c1.getContact().getAuthor().getName().toLowerCase()
 					.compareTo(c2.getContact().getAuthor().getName().toLowerCase());
 		} else {

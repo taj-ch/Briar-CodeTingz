@@ -1,12 +1,8 @@
 package org.briarproject.briar.android.contact;
 
-import android.support.annotation.NonNull;
-
 import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.nullsafety.NotNullByDefault;
 import org.briarproject.briar.api.client.MessageTracker.GroupCount;
-
-import java.util.Comparator;
 
 import javax.annotation.concurrent.NotThreadSafe;
 

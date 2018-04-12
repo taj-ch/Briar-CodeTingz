@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -39,6 +41,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -429,15 +432,14 @@ public class ChatActivity extends BriarActivity {
 				}
 
 				// if outgoing message
-				if(dataSnapshot.child("from").getValue().equals(UserDetails.username)) {
-					if(dataSnapshot.child("seen").getValue().toString() == "true") {
-						for (int i = 0; i < messageList.size(); i++) {
-							Message m = messageList.get(i);
-							if (m.getId().equals(key)) {
-								//physical message is set to seen
-								m.setSeen(true);
-								mAdapter.notifyDataSetChanged();
-							}
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.username) &&
+						dataSnapshot.child("seen").getValue().toString().equals("true")) {
+					for (int i = 0; i < messageList.size(); i++) {
+						Message m = messageList.get(i);
+						if (m.getId().equals(key)) {
+							//physical message is set to seen
+							m.setSeen(true);
+							mAdapter.notifyDataSetChanged();
 						}
 					}
 				}

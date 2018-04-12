@@ -1,14 +1,7 @@
 package org.briarproject.briar.android.contact;
 
 
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-
-import org.briarproject.bramble.api.contact.Contact;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 

@@ -3,33 +3,33 @@
 
 package org.briarproject.briar.android.database;
 
-	import com.google.android.gms.tasks.OnCompleteListener;
-	import com.google.android.gms.tasks.OnFailureListener;
-	import com.google.android.gms.tasks.OnSuccessListener;
-	import com.google.android.gms.tasks.Task;
-	import com.google.firebase.auth.AuthCredential;
-	import com.google.firebase.auth.AuthResult;
-	import com.google.firebase.auth.FirebaseAuth;
-	import com.google.firebase.auth.FirebaseUser;
-	import com.google.firebase.auth.ProviderQueryResult;
-	import com.google.firebase.database.DataSnapshot;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.database.DataSnapshot;
 
-	import org.junit.Before;
-	import org.junit.Test;
-	import org.junit.runner.RunWith;
-	import org.mockito.ArgumentCaptor;
-	import org.mockito.Captor;
-	import org.mockito.Mock;
-	import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-	import java.util.Collections;
+import java.util.Collections;
 
-	import rx.observers.TestSubscriber;
-	import rx.schedulers.Schedulers;
+import rx.observers.TestSubscriber;
+import rx.schedulers.Schedulers;
 
-	import static org.mockito.Matchers.eq;
-	import static org.mockito.Mockito.verify;
-	import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RxFirebaseAuthTests {

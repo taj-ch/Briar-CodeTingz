@@ -75,6 +75,7 @@ public abstract class BaseMessageFragment extends BaseFragment
 		}
 	}
 
+	@SuppressWarnings("PMD.AvoidReassigningParameters")
 	@Override
 	public void onSendClick(String msg) {
 		if (StringUtils.utf8IsTooLong(msg, listener.getMaximumMessageLength())) {
