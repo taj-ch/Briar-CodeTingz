@@ -8,18 +8,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.TestBriarApplication;
 import org.briarproject.briar.android.contact.ChatActivity;
-
 import org.briarproject.briar.android.contact.Message;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.util.UiUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;

@@ -1,6 +1,5 @@
 package org.briarproject.briar.android.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -24,23 +23,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
-import org.briarproject.briar.android.contact.ConversationActivity;
 import org.briarproject.briar.android.contact.UserDetails;
-import org.briarproject.briar.android.controller.handler.UiResultHandler;
-import org.briarproject.briar.android.sharing.ShareForumActivity;
 import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
-import static android.view.inputmethod.EditorInfo.IME_ACTION_NONE;
-import static android.widget.Toast.LENGTH_SHORT;
-import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
 
 public class SignInFragment extends SetupFragment {
 
@@ -129,6 +116,8 @@ public class SignInFragment extends SetupFragment {
 					userExists(email);
 				}
 				break;
+			default:
+				break;
 		}
 
 	}
@@ -209,7 +198,7 @@ public class SignInFragment extends SetupFragment {
 			mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
 				@Override
 				public void onComplete(@NonNull Task<ProviderQueryResult> task) {
-					if (!(task.getResult().getProviders().size() > 0)) {
+					if (task.getResult().getProviders().size() <= 0) {
 						UiUtils.setError(authorNameWrapper,
 								"This email is not associated to a user",
 								true);

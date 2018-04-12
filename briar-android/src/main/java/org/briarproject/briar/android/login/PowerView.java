@@ -21,6 +21,7 @@ import org.briarproject.briar.R;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static org.briarproject.briar.android.util.UiUtils.showOnboardingDialog;
 
+@SuppressWarnings("PMD")
 @UiThread
 @NotNullByDefault
 abstract class PowerView extends ConstraintLayout {

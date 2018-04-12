@@ -1,13 +1,9 @@
 package org.briarproject.briar.android.login;
 
-import android.app.Activity;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.google.firebase.FirebaseApp;
 
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.TestBriarApplication;
@@ -26,8 +22,6 @@ import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUIT
 import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.STRONG;
 import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.WEAK;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 

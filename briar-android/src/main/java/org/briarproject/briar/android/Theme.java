@@ -42,7 +42,6 @@ public class Theme {
 			int attributeId) {
 		TypedValue typedValue = new TypedValue();
 		context.getTheme().resolveAttribute(attributeId, typedValue, true);
-		int drawableRes = typedValue.resourceId;
-		return drawableRes;
+		return  typedValue.resourceId;
 	}
 }

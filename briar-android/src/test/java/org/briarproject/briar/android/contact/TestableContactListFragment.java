@@ -1,10 +1,7 @@
 package org.briarproject.briar.android.contact;
 
 
-import org.briarproject.bramble.api.contact.Contact;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 

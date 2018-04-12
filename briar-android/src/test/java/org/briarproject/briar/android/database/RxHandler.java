@@ -2,14 +2,14 @@
 
 package org.briarproject.briar.android.database;
 
-	import android.support.annotation.NonNull;
+import android.support.annotation.NonNull;
 
-	import com.google.android.gms.tasks.OnCompleteListener;
-	import com.google.android.gms.tasks.OnFailureListener;
-	import com.google.android.gms.tasks.OnSuccessListener;
-	import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
-	import rx.Subscriber;
+import rx.Subscriber;
 
 public class RxHandler<T> implements OnSuccessListener<T>, OnFailureListener, OnCompleteListener<T> {
 

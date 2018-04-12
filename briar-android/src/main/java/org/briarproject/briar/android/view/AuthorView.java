@@ -179,6 +179,8 @@ public class AuthorView extends RelativeLayout {
 				setCenterVertical(authorName, false);
 				setCenterVertical(trustIndicator, false);
 				break;
+			default:
+				break;
 		}
 	}
 
