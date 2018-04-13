@@ -1,0 +1,37 @@
+<FindBugsFilter>
+	<!-- Do not check auto-generated resources classes -->
+	<Match>
+		<Class name="~.*R\$.*"/>
+	</Match>
+
+	<!-- Do not check auto-generated manifest classes -->
+	<Match>
+		<Class name="~.*Manifest\$.*"/>
+	</Match>
+
+	<!-- Do not check auto-generated classes (Dagger puts $ into class names) -->
+	<Match>
+		<Class name="~.*Dagger*.*"/>
+	</Match>
+
+	<!-- Do not match these as we have no control on these based on previous code -->
+	<Match>
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
+	</Match>
+	<Match>
+		<Class name="org.briarproject.briar.android.keyagreement.ShowQrCodeFragment"/>
+		<Bug pattern="MF_CLASS_MASKS_FIELD"/>
+	</Match>
+	<Match>
+		<Package name="~org\.briarproject\.briar\.android\.profile.*"/>
+		<Bug pattern="DM_DEFAULT_ENCODING"/>
+	</Match>
+	<Match>
+		<Class name="org.briarproject.briar.android.settings.SettingsFragment"/>
+		<Bug pattern="DM_BOXED_PRIMITIVE_FOR_PARSING"/>
+	</Match>
+	<Match>
+		<Class name="org.thoughtcrime.securesms.components.emoji.EmojiProvider$EmojiPageBitmap"/>
+		<Bug pattern="NP_METHOD_RETURN_RELAXING_ANNOTATION"/>
+	</Match>
+</FindBugsFilter>

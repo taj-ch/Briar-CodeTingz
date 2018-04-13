@@ -1,10 +1,7 @@
 package org.briarproject.briar.android.contact;
 
 
-import org.briarproject.bramble.api.contact.Contact;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,5 +17,15 @@ public class TestableContactListFragment extends ContactListFragment {
 			}
 		}
 		return contacts;
+	}
+
+	public String getLastMessage(Message mockMessage){
+		String username = UserDetails.username;
+
+		if (mockMessage.getFrom().equals(username)) {
+			return "You: " + mockMessage.getMessage();
+		} else {
+			return mockMessage.getMessage();
+		}
 	}
 }

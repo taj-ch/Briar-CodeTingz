@@ -1,33 +1,22 @@
 package org.briarproject.briar.android.chat;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.support.v7.view.menu.ActionMenuItem;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ActionMenuView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-
-import junit.framework.Assert;
-
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.TestBriarApplication;
 import org.briarproject.briar.android.contact.ChatActivity;
-
 import org.briarproject.briar.android.contact.Message;
 import org.briarproject.briar.android.contact.UserDetails;
 import org.briarproject.briar.android.util.UiUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.MockitoAnnotations;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -37,7 +26,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertNotEquals;
 
 
 /**
@@ -199,7 +187,7 @@ public class ChatActivityTest {
 		button.performClick();
 		AlertDialog dialog = chatActivity.getDialog();
 		assertEquals(true, dialog.isShowing());
-		assertEquals("To delete, hold on a specific message then press the delete button.", chatActivity.getDisplayDeleteMessage());
+		assertEquals("To delete, hold on a specific message you sent then press the delete button.", chatActivity.getDisplayDeleteMessage());
 	}
 
 	@Test

@@ -30,13 +30,13 @@ import org.briarproject.briar.android.keyagreement.IntroFragment;
 import org.briarproject.briar.android.keyagreement.KeyAgreementActivity;
 import org.briarproject.briar.android.keyagreement.ShowQrCodeFragment;
 import org.briarproject.briar.android.login.AuthorNameFragment;
-import org.briarproject.briar.android.login.SignInFragment;
 import org.briarproject.briar.android.login.ChangePasswordActivity;
 import org.briarproject.briar.android.login.DozeFragment;
-import org.briarproject.briar.android.login.PasswordActivity;
 import org.briarproject.briar.android.login.EmailPasswordActivity;
+import org.briarproject.briar.android.login.PasswordActivity;
 import org.briarproject.briar.android.login.PasswordFragment;
 import org.briarproject.briar.android.login.SetupActivity;
+import org.briarproject.briar.android.login.SignInFragment;
 import org.briarproject.briar.android.navdrawer.NavDrawerActivity;
 import org.briarproject.briar.android.panic.PanicPreferencesActivity;
 import org.briarproject.briar.android.panic.PanicResponderActivity;
@@ -58,6 +58,7 @@ import org.briarproject.briar.android.privategroup.reveal.GroupRevealModule;
 import org.briarproject.briar.android.privategroup.reveal.RevealContactsActivity;
 import org.briarproject.briar.android.privategroup.reveal.RevealContactsFragment;
 import org.briarproject.briar.android.profile.ProfileActivity;
+import org.briarproject.briar.android.profile.ProfileFragment;
 import org.briarproject.briar.android.settings.SettingsActivity;
 import org.briarproject.briar.android.settings.SettingsFragment;
 import org.briarproject.briar.android.sharing.BlogInvitationActivity;
@@ -72,8 +73,6 @@ import org.briarproject.briar.android.sharing.ShareForumFragment;
 import org.briarproject.briar.android.sharing.ShareForumMessageFragment;
 import org.briarproject.briar.android.sharing.SharingModule;
 import org.briarproject.briar.android.splash.SplashScreenActivity;
-import org.briarproject.briar.android.profile.ProfileFragment;
-
 
 import dagger.Component;
 

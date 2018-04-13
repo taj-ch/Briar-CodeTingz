@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.is;
 /**
  * Created by Laxman on 3/18/2018.
  */
-
+@SuppressWarnings("PMD")
 public class ToolbarEspressoHelper {
 
 	/*

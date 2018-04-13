@@ -28,7 +28,9 @@ class ForumListItem {
 		return forum;
 	}
 
-	boolean isEmpty() { return postCount == 0; }
+	boolean isEmpty() {
+		return postCount == 0;
+	}
 
 	int getPostCount() {
 		return postCount;

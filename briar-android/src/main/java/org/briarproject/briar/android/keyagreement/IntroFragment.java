@@ -79,6 +79,8 @@ public class IntroFragment extends BaseFragment
 				screenSeenListener.showNextScreen();
 			case R.id.addByEmailButton:
 				showNextFragment(AddContactFragment.newInstance());
+			default:
+				break;
 			}
 		}
 

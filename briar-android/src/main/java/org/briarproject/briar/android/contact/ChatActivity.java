@@ -2,27 +2,20 @@ package org.briarproject.briar.android.contact;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +34,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -50,18 +44,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.widget.Toast;
-
 import com.firebase.client.Firebase;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -85,12 +72,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
-import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
-import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
-
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {
@@ -437,15 +419,14 @@ public class ChatActivity extends BriarActivity {
 				}
 
 				// if outgoing message
-				if(dataSnapshot.child("from").getValue().equals(UserDetails.username)) {
-					if(dataSnapshot.child("seen").getValue().toString() == "true") {
-						for (int i = 0; i < messageList.size(); i++) {
-							Message m = messageList.get(i);
-							if (m.getId().equals(key)) {
-								//physical message is set to seen
-								m.setSeen(true);
-								mAdapter.notifyDataSetChanged();
-							}
+				if(dataSnapshot.child("from").getValue().equals(UserDetails.username) &&
+						dataSnapshot.child("seen").getValue().toString().equals("true")) {
+					for (int i = 0; i < messageList.size(); i++) {
+						Message m = messageList.get(i);
+						if (m.getId().equals(key)) {
+							//physical message is set to seen
+							m.setSeen(true);
+							mAdapter.notifyDataSetChanged();
 						}
 					}
 				}
@@ -511,9 +492,7 @@ public class ChatActivity extends BriarActivity {
 						})
 						.create()
 						.show();
-			}
-
-			else {
+			} else {
 				ActivityCompat.requestPermissions(this,
 						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 						MY_PERMISSIONS_REQUEST_LOCATION);
@@ -575,9 +554,7 @@ public class ChatActivity extends BriarActivity {
 						})
 						.create()
 						.show();
-			}
-
-			else {
+			} else {
 				ActivityCompat.requestPermissions(this,
 						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 						MY_PERMISSIONS_REQUEST_LOCATION);
@@ -765,7 +742,7 @@ public class ChatActivity extends BriarActivity {
 				onBackPressed();
 				return true;
 			case R.id.action_delete_message:
-				if(mAdapter.getMessageFocusText() != "") {
+				if(!(mAdapter.getMessageFocusText().equals(""))) {
 					if (mAdapter.getmessageValidForDelete()) {
 						displayDeleteMessage = "Are you sure you want to delete: " + mAdapter.getMessageFocusText();
 						AlertDialog.Builder builder;
@@ -792,10 +769,13 @@ public class ChatActivity extends BriarActivity {
 						dialog.show();
 					}
 				} else {
-					displayDeleteMessage = "To delete, hold on a specific message you sent then press the delete button.";
+					displayDeleteMessage =
+							"To delete, hold on a specific" +
+									" message you sent then press the delete button.";
 					AlertDialog.Builder builder;
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-						builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+						builder = new AlertDialog.Builder(
+								this, android.R.style.Theme_Material_Dialog_Alert);
 					} else {
 						builder = new AlertDialog.Builder(this);
 					}
@@ -803,9 +783,9 @@ public class ChatActivity extends BriarActivity {
 							.setMessage(displayDeleteMessage)
 							.setPositiveButton(android.R.string.yes,
 									new DialogInterface.OnClickListener() {
-										public void onClick(DialogInterface dialog, int which) {
-										}
-									})
+								public void onClick(DialogInterface dialog, int which) {
+								}
+							})
 							.setIcon(android.R.drawable.ic_dialog_alert);
 					dialog = builder.create();
 					dialog.show();
@@ -823,7 +803,8 @@ public class ChatActivity extends BriarActivity {
 
 	private void onMessageDelete(){
 		String key = mAdapter.getMessageFocusKey();
-		DatabaseReference messageRef1 =	mRootRef.child("messages").child(UserDetails.username).child(UserDetails.chatWith);
+		DatabaseReference messageRef1 =	mRootRef.child("messages")
+				.child(UserDetails.username).child(UserDetails.chatWith);
 		messageRef1.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
@@ -838,7 +819,8 @@ public class ChatActivity extends BriarActivity {
 			}
 		});
 
-		DatabaseReference messageRef2 =	mRootRef.child("messages").child(UserDetails.chatWith).child(UserDetails.username);
+		DatabaseReference messageRef2 =	mRootRef.child("messages")
+				.child(UserDetails.chatWith).child(UserDetails.username);
 		messageRef2.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
@@ -893,7 +875,11 @@ public class ChatActivity extends BriarActivity {
 	}
 
 	//Getters for testing purposes
-	public AlertDialog getDialog(){ return dialog; }
+	public AlertDialog getDialog(){
+		return dialog;
+	}
 
-	public String getDisplayDeleteMessage(){ return displayDeleteMessage; }
+	public String getDisplayDeleteMessage(){
+		return displayDeleteMessage;
+	}
 }

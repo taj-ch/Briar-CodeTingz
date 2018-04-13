@@ -54,7 +54,6 @@ import org.briarproject.briar.android.forum.ForumActivity;
 import org.briarproject.briar.android.introduction.IntroductionActivity;
 import org.briarproject.briar.android.privategroup.conversation.GroupActivity;
 import org.briarproject.briar.android.profile.ProfileActivity;
-import org.briarproject.briar.android.profile.ProfileFragment;
 import org.briarproject.briar.android.view.BriarRecyclerView;
 import org.briarproject.briar.android.view.TextInputView;
 import org.briarproject.briar.android.view.TextInputView.TextInputListener;
@@ -654,9 +653,10 @@ public class ConversationActivity extends BriarActivity
 		});
 	}
 
+	@SuppressWarnings("PMD.AvoidReassigningParameters")
 	@Override
 	public void onSendClick(String text) {
-		if (text.equals("")) return;
+		if (("").equals(text)) return;
 		text = StringUtils.truncateUtf8(text, MAX_PRIVATE_MESSAGE_BODY_LENGTH);
 		long timestamp = System.currentTimeMillis();
 		timestamp = Math.max(timestamp, getMinTimestampForNewMessage());
@@ -690,7 +690,8 @@ public class ConversationActivity extends BriarActivity
 				//noinspection ConstantConditions init in loadGroupId()
 				storeMessage(privateMessageFactory.createPrivateMessage(
 						messagingGroupId, timestamp, body), body);
-			} catch (FormatException e) {throw new RuntimeException(e);
+			} catch (FormatException e) {
+				throw new RuntimeException(e);
 			}
 		});
 	}

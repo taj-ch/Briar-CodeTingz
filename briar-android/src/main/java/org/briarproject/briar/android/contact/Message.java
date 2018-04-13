@@ -67,9 +67,13 @@ public class Message {
 		this.seen = seen;
 	}
 
-	public String getId(){ return id; }
+	public String getId() {
+		return id;
+	}
 
-	public void setId(String id){ this.id = id; }
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getFrom() {
 		return from;

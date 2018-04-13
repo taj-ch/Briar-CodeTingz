@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Android Application Rules"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+
+	<description>Custom ruleset for Android application</description>
+
+	<exclude-pattern>.*/R.java</exclude-pattern>
+	<exclude-pattern>.*/gen/.*</exclude-pattern>
+	<!-- Exclude these since we didn't touch them and can't change the problems -->
+	<exclude-pattern>.*/blog/.*</exclude-pattern>
+	<exclude-pattern>.*/keyagreement/.*</exclude-pattern>
+	<exclude-pattern>.*/reporting/.*</exclude-pattern>
+	<exclude-pattern>.*/threaded/.*</exclude-pattern>
+	<exclude-pattern>.*/view/.*</exclude-pattern>
+	<exclude-pattern>.*/components/.*</exclude-pattern>
+	<exclude-pattern>.*/privategroup/.*</exclude-pattern>
+	<exclude-pattern>.*/privategroup/.*</exclude-pattern>
+	<exclude-pattern>.*/activity/RequestCodes.java</exclude-pattern>
+
+	<!-- Android -->
+	<!-- http://pmd.sourceforge.net/pmd-4.3.0/rules/android.html -->
+	<rule ref="rulesets/java/android.xml"/>
+
+	<!-- Design -->
+	<!-- http://pmd.sourceforge.net/pmd-4.3.0/rules/design.html -->
+	<!-- Removed some rules that Briar itself does not follow -->
+	<rule ref="rulesets/java/design.xml">
+		<exclude name="UncommentedEmptyMethodBody"/>
+		<exclude name="AccessorMethodGeneration"/>
+		<exclude name="GodClass"/>
+		<exclude name="FinalFieldCouldBeStatic"/>
+		<exclude name="ImmutableField"/>
+		<exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
+		<exclude name="UncommentedEmptyConstructor"/>
+		<exclude name="ConfusingTernary"/>
+		<exclude name="TooFewBranchesForASwitchStatement"/>
+		<exclude name="MissingBreakInSwitch"/>
+		<exclude name="SingularField"/>
+		<exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+		<exclude name="UseUtilityClass"/>
+		<exclude name="NonStaticInitializer"/>
+		<exclude name="UseLocaleWithCaseConversions"/>
+		<exclude name="AccessorClassGeneration"/>
+	</rule>
+	
+	
+
+	<!-- Naming -->
+	<!-- http://pmd.sourceforge.net/pmd-4.3.0/rules/naming.html -->
+	<rule ref="rulesets/java/naming.xml/ShortClassName">
+		<properties>
+			<property name="minimum" value="3"/>
+		</properties>
+	</rule>
+	<!-- other rules ignored for brevity -->
+</ruleset>

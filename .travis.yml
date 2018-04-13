@@ -77,6 +77,13 @@ jobs:
       script:
         - chmod +x ./gradlew;
         - ./gradlew test --stacktrace
+    - stage: static analysis
+      script:
+        chmod +x ./gradlew;
+        ./gradlew assemble;
+        ./gradlew :briar-android:checkstyle;
+        ./gradlew :briar-android:pmd;
+        ./gradlew :briar-android:findbugs;
     - stage: package
       script:
         chmod +x ./gradlew;
