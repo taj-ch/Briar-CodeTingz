@@ -62,6 +62,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.briarproject.bramble.api.contact.ContactId;
+import org.briarproject.bramble.api.contact.ContactManager;
+import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.activity.BriarActivity;
@@ -71,11 +74,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
+
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static android.widget.Toast.LENGTH_SHORT;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+import static java.util.logging.Level.WARNING;
+import static org.briarproject.bramble.api.crypto.PasswordStrengthEstimator.QUITE_WEAK;
+import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_INTRODUCTION;
+
 import static org.briarproject.briar.android.activity.RequestCodes.REQUEST_PROFILE;
 
 public class ChatActivity extends BriarActivity {
+
+    private static final Logger LOG =
+            Logger.getLogger(ChatActivity.class.getName());
+
 	private LinearLayout layout;
 	private ImageView sendButton;
 	private EditText messageArea;
@@ -115,6 +133,12 @@ public class ChatActivity extends BriarActivity {
 	private int itemPos = 0;
 	private String mLastKey = "";
 	private String mPrevKey = "";
+
+    private ContactId contactId;
+
+    // Fields that are accessed from background threads must be volatile
+    @Inject
+    volatile ContactManager contactManager;
 
 	@Override
 	public void injectActivity(ActivityComponent component) {
@@ -162,6 +186,11 @@ public class ChatActivity extends BriarActivity {
 			toolbarTitle = toolbar.findViewById(R.id.contactName);
 		}
 		toolbarTitle.setText(UserDetails.chatWith);
+
+        // Get contact id from contactListFragment
+        Intent retrieveContactId = getIntent();
+        int id = retrieveContactId.getIntExtra(CONTACT_ID, -1);
+        contactId = new ContactId(id);
 
 		loadMessages();
 
@@ -796,6 +825,9 @@ public class ChatActivity extends BriarActivity {
 				profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
 				startActivityForResult(profileIntent, REQUEST_PROFILE);
 				return true;
+            case R.id.action_social_remove_person:
+                askToRemoveContact();
+                return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -882,4 +914,38 @@ public class ChatActivity extends BriarActivity {
 	public String getDisplayDeleteMessage(){
 		return displayDeleteMessage;
 	}
+    private void askToRemoveContact() {
+        DialogInterface.OnClickListener okListener =
+                (dialog, which) -> removeContact();
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(ChatActivity.this,
+                        R.style.BriarDialogTheme);
+        builder.setTitle(getString(R.string.dialog_title_delete_contact));
+        builder.setMessage(getString(R.string.dialog_message_delete_contact));
+        builder.setNegativeButton(R.string.delete, okListener);
+        builder.setPositiveButton(R.string.cancel, null);
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    private void removeContact() {
+        runOnDbThread(() -> {
+            try {
+                contactManager.removeContact(contactId);
+            } catch (DbException e) {
+                if (LOG.isLoggable(WARNING)) LOG.log(WARNING, e.toString(), e);
+            } finally {
+                finishAfterContactRemoved();
+            }
+        });
+    }
+
+    private void finishAfterContactRemoved() {
+        runOnUiThreadUnlessDestroyed(() -> {
+            String deleted = getString(R.string.contact_deleted_toast);
+            Toast.makeText(ChatActivity.this, deleted, LENGTH_SHORT)
+                    .show();
+            supportFinishAfterTransition();
+        });
+    }
 }
