@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.widget.SearchView;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +13,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.SearchView;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -88,6 +97,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 
 	private ContactListAdapter adapter;
 	private BriarRecyclerView list;
+	private DatabaseReference mRootRef;
+	private ChildEventListener childEventListener;
 
 	// Fields that are accessed from background threads must be volatile
 	@Inject
@@ -133,6 +144,9 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		getActivity().setTitle(R.string.contact_list_button);
 
 		View contentView = inflater.inflate(R.layout.list, container, false);
+
+		FirebaseApp.initializeApp(this.getContext());
+		mRootRef = FirebaseDatabase.getInstance().getReference();
 
 		OnContactClickListener<ContactListItem> onContactClickListener =
 				(view, item) -> {
@@ -295,7 +309,8 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 							}
 						});
 
-
+						setLatestMessage(c);
+            
 					} catch (NoSuchContactException e) {
 						//continue
 					}
@@ -407,6 +422,19 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 		});
 	}
 
+	private void setLastMessageAndDate(ContactId c, String lastMessage, long date) {
+		runOnUiThreadUnlessDestroyed(() -> {
+			adapter.incrementRevision();
+			int position = adapter.findItemPosition(c);
+			ContactListItem item = adapter.getItemAt(position);
+			if (item != null) {
+				item.setDate(date);
+				item.setLastMessage(lastMessage);
+				adapter.notifyItemChanged(position);
+			}
+		});
+	}
+
 	private void filter(String charText) {
 		int revision = adapter.getRevision();
 		final String CHAR_TEXT_LOWER = charText.toLowerCase(Locale.getDefault());
@@ -440,5 +468,56 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				}
 			}
 		});
+	}
+
+	// Retrieve and set the latest message in the conversation
+	private void setLatestMessage(Contact c){
+		String chatWith = c.getAuthor().getName()
+				.replaceAll("\\s","")
+				.replaceAll("\\.", ",");
+		String username = UserDetails.username;
+
+		DatabaseReference messageRef = mRootRef.child("messages").child(username).child(chatWith);
+		Query messageQuery = messageRef.orderByKey().limitToLast(1);
+		messageRef.keepSynced(true);
+
+		if (childEventListener != null) {
+			messageQuery.removeEventListener(childEventListener);
+		}
+
+
+		childEventListener = new ChildEventListener() {
+			@Override
+			public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+				Message lastMessage = dataSnapshot.getValue(Message.class);
+				if (lastMessage.getFrom().equals(UserDetails.username)) {
+					setLastMessageAndDate(c.getId(), "You: " + lastMessage.getMessage(), lastMessage.getTime());
+				} else {
+					setLastMessageAndDate(c.getId(), lastMessage.getMessage(), lastMessage.getTime());
+				}
+			}
+
+			@Override
+			public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+			}
+
+			@Override
+			public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		};
+
+		messageQuery.addChildEventListener(childEventListener);
 	}
 }

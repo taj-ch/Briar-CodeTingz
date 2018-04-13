@@ -19,7 +19,7 @@ import org.briarproject.briar.android.util.UiUtils;
 
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 	private List<Message> mMessageList;
 	private DatabaseReference mUserDatabase;
 	private final int MSG_OUT = 0;
@@ -78,12 +78,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 				FirebaseDatabase.getInstance().getReference().child("Users")
 						.child(from_user);
 
-		if (message_type.equals("text")) {
+		if (("text").equals(message_type)) {
 			viewHolder.messageText.setVisibility(View.VISIBLE);
 			viewHolder.messageText.setText(c.getMessage());
 			viewHolder.messageImage.setVisibility(View.GONE);
 			viewHolder.fileText.setVisibility(View.GONE);
-		} else if (message_type.equals("image")) {
+		} else if (("image").equals(message_type)) {
 			viewHolder.messageText.setVisibility(View.GONE);
 			viewHolder.fileText.setVisibility(View.GONE);
 			viewHolder.messageImage.setVisibility(View.VISIBLE);

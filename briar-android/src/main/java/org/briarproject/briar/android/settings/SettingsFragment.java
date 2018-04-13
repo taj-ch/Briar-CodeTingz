@@ -268,6 +268,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 				.handleException(new UserFeedback(), false));
 	}
 
+	@SuppressWarnings("PMD.CompareObjectsWithEquals")
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object o) {
 		if (preference == enableBluetooth) {

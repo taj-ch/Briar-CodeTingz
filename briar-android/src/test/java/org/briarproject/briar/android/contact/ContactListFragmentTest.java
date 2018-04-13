@@ -103,6 +103,38 @@ public class ContactListFragmentTest {
 		assertEquals(filteredContacts.get(0).isConnected(), false);
 		filteredContacts.get(0).setConnected(true);
 		assertEquals(filteredContacts.get(0).isConnected(), true);
+
+	public void testDefaultLastMessage() {
+		List<ContactListItem> dummyData = getDummyData();
+		assertEquals("Send a message!", dummyData.get(0).getLastMessage());
+		assertEquals(0, dummyData.get(0).getDate());
+	}
+
+	@Test
+	public void testLastMessage() {
+		List<ContactListItem> dummyData = getDummyData();
+		dummyData.get(0).setLastMessage("yo");
+		dummyData.get(0).setDate(1234567890);
+		assertEquals("yo", dummyData.get(0).getLastMessage());
+		assertEquals(1234567890, dummyData.get(0).getDate());
+	}
+
+	@Test
+	public void testLastMessageFrom() {
+		UserDetails.changeUsername("Tom");
+		Message message = new Message("Hello", "text", 123456789, false);
+		message.setFrom("John");
+		String lastMessage = contactListFragment.getLastMessage(message);
+		assertEquals("Hello", lastMessage);
+	}
+
+	@Test
+	public void testLastMessageTo() {
+		UserDetails.changeUsername("John");
+		Message message = new Message("Hello", "text", 123456789, false);
+		message.setFrom("John");
+		String lastMessage = contactListFragment.getLastMessage(message);
+		assertEquals("You: Hello", lastMessage);
 	}
 
 }

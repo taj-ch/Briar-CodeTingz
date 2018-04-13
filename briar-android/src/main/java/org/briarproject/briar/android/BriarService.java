@@ -46,13 +46,14 @@ import static java.util.logging.Level.WARNING;
 import static org.briarproject.bramble.api.lifecycle.LifecycleManager.StartResult.ALREADY_RUNNING;
 import static org.briarproject.bramble.api.lifecycle.LifecycleManager.StartResult.SUCCESS;
 
+@SuppressWarnings("PMD")
 public class BriarService extends Service {
 
-	public static String EXTRA_START_RESULT =
+	public static final String EXTRA_START_RESULT =
 			"org.briarproject.briar.START_RESULT";
-	public static String EXTRA_NOTIFICATION_ID =
+	public static final String EXTRA_NOTIFICATION_ID =
 			"org.briarproject.briar.FAILURE_NOTIFICATION_ID";
-	public static String EXTRA_STARTUP_FAILED =
+	public static final String EXTRA_STARTUP_FAILED =
 			"org.briarproject.briar.STARTUP_FAILED";
 
 	private static final int ONGOING_NOTIFICATION_ID = 1;

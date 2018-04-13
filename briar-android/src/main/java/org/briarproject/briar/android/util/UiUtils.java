@@ -46,6 +46,7 @@ import static android.text.format.DateUtils.WEEK_IN_MILLIS;
 import static org.briarproject.briar.BuildConfig.APPLICATION_ID;
 import static org.briarproject.briar.android.BriarApplication.EXPIRY_DATE;
 
+@SuppressWarnings("PMD")
 public class UiUtils {
 
 	public static final long MIN_DATE_RESOLUTION = MINUTE_IN_MILLIS;
