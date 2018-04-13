@@ -39,7 +39,6 @@ public class SignInFragment extends SetupFragment {
 	private Button createAccountButton;
 	private Button resetAccountPassword;
 
-
 	private FirebaseAuth mAuth;
 
 	private String email;
@@ -94,8 +93,7 @@ public class SignInFragment extends SetupFragment {
 				if(email != null && !email.isEmpty() && password !=null && !password.isEmpty()){
 					signInButton.setClickable(false);
 					openAccount(email, password);
-				}
-				else{
+				} else{
 					Toast.makeText(getActivity(), "Fields can't be blank!", Toast.LENGTH_LONG)
 							.show();
 				}
@@ -109,8 +107,7 @@ public class SignInFragment extends SetupFragment {
 					Toast.makeText(getActivity(),
 							"Fill in the email above", Toast.LENGTH_LONG)
 							.show();
-				}
-				else{
+				} else{
 					userExists(email);
 				}
 				break;
@@ -145,8 +142,7 @@ public class SignInFragment extends SetupFragment {
 
 							setupController.showDozeOrCreateAccount();
 
-						}
-						else {
+						} else {
 							tryAgain();
 						}
 					}

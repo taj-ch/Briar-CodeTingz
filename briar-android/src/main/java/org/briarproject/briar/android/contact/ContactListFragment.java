@@ -282,12 +282,9 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 							public void onDataChange(DataSnapshot dataSnapshot) {
 								if(dataSnapshot.child(dbEmail).child("online").getValue() == null) {
 									//Do nothing, creating test data
-								}
-								else if (dataSnapshot.child(dbEmail).child("online").getValue().toString().equals("true")){
+								} else if (dataSnapshot.child(dbEmail).child("online").getValue().toString().equals("true")){
 									setConnected(c.getId(), true);
-								}
-
-								else if(dataSnapshot.child(dbEmail).child("online").getValue().toString().equals("false")){
+								} else if(dataSnapshot.child(dbEmail).child("online").getValue().toString().equals("false")){
 									setConnected(c.getId(), false);
 								}
 							}
@@ -319,8 +316,7 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				adapter.incrementRevision();
 				if (contacts.isEmpty()) list.showData();
 				else adapter.setItems(contacts);
-			}
-			else {
+			} else {
 				LOG.info("Concurrent update, reloading");
 				loadContacts();
 			}
