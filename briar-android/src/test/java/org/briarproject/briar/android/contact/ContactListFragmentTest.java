@@ -98,12 +98,15 @@ public class ContactListFragmentTest {
 
 	@Test
 	public void testConnectedContact() {
-		List<ContactListItem> filteredContacts = contactListFragment.filter("Tom", getDummyData());
+		List<ContactListItem> filteredContacts =
+				contactListFragment.filter("Tom", getDummyData());
 
 		assertEquals(filteredContacts.get(0).isConnected(), false);
 		filteredContacts.get(0).setConnected(true);
 		assertEquals(filteredContacts.get(0).isConnected(), true);
+	}
 
+	@Test
 	public void testDefaultLastMessage() {
 		List<ContactListItem> dummyData = getDummyData();
 		assertEquals("Send a message!", dummyData.get(0).getLastMessage());
