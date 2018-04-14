@@ -519,7 +519,123 @@ public class PrivateGroupTest {
 
 		backButtonSeven.perform(click());
 	}
-	
+
+	@Test
+	public void E_DissolvePrivateGroup() {
+		// Wait for the page to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the message exists
+		ViewInteraction relativeLayout389 = onView(allOf(childAtPosition(allOf(
+				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.RelativeLayout.class), 0)), 0), isDisplayed()));
+		relativeLayout389.check(matches(isDisplayed()));
+
+		// Assert that the group is correct
+		ViewInteraction textView1465 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1), isDisplayed()));
+		textView1465.check(matches(withText("TestGroup")));
+
+		// Assert tht the creator is correct
+		ViewInteraction textView1545 = onView(allOf(withId(R.id.creatorView),
+				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
+						withId(R.id.recyclerView), 0), 2), isDisplayed()));
+		textView1545.check(matches(withText("Created by laxman@laxman.lax")));
+
+		// Select the group
+		ViewInteraction recyclerView4 = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+				withClassName(is("android.widget.RelativeLayout")), 0)));
+		recyclerView4.perform(actionOnItemAtPosition(0, click()));
+
+		// Wait for the page to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonTen = onView(allOf(withContentDescription("Navigate up")));
+		backButtonTen.check(matches(isDisplayed()));
+
+		// Assert that the title of the page is "TestGroup"
+		ToolbarEspressoHelper.matchToolbarTitle("TestGroup").check(matches(isDisplayed()));
+
+		// Assert that the options button is displayed
+		ViewInteraction imageView2 = onView(allOf(withContentDescription("More options"),
+				childAtPosition(childAtPosition(withId(R.id.toolbar), 3), 1), isDisplayed()));
+		imageView2.check(matches(isDisplayed()));
+
+		// Select the options menu
+		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+		// Assert that the dissolve group option is displayed
+		ViewInteraction textView24 = onView(allOf(withId(R.id.title), withText("Dissolve Group"),
+				childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.LinearLayout.class), 0), 0), isDisplayed()));
+		textView24.check(matches(withText("Dissolve Group")));
+
+		// Select the dissolve group option
+		ViewInteraction dissolveGroup = onView(allOf(withId(R.id.title),
+				withText("Dissolve Group"), childAtPosition(childAtPosition(withClassName(is(
+						"android.support.v7.view.menu.ListMenuItemView")), 0), 0), isDisplayed()));
+		dissolveGroup.perform(click());
+
+		// Wait for the dialog to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the dialog is displayed
+		ViewInteraction textView25 = onView(allOf(withId(R.id.alertTitle),
+				withText("Confirm Dissolving Group")));
+		textView25.check(matches(isDisplayed()));
+
+		// Assert the dissolve button is displayed
+		ViewInteraction button2 = onView(allOf(withId(android.R.id.button2), withText("Dissolve")));
+		button2.check(matches(isDisplayed()));
+
+		// Assert that the cancel button is displayed
+		ViewInteraction button3 = onView(allOf(withId(android.R.id.button1), withText("Cancel")));
+		button3.check(matches(isDisplayed()));
+
+		// Select the dissolve group button
+		ViewInteraction appCompatButton5 = onView(allOf(withId(android.R.id.button2),
+				withText("Dissolve")));
+		appCompatButton5.perform(scrollTo(), click());
+
+		// Wait so that the dissolve can complete
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the group no longer exists
+		ViewInteraction relativeLayout4 = onView(allOf(childAtPosition(allOf(
+				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.RelativeLayout.class), 0)), 0)));
+		relativeLayout4.check(doesNotExist());
+
+		// Assert that the group no longer exists (Group name not there)
+		ViewInteraction textView21 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1)));
+		textView21.check(doesNotExist());
+
+		// Assert the group no longer exists (creator not there)
+		ViewInteraction textView22 = onView(allOf(withId(R.id.creatorView),
+				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
+						withId(R.id.recyclerView), 0), 2)));
+		textView22.check(doesNotExist());
+
+	}
+
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
