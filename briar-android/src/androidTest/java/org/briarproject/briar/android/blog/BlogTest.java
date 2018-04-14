@@ -368,6 +368,106 @@ public class BlogTest {
 		backButtonTwo.perform(click());
 	}
 
+	@Test
+	public void D_ManageRSSFeedTest() {
+
+		// Wait for the page to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the option button is displayed
+		ViewInteraction optionButton = onView(
+				allOf(withContentDescription("More options"), childAtPosition(childAtPosition(
+						withId(R.id.toolbar), 2), 1)));
+		optionButton.check(matches(isDisplayed()));
+
+		// Open the options
+		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+		// Wait for the options to load
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that "Manage RSS Feeds" is a option
+		ViewInteraction manageRSSoption = onView(allOf(withId(R.id.title), withText("Manage RSS Feeds"),
+				childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.LinearLayout.class), 0), 0)));
+		manageRSSoption.check(matches(withText("Manage RSS Feeds")));
+
+		// Click the "Manage RSS Feeds" option
+		ViewInteraction selectManageOption = onView(allOf(withId(R.id.title), withText(
+				"Manage RSS Feeds"), childAtPosition(childAtPosition(withClassName(is(
+						"android.support.v7.view.menu.ListMenuItemView")), 0), 0)));
+		selectManageOption.perform(click());
+
+		// Wait for the manage rss feeds page to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButton = onView(allOf(withContentDescription("Navigate up")));
+		backButton.check(matches(isDisplayed()));
+
+		// Assert that the title of the page is "Manage RSS Feeds"
+		ToolbarEspressoHelper.matchToolbarTitle("Manage RSS Feeds").check(matches(isDisplayed()));
+
+		// Assert that the import rss feed is displayed
+		ViewInteraction importRssFeedButton = onView(allOf(withId(R.id.action_rss_feeds_import),
+				withContentDescription("Import RSS Feed"), childAtPosition(childAtPosition(
+										withId(R.id.action_bar), 2), 0)));
+		importRssFeedButton.check(matches(isDisplayed()));
+
+		// Assert that the feed list is displayed
+		ViewInteraction feedList = onView(allOf(childAtPosition(allOf(withId(R.id.feedList),
+				childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class),
+						0)), 0)));
+		feedList.check(matches(isDisplayed()));
+
+		// Click the import rss feed
+		ViewInteraction importRSSFeedButon = onView(allOf(withId(R.id.action_rss_feeds_import),
+				withContentDescription("Import RSS Feed"), childAtPosition(childAtPosition(
+						withId(R.id.action_bar), 2), 0)));
+		importRSSFeedButon.perform(click());
+
+		// Wait for the import rss feed to open
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonTwo = onView(
+				allOf(withContentDescription("Navigate up"), isDisplayed()));
+		backButtonTwo.check(matches(isDisplayed()));
+
+		// Assert that the title of the page is "Import RSS Feed"
+		ToolbarEspressoHelper.matchToolbarTitle("Import RSS Feed").check(matches(isDisplayed()));
+
+		// Assert that that the import rss input is displayed
+		ViewInteraction importRSSInputBox = onView(allOf(withId(R.id.urlInput)));
+		importRSSInputBox.check(matches(isDisplayed()));
+
+		// Assert that the import rss feed button is displayed
+		ViewInteraction importRSSButton = onView(allOf(withId(R.id.importButton), childAtPosition(
+				childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0),
+				1)));
+		importRSSButton.check(matches(isDisplayed()));
+
+		// Click back to return to blog list
+		ViewInteraction backButtonThree = onView(allOf(withContentDescription("Navigate up")));
+		backButtonThree.perform(click());
+	}
+
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
