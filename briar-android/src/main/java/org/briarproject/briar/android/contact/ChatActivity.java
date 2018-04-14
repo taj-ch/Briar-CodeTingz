@@ -184,7 +184,7 @@ public class ChatActivity extends BriarActivity {
 		if (toolbar != null) {
 			toolbarTitle = toolbar.findViewById(R.id.contactName);
 		}
-		toolbarTitle.setText(UserDetails.chatWith);
+		toolbarTitle.setText(UserDetails.chatWith.replace(",", "."));
 
         // Get contact id from contactListFragment
         Intent retrieveContactId = getIntent();
