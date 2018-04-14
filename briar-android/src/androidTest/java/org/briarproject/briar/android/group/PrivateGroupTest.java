@@ -418,6 +418,108 @@ public class PrivateGroupTest {
 
 	}
 
+	@Test
+	public void D_PrivateGroupMemberList() {
+		// Wait for the page to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the message exists
+		ViewInteraction relativeLayout3 = onView(allOf(childAtPosition(allOf(
+				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.RelativeLayout.class), 0)), 0), isDisplayed()));
+		relativeLayout3.check(matches(isDisplayed()));
+
+		// Assert that the group is correct
+		ViewInteraction textView14 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1), isDisplayed()));
+		textView14.check(matches(withText("TestGroup")));
+
+		// Assert that the creator is correct
+		ViewInteraction textView15 = onView(allOf(withId(R.id.creatorView),
+				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
+						withId(R.id.recyclerView), 0), 2), isDisplayed()));
+		textView15.check(matches(withText("Created by laxman@laxman.lax")));
+
+		// Click the group
+		ViewInteraction recyclerView2 = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+				withClassName(is("android.widget.RelativeLayout")), 0)));
+		recyclerView2.perform(actionOnItemAtPosition(0, click()));
+
+		// Wait for the group to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonFive = onView(allOf(withContentDescription("Navigate up")));
+		backButtonFive.check(matches(isDisplayed()));
+
+		// Assert that the option button is displayed
+		ViewInteraction imageView = onView(allOf(withContentDescription("More options"),
+				childAtPosition(childAtPosition(withId(R.id.toolbar), 3), 1), isDisplayed()));
+		imageView.check(matches(isDisplayed()));
+
+		// Open options button
+		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that "Member List" is one of the options
+		ViewInteraction textView16 = onView(allOf(withId(R.id.title), withText("Member List"),
+				childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.LinearLayout.class), 0), 0), isDisplayed()));
+		textView16.check(matches(withText("Member List")));
+
+		// Select the "Member List" option
+		ViewInteraction membListOption = onView(allOf(withId(R.id.title), withText("Member List"),
+				childAtPosition(childAtPosition(withClassName(is(
+						"android.support.v7.view.menu.ListMenuItemView")), 0), 0), isDisplayed()));
+		membListOption.perform(click());
+
+		// Wait so that the member list page can load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonSix = onView(allOf(withContentDescription("Navigate up")));
+		backButtonSix.check(matches(isDisplayed()));
+
+		// Assert that the title of the toolbar is "Member List"
+		ToolbarEspressoHelper.matchToolbarTitle("Member List").check(matches(isDisplayed()));
+
+		// Assert that we are the creator
+		ViewInteraction textView18 = onView(allOf(withId(R.id.authorName),
+				withText("laxman@laxman.lax")));
+		textView18.check(matches(isDisplayed()));
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonSeven = onView(allOf(withContentDescription("Navigate up")));
+		backButtonSeven.check(matches(isDisplayed()));
+		backButtonSeven.perform(click());
+
+		// Wait for the page to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		backButtonSeven.perform(click());
+	}
+	
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
