@@ -320,6 +320,102 @@ public class PrivateGroupTest {
 		ViewInteraction backButtonFour = onView(allOf(withContentDescription("Navigate up")));
 		backButtonFour.check(matches(isDisplayed()));
 		backButtonFour.perform(click());
+
+	}
+
+	@Test
+	public void C_ReplyPrivateGroupMessage() {
+		// Wait for the private group to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that message is displayed
+		ViewInteraction relativeLayout21 = onView(allOf(childAtPosition(allOf(withId(
+				R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+				android.widget.RelativeLayout.class), 0)), 0), isDisplayed()));
+		relativeLayout21.check(matches(isDisplayed()));
+
+		// Assert that group is correct
+		ViewInteraction textView31 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1), isDisplayed()));
+		textView31.check(matches(withText("TestGroup")));
+
+		// Assert that creator is correct
+		ViewInteraction textView41 = onView(allOf(withId(R.id.creatorView),
+				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
+						withId(R.id.recyclerView), 0), 2), isDisplayed()));
+		textView41.check(matches(withText("Created by laxman@laxman.lax")));
+
+		// Click group
+		ViewInteraction recyclerView21 = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+				withClassName(is("android.widget.RelativeLayout")), 0)));
+		recyclerView21.perform(actionOnItemAtPosition(0, click()));
+
+		// Wait for group to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction imageButton23 = onView(allOf(withContentDescription("Navigate up")));
+		imageButton23.check(matches(isDisplayed()));
+
+		// Assert that the title of the page is "TestGroup"
+		ToolbarEspressoHelper.matchToolbarTitle("TestGroup").check(matches(isDisplayed()));
+
+		// Assert that emoji button is displayed
+		ViewInteraction imageButton24 = onView(allOf(withId(R.id.emoji_toggle), childAtPosition(
+				childAtPosition(withId(R.id.text_input_container), 1), 0), isDisplayed()));
+		imageButton24.check(matches(isDisplayed()));
+
+		// Assert input box is displayed
+		ViewInteraction editText34 = onView(allOf(withId(R.id.input_text)));
+		editText34.check(matches(isDisplayed()));
+
+		// Assert send button is displayed
+		ViewInteraction imageButton35 = onView(allOf(withId(R.id.btn_send),
+				withContentDescription("Send")));
+		imageButton35.check(matches(isDisplayed()));
+
+		// Assert send button is displayed
+		ViewInteraction textView64 = onView(allOf(withId(R.id.btn_reply), withText("Reply")));
+		textView64.check(matches(isDisplayed()));
+
+		// Click reply button
+		ViewInteraction appCompatTextView56 = onView(allOf(withId(R.id.btn_reply),
+				withText("Reply"), isDisplayed()));
+		appCompatTextView56.perform(click());
+
+		// Write "Reply" into input
+		ViewInteraction emojiEditText27 = onView(allOf(withId(R.id.input_text), childAtPosition(
+				childAtPosition(withId(R.id.text_input_container), 1), 1), isDisplayed()));
+		emojiEditText27.perform(replaceText("Reply"), closeSoftKeyboard());
+
+		// Click send button
+		ViewInteraction appCompatImageButton64 = onView(allOf(withId(R.id.btn_send),
+				withContentDescription("Send"), isDisplayed()));
+		appCompatImageButton64.perform(click());
+
+		// Assert that the message sent is correct
+		ViewInteraction textView75 = onView(allOf(withId(R.id.text), withText("Reply")));
+		textView75.check(matches(isDisplayed()));
+
+		// Wait for the message to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Click go back to group list
+		ViewInteraction appCompatImageButton72 = onView(allOf(withContentDescription("Navigate up")));
+		appCompatImageButton72.perform(click());
+
 	}
 
 	private static Matcher<View> childAtPosition(
