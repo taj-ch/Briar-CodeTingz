@@ -1,15 +1,14 @@
 package org.briarproject.briar.android.chat;
 
 import android.app.AlertDialog;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.TestBriarApplication;
 import org.briarproject.briar.android.contact.ChatActivity;
@@ -185,6 +184,26 @@ public class ChatActivityTest {
 	}
 
 	@Test
+	public void testDeleteUnselectedMessage() {
+		ActionMenuItemView button = (ActionMenuItemView) chatActivity.findViewById(R.id.action_delete_message);
+		button.performClick();
+		AlertDialog dialog = chatActivity.getDialog();
+		assertEquals(true, dialog.isShowing());
+		assertEquals("To delete, hold on a specific message you sent then press the delete button.", chatActivity.getDisplayDeleteMessage());
+	}
+
+	@Test
+	public void testDeleteSelectedMessage() {
+		ActionMenuItemView button = (ActionMenuItemView) chatActivity.findViewById(R.id.action_delete_message);
+		RecyclerView.ViewHolder v = messagesList.findViewHolderForAdapterPosition(0);
+		v.itemView.findViewById(R.id.text).performLongClick();
+		button.performClick();
+		AlertDialog dialog = chatActivity.getDialog();
+		assertEquals(true, dialog.isShowing());
+		assertEquals("Are you sure you want to delete: "+"hello", chatActivity.getDisplayDeleteMessage());
+	}
+  
+  @Test
 	public void testDeleteContactOption() {
 		MenuItem removePersonOption = new RoboMenuItem(R.id.action_social_remove_person);
 		chatActivity.onOptionsItemSelected(removePersonOption);

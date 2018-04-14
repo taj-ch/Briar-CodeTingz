@@ -184,8 +184,7 @@ public class SignInFragment extends SetupFragment {
 	private void userExists(String email) {
 		if(!isEmailValid(email)){
 			UiUtils.setError(authorNameWrapper, "Enter a valid Email", true);
-		}
-		else {
+		} else {
 			//checks database for existing user
 			mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
 				@Override

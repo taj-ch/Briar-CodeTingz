@@ -9,13 +9,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,6 +80,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
+
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -113,6 +113,7 @@ public class ChatActivity extends BriarActivity {
 	private ProgressDialog mProgressDialog;
 	private LocationRequest mLocationRequest;
 	private AlertDialog dialog;
+	private String displayDeleteMessage;
 
 	private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
 	private long FASTEST_INTERVAL = 2000; /* 2 sec */
@@ -282,7 +283,7 @@ public class ChatActivity extends BriarActivity {
 
 	private void sendMessage() {
 		String message = messageArea.getText().toString();
-
+		//updating the database with the sent message
 		if (!TextUtils.isEmpty(message)) {
 
 			String current_user_ref = "messages/" + UserDetails.username + "/" +
@@ -364,7 +365,9 @@ public class ChatActivity extends BriarActivity {
 					ref.addValueEventListener(new ValueEventListener() {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
-							dataSnap.child("seen").getRef().setValue(true);
+							if (dataSnap.hasChild("message")) {
+								dataSnap.child("seen").getRef().setValue(true);
+							}
 						}
 
 						@Override
@@ -432,7 +435,9 @@ public class ChatActivity extends BriarActivity {
 						@Override
 						public void onDataChange(DataSnapshot dataSnap) {
 							// database message is set to seen
-							dataSnap.child("seen").getRef().setValue(true);
+							if(dataSnap.hasChild("message")) {
+								dataSnap.child("seen").getRef().setValue(true);
+							}
 						}
 
 						@Override
@@ -459,7 +464,13 @@ public class ChatActivity extends BriarActivity {
 
 			@Override
 			public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+				String key = dataSnapshot.getKey();
+				for(int i=0 ; i < messageList.size() ; i++){
+					if(messageList.get(i).getId().equals(key)){
+						messageList.remove(i);
+					}
+				}
+				mAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -510,9 +521,7 @@ public class ChatActivity extends BriarActivity {
 						})
 						.create()
 						.show();
-			}
-
-			else {
+			} else {
 				ActivityCompat.requestPermissions(this,
 						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 						MY_PERMISSIONS_REQUEST_LOCATION);
@@ -574,9 +583,7 @@ public class ChatActivity extends BriarActivity {
 						})
 						.create()
 						.show();
-			}
-
-			else {
+			} else {
 				ActivityCompat.requestPermissions(this,
 						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
 						MY_PERMISSIONS_REQUEST_LOCATION);
@@ -763,6 +770,56 @@ public class ChatActivity extends BriarActivity {
 			case android.R.id.home:
 				onBackPressed();
 				return true;
+			case R.id.action_delete_message:
+				if(!(mAdapter.getMessageFocusText().equals(""))) {
+					if (mAdapter.getmessageValidForDelete()) {
+						displayDeleteMessage = "Are you sure you want to delete: " + mAdapter.getMessageFocusText();
+						AlertDialog.Builder builder;
+						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+							builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+						} else {
+							builder = new AlertDialog.Builder(this);
+						}
+						builder.setTitle("Delete entry")
+								.setMessage(displayDeleteMessage)
+								.setPositiveButton(android.R.string.yes,
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog, int which) {
+												onMessageDelete();
+											}
+										})
+								.setNegativeButton(android.R.string.no,
+										new DialogInterface.OnClickListener() {
+											public void onClick(DialogInterface dialog, int which) {
+											}
+										})
+								.setIcon(android.R.drawable.ic_dialog_alert);
+						dialog = builder.create();
+						dialog.show();
+					}
+				} else {
+					displayDeleteMessage =
+							"To delete, hold on a specific" +
+									" message you sent then press the delete button.";
+					AlertDialog.Builder builder;
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+						builder = new AlertDialog.Builder(
+								this, android.R.style.Theme_Material_Dialog_Alert);
+					} else {
+						builder = new AlertDialog.Builder(this);
+					}
+					builder.setTitle("Delete entry")
+							.setMessage(displayDeleteMessage)
+							.setPositiveButton(android.R.string.yes,
+									new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+								}
+							})
+							.setIcon(android.R.drawable.ic_dialog_alert);
+					dialog = builder.create();
+					dialog.show();
+				}
+				return true;
 			case R.id.action_view_profile:
 				Intent profileIntent = new Intent(this, ProfileActivity.class);
 				profileIntent.putExtra(CONTACT_EMAIL, UserDetails.chatWithEmail);
@@ -774,6 +831,43 @@ public class ChatActivity extends BriarActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void onMessageDelete(){
+		String key = mAdapter.getMessageFocusKey();
+		DatabaseReference messageRef1 =	mRootRef.child("messages")
+				.child(UserDetails.username).child(UserDetails.chatWith);
+		messageRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				if(dataSnapshot.child(key).exists()) {
+					messageRef1.child(key).removeValue();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
+		DatabaseReference messageRef2 =	mRootRef.child("messages")
+				.child(UserDetails.chatWith).child(UserDetails.username);
+		messageRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				String key = mAdapter.getMessageFocusKey();
+				if(dataSnapshot.child(key).exists()) {
+					messageRef2.child(key).removeValue();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
+
 	}
 
 	private String getMimeType(Uri uri) {
@@ -822,6 +916,9 @@ public class ChatActivity extends BriarActivity {
 		return dialog;
 	}
 
+	public String getDisplayDeleteMessage(){
+		return displayDeleteMessage;
+	}
     private void askToRemoveContact() {
         DialogInterface.OnClickListener okListener =
                 (dialog, which) -> removeContact();
