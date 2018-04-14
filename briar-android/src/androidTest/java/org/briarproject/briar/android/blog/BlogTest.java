@@ -227,6 +227,81 @@ public class BlogTest {
 		reblogButton.check(matches(isDisplayed()));
 	}
 
+
+	@Test
+	public void B_ReBlogTest() {
+
+		// Allow the page to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Get the reblog button view
+		ViewInteraction reblogButton = onView(allOf(withId(R.id.commentView), withContentDescription(
+				"Add a comment (optional)")));
+
+		// Assert that the reblog button is displayable
+		reblogButton.check(matches(isDisplayed()));
+
+		// Click the reblog button
+		reblogButton.perform(click());
+
+		// Wait for the reblog post page to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButton = onView(allOf(withContentDescription("Navigate up")));
+		backButton.check(matches(isDisplayed()));
+
+		// Assert that the toolbar title is "Write Blog Post"
+		ToolbarEspressoHelper.matchToolbarTitle("Reblog").check(matches(isDisplayed()));
+
+		// Assert that the blog post input box is displayed
+		ViewInteraction blogPostInputBox = onView(allOf(childAtPosition(childAtPosition(
+				withId(R.id.postLayout), 0), 0)));
+		blogPostInputBox.check(matches(isDisplayed()));
+
+		// Assert that the emoji button is displayed
+		ViewInteraction emojiButton = onView(allOf(withId(R.id.emoji_toggle)));
+		emojiButton.check(matches(isDisplayed()));
+
+		// Add comment "Test Reblog" to reblog
+		ViewInteraction reblogComment = onView(allOf(withId(R.id.input_text)));
+		reblogComment.perform(replaceText("Test Reblog"), closeSoftKeyboard());
+
+		// Assert that the publish blog button is displayed
+		ViewInteraction publishBlogButton = onView(allOf(withId(R.id.btn_send), withText("Reblog")));
+		publishBlogButton.check(matches(isDisplayed()));
+
+		// Click the publish blog button
+		publishBlogButton.perform(click());
+
+		// Wait to be redirect to blog post list
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the blog post message box is displayed
+		ViewInteraction blogPostMessage = onView(
+				allOf(withId(R.id.postLayout), childAtPosition(allOf(withId(R.id.recyclerView),
+						childAtPosition(IsInstanceOf.<View>instanceOf(
+								android.widget.RelativeLayout.class), 0)), 0)));
+		blogPostMessage.check(matches(isDisplayed()));
+
+		// Assert that the comment to the reblog is correct
+		ViewInteraction blogPostComment = onView(allOf(withId(R.id.bodyView), withText("Test Reblog"),
+				childAtPosition(childAtPosition(withId(R.id.commentContainer), 0), 2)));
+		blogPostComment.check(matches(withText("Test Reblog")));
+	}
+	
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
