@@ -16,11 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.briarproject.bramble.api.db.DbException;
 import org.briarproject.briar.R;
 import org.briarproject.briar.android.activity.ActivityComponent;
 import org.briarproject.briar.android.contact.UserDetails;
@@ -68,7 +66,6 @@ public class SignInFragment extends SetupFragment {
 
 		FirebaseApp.initializeApp(this.getContext());
 		mAuth = FirebaseAuth.getInstance();
-
 		return v;
 	}
 
@@ -87,8 +84,6 @@ public class SignInFragment extends SetupFragment {
 		return getString(R.string.setup_name_explanation);
 	}
 
-
-
 	@Override
 	public void onClick(View view) {
 		switch(view.getId()) {
@@ -98,7 +93,7 @@ public class SignInFragment extends SetupFragment {
 				if(email != null && !email.isEmpty() && password !=null && !password.isEmpty()){
 					signInButton.setClickable(false);
 					openAccount(email, password);
-				}else{
+				} else{
 					Toast.makeText(getActivity(), "Fields can't be blank!", Toast.LENGTH_LONG)
 							.show();
 				}
@@ -137,8 +132,6 @@ public class SignInFragment extends SetupFragment {
 						//the mAuth state listener will be notified and logic to handle the
 						//signed in user can be handled in the listener.
 						if (task.isSuccessful()){
-							//sign in successful
-
 							String tkn = FirebaseInstanceId.getInstance().getToken();
 							Log.d("TOKEN_REFRESH_login", tkn);
 
@@ -152,7 +145,6 @@ public class SignInFragment extends SetupFragment {
 							setupController.showDozeOrCreateAccount();
 
 						} else {
-							//there was an error
 							tryAgain();
 						}
 					}

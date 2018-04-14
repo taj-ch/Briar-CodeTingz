@@ -47,8 +47,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import com.firebase.client.Firebase;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -101,7 +103,6 @@ public class ChatActivity extends BriarActivity {
 	private ImageButton addImageButton;
 	private ImageButton addLocationButton;
 	private ImageButton addFileButton;
-	private Firebase reference;
 	public static final String CONTACT_ID = "briar.CONTACT_ID";
 	public static final String CONTACT_EMAIL = "briar.CONTACT_EMAIL";
 	private DatabaseReference mRootRef;
@@ -125,7 +126,6 @@ public class ChatActivity extends BriarActivity {
 	// Storage Firebase
 	private StorageReference mImageStorage;
 	private Toolbar toolbar;
-	private TextView toolbarContactName;
 	private TextView toolbarTitle;
 	private SwipeRefreshLayout mRefreshLayout;
 	private static final int TOTAL_ITEMS_TO_LOAD = 10;
@@ -904,6 +904,11 @@ public class ChatActivity extends BriarActivity {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public void onStart(){
+		super.onStart();
 	}
 
 	//Getters for testing purposes

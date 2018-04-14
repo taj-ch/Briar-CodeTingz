@@ -1,8 +1,10 @@
 package org.briarproject.briar.android.contact;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +22,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.briarproject.bramble.api.contact.Contact;
 import org.briarproject.bramble.api.contact.ContactId;
@@ -96,6 +106,9 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 	@Inject
 	volatile ConversationManager conversationManager;
 
+	private DatabaseReference mUsersDatabase;
+	private FirebaseAuth mAuth;
+
 	public static ContactListFragment newInstance() {
 		Bundle args = new Bundle();
 		ContactListFragment fragment = new ContactListFragment();
@@ -123,11 +136,15 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 			@Nullable ViewGroup container,
 			@Nullable Bundle savedInstanceState) {
 
+		FirebaseApp.initializeApp(this.getContext());
+		mAuth = FirebaseAuth.getInstance();
+		mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("messages");
+		mUsersDatabase.keepSynced(true);
+
 		getActivity().setTitle(R.string.contact_list_button);
 
 		View contentView = inflater.inflate(R.layout.list, container, false);
 
-		FirebaseApp.initializeApp(this.getContext());
 		mRootRef = FirebaseDatabase.getInstance().getReference();
 
 		OnContactClickListener<ContactListItem> onContactClickListener =
@@ -159,28 +176,6 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 					i.putExtra(CONTACT_ID, contactId.getInt());
 
 					startActivity(i);
-					/*
-					if (Build.VERSION.SDK_INT >= 23) {
-						ContactListItemViewHolder holder =
-								(ContactListItemViewHolder) list
-										.getRecyclerView()
-										.findViewHolderForAdapterPosition(
-												adapter.findItemPosition(item));
-						Pair<View, String> avatar =
-								Pair.create(holder.avatar,
-										getTransitionName(holder.avatar));
-						Pair<View, String> bulb =
-								Pair.create(holder.bulb,
-										getTransitionName(holder.bulb));
-						ActivityOptionsCompat options =
-								makeSceneTransitionAnimation(getActivity(),
-										avatar, bulb);
-						ActivityCompat.startActivity(getActivity(), i,
-								options.toBundle());
-					} else {
-						// work-around for android bug #224270
-						startActivity(i);
-					}*/
 				};
 		adapter = new ContactListAdapter(getContext(), onContactClickListener);
 		list = contentView.findViewById(R.id.list);
@@ -287,14 +282,36 @@ public class ContactListFragment extends BaseFragment implements EventListener {
 				for (Contact c : contactManager.getActiveContacts()) {
 					try {
 						ContactId id = c.getId();
+						String email = c.getAuthor().getName();
+						String dbEmail = email.replaceAll("\\.", ",");
 						GroupCount count =
 								conversationManager.getGroupCount(id);
-						boolean connected =
-								connectionRegistry.isConnected(c.getId());
+						boolean connected = connectionRegistry.isConnected(c.getId());
 						contacts.add(new ContactListItem(c, connected, count));
+						System.out.println(mUsersDatabase.child(dbEmail).child("online"));
+
+						mUsersDatabase.addValueEventListener (new ValueEventListener() {
+							@Override
+							public void onDataChange(DataSnapshot dataSnapshot) {
+								if(dataSnapshot.child(dbEmail).child("online").getValue() == null) {
+									//Do nothing, creating test data
+								} else if (dataSnapshot.child(dbEmail).child("online").getValue().toString().equals("true")){
+									setConnected(c.getId(), true);
+								} else if(dataSnapshot.child(dbEmail).child("online").getValue().toString().equals("false")){
+									setConnected(c.getId(), false);
+								}
+							}
+
+							@Override
+							public void onCancelled(DatabaseError databaseError) {
+
+							}
+						});
+
 						setLatestMessage(c);
+            
 					} catch (NoSuchContactException e) {
-						// Continue
+						//continue
 					}
 				}
 				long duration = System.currentTimeMillis() - now;
