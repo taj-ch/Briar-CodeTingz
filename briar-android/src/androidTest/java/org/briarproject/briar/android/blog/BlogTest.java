@@ -301,7 +301,73 @@ public class BlogTest {
 				childAtPosition(childAtPosition(withId(R.id.commentContainer), 0), 2)));
 		blogPostComment.check(matches(withText("Test Reblog")));
 	}
-	
+
+	@Test
+	public void C_ImportRSSFeedTest() {
+
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the options button is displayed
+		ViewInteraction optionsButton = onView(allOf(withContentDescription("More options"),
+				childAtPosition(childAtPosition(withId(R.id.toolbar), 2), 1)));
+		optionsButton.check(matches(isDisplayed()));
+
+		// Open the options menu
+		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+		// Wait for the options menu to open
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the "Import RSS Feed" is a option
+		ViewInteraction selectOption = onView(allOf(withId(R.id.title), withText("Import RSS Feed"),
+				childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.LinearLayout.class), 0), 0)));
+		selectOption.check(matches(withText("Import RSS Feed")));
+
+		// Click the "Import RSS Feed" option
+		ViewInteraction clickOption = onView(allOf(withId(R.id.title), withText(
+				"Import RSS Feed"), childAtPosition(childAtPosition(withClassName(is(
+						"android.support.v7.view.menu.ListMenuItemView")), 0), 0)));
+		clickOption.perform(click());
+
+		// Wait for the import rss feed page to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButton = onView(allOf(withContentDescription("Navigate up")));
+		backButton.check(matches(isDisplayed()));
+
+		// Assert that the title of the page is "Import RSS Feed"
+		ToolbarEspressoHelper.matchToolbarTitle("Import RSS Feed").check(matches(isDisplayed()));
+
+		// Assert that the rss feed url input box is displayed
+		ViewInteraction urlInputBox = onView(allOf(withId(R.id.urlInput)));
+		urlInputBox.check(matches(isDisplayed()));
+
+		// Assert that the rss feed import button is displayed
+		ViewInteraction rssFeedImportButton = onView(allOf(withId(R.id.importButton), childAtPosition(
+				childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.FrameLayout.class), 0),
+				1)));
+		rssFeedImportButton.check(matches(isDisplayed()));
+
+		// Click the back button to return to blog list
+		ViewInteraction backButtonTwo = onView(allOf(
+				withContentDescription("Navigate up")));
+		backButtonTwo.perform(click());
+	}
+
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
