@@ -333,7 +333,98 @@ public class ForumTest {
 		backButtonTwo.perform(click());
 	}
 
-	
+	@Test
+	public void C_ReplyForumMessage() {
+
+		// Wait for page to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the forum group is in the list
+		ViewInteraction forumGroupList = onView(allOf(childAtPosition(allOf(
+				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.RelativeLayout.class), 0)), 0)));
+		forumGroupList.check(matches(isDisplayed()));
+
+		// Assert that the forum name is correct
+		ViewInteraction forumName = onView(allOf(withId(R.id.forumNameView), withText("ForumTest"),
+				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1)));
+		forumName.check(matches(isDisplayed()));
+
+		// Assert that the test description is correct
+		ViewInteraction forumDescription = onView(allOf(withId(R.id.forumDescView),
+				withText("TestDescription"), childAtPosition(childAtPosition(withId(
+						R.id.recyclerView), 0), 2)));
+		forumDescription.check(matches(isDisplayed()));
+
+		// Click the forum group
+		ViewInteraction selectForumGroup = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+				withClassName(is("android.widget.RelativeLayout")), 0)));
+		selectForumGroup.perform(actionOnItemAtPosition(0, click()));
+
+		// Allow the forum group page to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButton = onView(allOf(withContentDescription("Navigate up")));
+		backButton.check(matches(isDisplayed()));
+
+		// Assert that the emoji button is displayed
+		ViewInteraction emojiButton = onView(allOf(withId(R.id.emoji_toggle), childAtPosition(
+				childAtPosition(withId(R.id.text_input_container), 1), 0)));
+		emojiButton.check(matches(isDisplayed()));
+
+		// Assert that the forum message input is displayed
+		ViewInteraction forumMessageInputBox = onView(allOf(withId(R.id.input_text)));
+		forumMessageInputBox.check(matches(isDisplayed()));
+
+		// Assert that the send button is displayed
+		ViewInteraction sendMessageButton = onView(allOf(withId(R.id.btn_send),
+				withContentDescription("Send"), childAtPosition(childAtPosition(
+						withId(R.id.text_input_container), 1), 2)));
+		sendMessageButton.check(matches(isDisplayed()));
+
+		// Assert that the reply button is displayed
+		ViewInteraction replyForumButton = onView(allOf(withId(R.id.btn_reply), withText("Reply")));
+		replyForumButton.check(matches(isDisplayed()));
+
+		// Click reply
+		replyForumButton.perform(click());
+
+		// Enter "Forum reply" as the reply to the message
+		ViewInteraction forumReplyMessage = onView(allOf(withId(R.id.input_text), childAtPosition(
+				childAtPosition(withId(R.id.text_input_container), 1), 1), isDisplayed()));
+		forumReplyMessage.perform(replaceText("Forum reply"), closeSoftKeyboard());
+
+		// Click the send button
+		ViewInteraction sendReplyButton = onView(allOf(withId(R.id.btn_send),
+				withContentDescription("Send"), isDisplayed()));
+		sendReplyButton.perform(click());
+
+		// Wait for the reply to appear in the list
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the the reply message appeared correctly
+		ViewInteraction forumReplyDisplayed = onView(allOf(withId(R.id.text), withText(
+				"Forum reply"), childAtPosition(childAtPosition(withId(R.id.layout), 1), 0)));
+		forumReplyDisplayed.check(matches(isDisplayed()));
+
+		// Assert that the back button is displayed
+		ViewInteraction appCompatImageButton8 = onView(allOf(withContentDescription("Navigate up")));
+		appCompatImageButton8.perform(click());
+	}
+
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
