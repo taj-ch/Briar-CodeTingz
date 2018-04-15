@@ -236,6 +236,104 @@ public class ForumTest {
 		forumDescription.check(matches(isDisplayed()));
 	}
 
+	@Test
+	public void B_SendForumMessage() {
+
+		// Wait for page to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert the forum exists
+		ViewInteraction forumGroupList = onView(allOf(childAtPosition(allOf(
+				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.RelativeLayout.class), 0)), 0)));
+		forumGroupList.check(matches(isDisplayed()));
+
+		// Assert the forum name in the list
+		ViewInteraction forumName = onView(allOf(withId(R.id.forumNameView), withText("ForumTest"),
+				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1)));
+		forumName.check(matches(isDisplayed()));
+
+		// Assert the forum description in the list
+		ViewInteraction forumDescription = onView(allOf(withId(R.id.forumDescView),
+				withText("TestDescription"), childAtPosition(childAtPosition(withId(
+						R.id.recyclerView), 0), 2)));
+		forumDescription.check(matches(isDisplayed()));
+
+		// Click the forum group
+		ViewInteraction forumGroupSelect = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+								withClassName(is("android.widget.RelativeLayout")), 0)));
+		forumGroupSelect.perform(actionOnItemAtPosition(0, click()));
+
+		// Wait for the forum group to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButton = onView(allOf(withContentDescription("Navigate up")));
+		backButton.check(matches(isDisplayed()));
+
+		// Assert that the title of the toolbar is "ForumTest"
+		ToolbarEspressoHelper.matchToolbarTitle("ForumTest").check(matches(isDisplayed()));
+
+		// Assert that the emoji button is displayed
+		ViewInteraction emojiButton = onView(allOf(withId(R.id.emoji_toggle), childAtPosition(
+				childAtPosition(withId(R.id.text_input_container), 1), 0)));
+		emojiButton.check(matches(isDisplayed()));
+
+		// Assert that the input box is displayed
+		ViewInteraction forumMessageInput = onView(allOf(withId(R.id.input_text)));
+		forumMessageInput.check(matches(isDisplayed()));
+
+		// Assert that the send button is displayed
+		ViewInteraction forumSendMessageButton = onView(allOf(withId(R.id.btn_send),
+				withContentDescription("Send"), childAtPosition(childAtPosition(
+						withId(R.id.text_input_container), 1), 2)));
+		forumSendMessageButton.check(matches(isDisplayed()));
+
+		// Write message "Forum test" in input box
+		ViewInteraction forumMessage = onView(allOf(withId(R.id.input_text), childAtPosition(
+				childAtPosition(withId(R.id.text_input_container), 1), 1), isDisplayed()));
+		forumMessage.perform(replaceText("Forum test"), closeSoftKeyboard());
+
+		// Click the send message button
+		ViewInteraction sendMessageButton = onView(allOf(withId(R.id.btn_send),
+				withContentDescription("Send"), isDisplayed()));
+		sendMessageButton.perform(click());
+
+		// Wait for the message to appear in list
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the message was displayed
+		ViewInteraction displayedMessage = onView(allOf(withId(R.id.text), withText("Forum test")));
+		displayedMessage.check(matches(isDisplayed()));
+
+		// Assert that the author is correct
+		ViewInteraction displayedAuthor = onView(allOf(withId(R.id.authorName),
+				withText("laxman@laxman.lax")));
+		displayedAuthor.check(matches(isDisplayed()));
+
+		// Assert that the reply button is displayed
+		ViewInteraction forumMessageReplyButton = onView(allOf(withId(R.id.btn_reply),
+				withText("Reply")));
+		forumMessageReplyButton.check(matches(isDisplayed()));
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonTwo = onView(allOf(withContentDescription("Navigate up")));
+		backButtonTwo.perform(click());
+	}
+
+	
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
