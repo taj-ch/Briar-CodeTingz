@@ -522,6 +522,122 @@ public class ForumTest {
 		backButtonFour.perform(click());
 	}
 
+	@Test
+	public void E_LeaveForum() {
+
+		// Wait for page to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the forum group exists in the list
+		ViewInteraction forumGroupList = onView(allOf(childAtPosition(allOf(
+				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.RelativeLayout.class), 0)), 0)));
+		forumGroupList.check(matches(isDisplayed()));
+
+		// Assert that the forum name is correct
+		ViewInteraction forumName = onView(allOf(withId(R.id.forumNameView), withText("ForumTest"),
+				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1)));
+		forumName.check(matches(isDisplayed()));
+
+		// Assert that the forum description is correct
+		ViewInteraction forumDescription = onView(allOf(withId(R.id.forumDescView),
+				withText("TestDescription"), childAtPosition(childAtPosition(
+						withId(R.id.recyclerView), 0), 2)));
+		forumDescription.check(matches(isDisplayed()));
+
+		// Click the forum group
+		ViewInteraction selectForumGroup = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+				withClassName(is("android.widget.RelativeLayout")), 0)));
+		selectForumGroup.perform(actionOnItemAtPosition(0, click()));
+
+		// Wait for the forum group page to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButton = onView(allOf(withContentDescription("Navigate up")));
+		backButton.check(matches(isDisplayed()));
+
+		// Assert that the title of the toolbar is "ForumTest"
+		ToolbarEspressoHelper.matchToolbarTitle("ForumTest").check(matches(isDisplayed()));
+
+		// Assert the options button is displayed
+		ViewInteraction optionsButton = onView(allOf(withContentDescription("More options"),
+				childAtPosition(childAtPosition(withId(R.id.toolbar), 3), 1)));
+		optionsButton.check(matches(isDisplayed()));
+
+		// Open the options list
+		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+		// Wait for the options list to open
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the leave forum option is in the list of options
+		ViewInteraction leaveForumOption = onView(allOf(withId(R.id.title), withText("Leave Forum"),
+				childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.LinearLayout.class), 0), 0)));
+		leaveForumOption.check(matches(isDisplayed()));
+
+		// Click the leave forum option in the options list
+		ViewInteraction selectLeaveForumOption = onView(allOf(withId(R.id.title),
+				withText("Leave Forum"), childAtPosition(childAtPosition(withClassName(is(
+						"android.support.v7.view.menu.ListMenuItemView")), 0), 0), isDisplayed()));
+		selectLeaveForumOption.perform(click());
+
+		// Assert that the confirm leave group dialog opened
+		ViewInteraction confirmLeaveForum = onView(allOf(withId(R.id.alertTitle),
+				withText("Confirm Leaving Forum")));
+		confirmLeaveForum.check(matches(isDisplayed()));
+
+		// Assert that the leave button is displayed
+		ViewInteraction leaveButton = onView(allOf(withId(android.R.id.button2),
+				withText("Leave")));
+		leaveButton.check(matches(isDisplayed()));
+
+		// Assert that the cancel button is displayed
+		ViewInteraction cancelButton = onView(allOf(withId(android.R.id.button1), withText("Cancel")));
+		cancelButton.check(matches(isDisplayed()));
+
+		// Click the leave button
+		ViewInteraction finalLeaveForum = onView(allOf(withId(android.R.id.button2), withText("Leave")));
+		finalLeaveForum.perform(scrollTo(), click());
+
+		// Wait for the forum group to be deleted
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the forum group doesnt exist in the forum group list
+		ViewInteraction forumGroupListDeleted = onView(allOf(childAtPosition(allOf(withId(
+				R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.RelativeLayout.class), 0)), 0)));
+		forumGroupListDeleted.check(doesNotExist());
+
+		// Assert that the forum name doesnt exist
+		ViewInteraction forumNameDeleted = onView(allOf(withId(R.id.forumNameView), withText(
+				"ForumTest"), childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1)));
+		forumNameDeleted.check(doesNotExist());
+
+		// Assert that teh forum description doesnt exist
+		ViewInteraction forumDescriptionDeleted = onView(allOf(withId(R.id.forumDescView),
+				withText("TestDescription"), childAtPosition(childAtPosition(withId(
+						R.id.recyclerView), 0), 2)));
+		forumDescriptionDeleted.check(doesNotExist());
+	}
+
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
