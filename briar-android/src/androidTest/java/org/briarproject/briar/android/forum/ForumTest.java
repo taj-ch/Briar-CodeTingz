@@ -425,6 +425,103 @@ public class ForumTest {
 		appCompatImageButton8.perform(click());
 	}
 
+	@Test
+	public void D_ForumSharingStatus() {
+
+		// Wait for page to load
+		try {
+			Thread.sleep(7500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the forum group is in the list
+		ViewInteraction forumGroupList = onView(allOf(childAtPosition(allOf(
+				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
+						android.widget.RelativeLayout.class), 0)), 0)));
+		forumGroupList.check(matches(isDisplayed()));
+
+		// Assert that the forum name is correct
+		ViewInteraction forumName = onView(allOf(withId(R.id.forumNameView), withText("ForumTest"),
+				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1)));
+		forumName.check(matches(isDisplayed()));
+
+		// Assert that the forum description is correct
+		ViewInteraction forumDescription = onView(allOf(withId(R.id.forumDescView),
+				withText("TestDescription"), childAtPosition(childAtPosition(withId(
+						R.id.recyclerView), 0), 2)));
+		forumDescription.check(matches(isDisplayed()));
+
+		// Click the forum group
+		ViewInteraction selectForumGroup = onView(allOf(withId(R.id.recyclerView),
+				childAtPosition(withClassName(is("android.widget.RelativeLayout")), 0)));
+		selectForumGroup.perform(actionOnItemAtPosition(0, click()));
+
+		// Wait for the forum group to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonOne = onView(allOf(withContentDescription("Navigate up")));
+		backButtonOne.check(matches(isDisplayed()));
+
+		// Assert that the title of the toolbar is "ForumTest"
+		ToolbarEspressoHelper.matchToolbarTitle("ForumTest").check(matches(isDisplayed()));
+
+		// Assert that the option button is displayed
+		ViewInteraction optionButton = onView(allOf(withContentDescription("More options"),
+				childAtPosition(childAtPosition(withId(R.id.toolbar), 3), 1), isDisplayed()));
+		optionButton.check(matches(isDisplayed()));
+
+		// Click the more options button
+		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
+
+		// Assert that the sharing status option is in the options list
+		ViewInteraction sharingStatusOption = onView(allOf(withId(R.id.title),
+				withText("Sharing Status"), childAtPosition(childAtPosition(
+						IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class), 0), 0),
+						isDisplayed()));
+		sharingStatusOption.check(matches(withText("Sharing Status")));
+
+		// Click the sharing status option
+		ViewInteraction selectSharingStatusOption = onView(allOf(withId(R.id.title),
+				withText("Sharing Status"), childAtPosition(childAtPosition(withClassName(is(
+						"android.support.v7.view.menu.ListMenuItemView")), 0), 0), isDisplayed()));
+		selectSharingStatusOption.perform(click());
+
+		// Wait for the sharing status page to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonTwo = onView(allOf(withContentDescription("Navigate up")));
+		backButtonTwo.check(matches(isDisplayed()));
+
+		// Assert that the title of the toolbar is "Sharing Status"
+		ToolbarEspressoHelper.matchToolbarTitle("Sharing Status").check(matches(isDisplayed()));
+
+		// Assert that the back button is displayed
+		ViewInteraction backButtonThree = onView(allOf(withContentDescription("Navigate up")));
+		backButtonThree.perform(click());
+
+		// Wait for the forum group to load
+		try {
+			Thread.sleep(6000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		// Click the back button to return to forum group list
+		ViewInteraction backButtonFour = onView(allOf(withContentDescription("Navigate up")));
+		backButtonFour.perform(click());
+	}
+
 	private static Matcher<View> childAtPosition(
 			final Matcher<View> parentMatcher, final int position) {
 
