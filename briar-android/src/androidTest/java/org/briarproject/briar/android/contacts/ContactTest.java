@@ -146,7 +146,7 @@ public class ContactTest {
         addContactButton.perform(click());
 
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -170,6 +170,12 @@ public class ContactTest {
         ViewInteraction selectAddByEmailButton = onView(
                 allOf(withId(R.id.addByEmailButton), withText("Add By Email")));
         selectAddByEmailButton.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // Assert that the back button is displayed
         ViewInteraction backButton2 = onView(allOf(withContentDescription("Navigate up")));
@@ -197,7 +203,7 @@ public class ContactTest {
 
         // Wait for the contact to be added
         try {
-            Thread.sleep(7500);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -213,7 +219,7 @@ public class ContactTest {
 
         // Wait for page to load
         try {
-            Thread.sleep(4000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -222,6 +228,12 @@ public class ContactTest {
         ViewInteraction selectAddContactTwo = onView(allOf(withId(R.id.addByEmailButton),
                 withText("Add By Email")));
         selectAddContactTwo.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // Add another email to add
         ViewInteraction emailToAdd2 = onView(allOf(withId(R.id.edit_email), isDisplayed()));
@@ -234,7 +246,7 @@ public class ContactTest {
 
         // Wait for contact to be added
         try {
-            Thread.sleep(7500);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -250,7 +262,7 @@ public class ContactTest {
 
         // Wait for page to load
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -268,7 +280,7 @@ public class ContactTest {
 
         // Wait for page to load
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -337,7 +349,7 @@ public class ContactTest {
 
         // Wait for the page to load
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -346,7 +358,7 @@ public class ContactTest {
     @Test
     public void c_deleteMessage() {
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -364,7 +376,7 @@ public class ContactTest {
 
         // Wait for the page to load
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -390,6 +402,12 @@ public class ContactTest {
                         withId(R.id.toolbar), 2), 0), isDisplayed()));
         clickDeleteButton.perform(click());
 
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Assert that the delete dialog is displayed
         ViewInteraction dialog = onView(allOf(IsInstanceOf.<View>instanceOf(
                 android.widget.TextView.class), withText("Delete entry")));
@@ -404,6 +422,12 @@ public class ContactTest {
         selectDelete.check(matches(isDisplayed()));
         selectDelete.perform(click());
 
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Assert that the message is there
         ViewInteraction messageRemoved = onView(allOf(withId(R.id.text), withText("hello at " + time)));
         messageRemoved.check(doesNotExist());
@@ -412,13 +436,18 @@ public class ContactTest {
         ViewInteraction backButton7 = onView(allOf(withContentDescription("Navigate up")));
         backButton7.perform(click());
 
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void d_sortAlphabeticallyTest() {
         // Wait for the page to load
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -445,7 +474,7 @@ public class ContactTest {
 
         // Wait for the contacts to be sorted
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -492,6 +521,12 @@ public class ContactTest {
                         "android.support.v7.view.menu.ListMenuItemView")), 0), 0), isDisplayed()));
         recent.perform(click());
 
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Assert that tus is on top
         ViewInteraction verifyOrder1 = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus"),
                 childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
@@ -510,7 +545,7 @@ public class ContactTest {
 
         // Wait for page to load
         try {
-            Thread.sleep(60000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -536,7 +571,7 @@ public class ContactTest {
         search.perform(click());
 
         try {
-            Thread.sleep(4000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -549,13 +584,19 @@ public class ContactTest {
         // Click cancel search button
         ViewInteraction cancelSearch = onView(allOf(withContentDescription("Collapse")));
         cancelSearch.perform(click());
+
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void g_viewProfile() {
 
         try {
-            Thread.sleep(6000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -572,7 +613,7 @@ public class ContactTest {
         selectContact.perform(actionOnItemAtPosition(0, click()));
 
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -603,7 +644,7 @@ public class ContactTest {
 
         // Wait for the page to load
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -621,7 +662,7 @@ public class ContactTest {
         backButton10.perform(click());
 
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -631,6 +672,11 @@ public class ContactTest {
         backButton11.check(matches(isDisplayed()));
         backButton11.perform(click());
 
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -655,7 +701,7 @@ public class ContactTest {
 
         // Wait for the page to load
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -686,7 +732,7 @@ public class ContactTest {
 
         // Wait for the dialog to load
         try {
-            Thread.sleep(6000);
+            Thread.sleep(7500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -709,7 +755,7 @@ public class ContactTest {
 
         // Wait for the contact to deleted
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
