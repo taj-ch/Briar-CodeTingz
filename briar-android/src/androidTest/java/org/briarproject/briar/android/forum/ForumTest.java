@@ -66,10 +66,10 @@ public class ForumTest {
 			}
 
 			// Select Log in instead
-			ViewInteraction appCompatButton = onView(allOf(withId(R.id.btn_log_in),
+			ViewInteraction login = onView(allOf(withId(R.id.btn_log_in),
 					childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")),
 							0), 5)));
-			appCompatButton.perform(scrollTo(), click());
+			login.perform(scrollTo(), click());
 
 			// Allow page to be redirected
 			try {
@@ -79,22 +79,20 @@ public class ForumTest {
 			}
 
 			// Enter email address
-			ViewInteraction textInputEditText2 = onView(allOf(withId(R.id.edit_email),
+			ViewInteraction emailAddress = onView(allOf(withId(R.id.edit_email),
 					childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0)));
-			textInputEditText2.perform(scrollTo(), replaceText("laxman@laxman.lax"), closeSoftKeyboard());
+			emailAddress.perform(scrollTo(), replaceText("laxman@laxman.lax"), closeSoftKeyboard());
 
 			// Enter password
-			ViewInteraction textInputEditText4 = onView(allOf(withId(R.id.edit_password),
+			ViewInteraction password = onView(allOf(withId(R.id.edit_password),
 					childAtPosition(childAtPosition(withId(R.id.password_layout), 0), 0)));
-			textInputEditText4.perform(scrollTo(), replaceText("onetwothree"), closeSoftKeyboard());
+			password.perform(scrollTo(), replaceText("onetwothree"), closeSoftKeyboard());
 
 			// Click log in
-			ViewInteraction appCompatButton2 = onView(allOf(withId(R.id.btn_sign_in),
+			ViewInteraction selectLogin = onView(allOf(withId(R.id.btn_sign_in),
 					childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")),
 							0), 5)));
-			appCompatButton2.perform(scrollTo(), click());
-
-
+			selectLogin.perform(scrollTo(), click());
 		}
 		try {
 			Thread.sleep(15000);
@@ -105,16 +103,16 @@ public class ForumTest {
 		// SECTION 2: Open Blog in navigation for each test
 
 		// Click navigation menu
-		ViewInteraction appCompatImageButton = onView(allOf(childAtPosition(allOf(
+		ViewInteraction navigationMenu = onView(allOf(childAtPosition(allOf(
 				withId(R.id.toolbar), childAtPosition(withClassName(
 						is("android.support.design.widget.AppBarLayout")), 0)), 1)));
-		appCompatImageButton.perform(click());
+		navigationMenu.perform(click());
 
 		// Select the blogs option in the navigation menu
-		ViewInteraction navigationMenuItemView3 = onView(childAtPosition(allOf(withId(
+		ViewInteraction navOption = onView(childAtPosition(allOf(withId(
 				R.id.design_navigation_view), childAtPosition(
 				withId(R.id.navigation), 0)), 3));
-		navigationMenuItemView3.perform(scrollTo(), click());
+		navOption.perform(scrollTo(), click());
 
 		try {
 			Thread.sleep(4000);
@@ -127,7 +125,7 @@ public class ForumTest {
 	}
 
 	@Test
-	public void A_CreateForum() {
+	public void a_createForum() {
 
 		// Wait for page to load
 		try {
@@ -237,7 +235,7 @@ public class ForumTest {
 	}
 
 	@Test
-	public void B_SendForumMessage() {
+	public void b_sendForumMessage() {
 
 		// Wait for page to load
 		try {
@@ -334,7 +332,7 @@ public class ForumTest {
 	}
 
 	@Test
-	public void C_ReplyForumMessage() {
+	public void c_replyForumMessage() {
 
 		// Wait for page to load
 		try {
@@ -426,7 +424,7 @@ public class ForumTest {
 	}
 
 	@Test
-	public void D_ForumSharingStatus() {
+	public void d_forumSharingStatus() {
 
 		// Wait for page to load
 		try {
@@ -523,7 +521,7 @@ public class ForumTest {
 	}
 
 	@Test
-	public void E_LeaveForum() {
+	public void e_leaveForum() {
 
 		// Wait for page to load
 		try {

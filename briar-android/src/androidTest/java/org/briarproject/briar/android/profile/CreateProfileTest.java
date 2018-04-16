@@ -55,178 +55,128 @@ public class CreateProfileTest {
     @Rule
     public ActivityTestRule<SplashScreenActivity> mActivityTestRule = new ActivityTestRule<>(SplashScreenActivity.class);
 
+
     @Before
-    public void loginIfNecessary() {
+    public void setUp() {
+
+        // SECTION: Log in if necessary
 
         Boolean loginTestSetup = LoginTestSetup.isUserAlreadyLoggedIn();
 
         if(!loginTestSetup) {
+            // Allow app to open up properly in emulator
             try {
                 Thread.sleep(15000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            ViewInteraction appCompatButton = onView(
-                    allOf(withId(R.id.btn_log_in),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withClassName(is("android.widget.ScrollView")),
-                                            0),
-                                    5)));
-            appCompatButton.perform(scrollTo(), click());
+            // Select Log in instead
+            ViewInteraction selectLoginIn = onView(allOf(withId(R.id.btn_log_in),
+                    childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")),
+                            0), 5)));
+            selectLoginIn.perform(scrollTo(), click());
 
+            // Allow page to be redirected
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            ViewInteraction textInputEditText2 = onView(
-                    allOf(withId(R.id.edit_email),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(R.id.email_layout),
-                                            0),
-                                    0)));
-            textInputEditText2.perform(scrollTo(), replaceText("laxman@laxman.lax"));
+            // Enter email address
+            ViewInteraction emailAddress = onView(allOf(withId(R.id.edit_email),
+                    childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0)));
+            emailAddress.perform(scrollTo(), replaceText("laxman@laxman.lax"), closeSoftKeyboard());
 
-            ViewInteraction textInputEditText3 = onView(
-                    allOf(withId(R.id.edit_email), withText("laxman@laxman.lax"),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(R.id.email_layout),
-                                            0),
-                                    0),
-                            isDisplayed()));
-            textInputEditText3.perform(closeSoftKeyboard());
+            // Enter password
+            ViewInteraction password = onView(allOf(withId(R.id.edit_password),
+                    childAtPosition(childAtPosition(withId(R.id.password_layout), 0), 0)));
+            password.perform(scrollTo(), replaceText("onetwothree"), closeSoftKeyboard());
 
-            ViewInteraction textInputEditText4 = onView(
-                    allOf(withId(R.id.edit_password),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withId(R.id.password_layout),
-                                            0),
-                                    0)));
-            textInputEditText4.perform(scrollTo(), replaceText("onetwothree"), closeSoftKeyboard());
-
-            ViewInteraction appCompatButton2 = onView(
-                    allOf(withId(R.id.btn_sign_in),
-                            childAtPosition(
-                                    childAtPosition(
-                                            withClassName(is("android.widget.ScrollView")),
-                                            0),
-                                    5)));
-            appCompatButton2.perform(scrollTo(), click());
+            // Click log in
+            ViewInteraction login = onView(allOf(withId(R.id.btn_sign_in), childAtPosition(
+                    childAtPosition(withClassName(is("android.widget.ScrollView")), 0), 5)));
+            login.perform(scrollTo(), click());
         }
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // SECTION 2: Open Private Group in navigation for each test
+
+        // Click navigation menu
+        ViewInteraction navigationMenu = onView(allOf(childAtPosition(allOf(
+                withId(R.id.toolbar), childAtPosition(withClassName(
+                        is("android.support.design.widget.AppBarLayout")), 0)), 1)));
+        navigationMenu.perform(click());
+
+        // Select the private group option in the navigation menu
+        ViewInteraction navOption = onView(childAtPosition(allOf(withId(
+                R.id.design_navigation_view), childAtPosition(
+                withId(R.id.navigation), 0)), 5));
+        navOption.perform(scrollTo(), click());
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Assert that the title of the toolbar is "Profile"
+        ToolbarEspressoHelper.matchToolbarTitle("Profile").check(matches(isDisplayed()));
     }
 
     @Test
     public void createEditProfileTest() {
 
 	    try {
-		    Thread.sleep(15000);
+		    Thread.sleep(20000);
 	    } catch (InterruptedException e) {
 		    e.printStackTrace();
 	    }
-
-    	// Open the navigation menu
-        ViewInteraction appCompatImageButton = onView(
-                allOf(childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withClassName(is("android.support.design.widget.AppBarLayout")),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        appCompatImageButton.perform(click());
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Select profile in navigation menu
-        ViewInteraction navigationMenuItemView = onView(
-                childAtPosition(
-                        allOf(withId(R.id.design_navigation_view),
-                                childAtPosition(
-                                        withId(R.id.navigation),
-                                        0)),
-                        5));
-        navigationMenuItemView.perform(scrollTo(), click());
-
-        try {
-            Thread.sleep(6000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
 	    // Assert that the title of the toolbar is "Profile"
 	    ToolbarEspressoHelper.matchToolbarTitle("Profile")
 			    .check(matches(isDisplayed()));
 
         // Assert that the email displayed is correct
-        ViewInteraction textView5 = onView(
-                allOf(withId(R.id.profile_email), withText("laxman@laxman.lax"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                        0),
-                                2),
-                        isDisplayed()));
-        textView5.check(matches(withText("laxman@laxman.lax")));
+        ViewInteraction email = onView(allOf(withId(R.id.profile_email), withText(
+                "laxman@laxman.lax"), childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
+                        android.widget.ScrollView.class), 0), 2), isDisplayed()));
+        email.check(matches(withText("laxman@laxman.lax")));
 
         // Enter a nickname
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.profile_nickname),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
+        ViewInteraction nickname = onView(allOf(withId(R.id.profile_nickname),
+                childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")), 0),
                                 4)));
-        appCompatEditText2.perform(scrollTo(), replaceText("Lax"), closeSoftKeyboard());
+        nickname.perform(scrollTo(), replaceText("Lax"), closeSoftKeyboard());
 
         // Enter a first name
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.profile_first_name),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                6)));
-        appCompatEditText3.perform(scrollTo(), replaceText("Laxman"), closeSoftKeyboard());
+        ViewInteraction firstName = onView(allOf(withId(R.id.profile_first_name),
+                childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")), 0),
+                        6)));
+        firstName.perform(scrollTo(), replaceText("Laxman"), closeSoftKeyboard());
 
         // Enter a last name
-        ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.profile_last_name),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
+        ViewInteraction lastName = onView(allOf(withId(R.id.profile_last_name),
+                childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")), 0),
                                 8)));
-        appCompatEditText4.perform(scrollTo(), replaceText("Velauthapillai"), closeSoftKeyboard());
+        lastName.perform(scrollTo(), replaceText("Velauthapillai"), closeSoftKeyboard());
 
         // Enter a description
-        ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.profile_description),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                10)));
-        appCompatEditText5.perform(scrollTo(), replaceText("Testing creating profile."), closeSoftKeyboard());
+        ViewInteraction description = onView(allOf(withId(R.id.profile_description),
+                childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")),
+                        0), 10)));
+        description.perform(scrollTo(), replaceText("Testing creating profile."), closeSoftKeyboard());
 
         // Click Save
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.action_create_profile), withText("Save"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                11)));
-        appCompatButton3.perform(scrollTo(), click());
+        ViewInteraction save = onView(allOf(withId(R.id.action_create_profile),
+                withText("Save"), childAtPosition(childAtPosition(withClassName(
+                        is("android.widget.ScrollView")), 0), 11)));
+        save.perform(scrollTo(), click());
 
         try {
             Thread.sleep(2000);
@@ -235,26 +185,16 @@ public class CreateProfileTest {
         }
 
         // Open Navigation menu
-        ViewInteraction appCompatImageButton2 = onView(
-                allOf(childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withClassName(is("android.support.design.widget.AppBarLayout")),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        appCompatImageButton2.perform(click());
+        ViewInteraction navigationMenu = onView(allOf(childAtPosition(allOf(
+                withId(R.id.toolbar), childAtPosition(withClassName(
+                        is("android.support.design.widget.AppBarLayout")), 0)), 1), isDisplayed()));
+        navigationMenu.perform(click());
 
         // Open select contacts in navigation. This is just to make sure it gets
 	    // saved.
-        ViewInteraction navigationMenuItemView2 = onView(
-                childAtPosition(
-                        allOf(withId(R.id.design_navigation_view),
-                                childAtPosition(
-                                        withId(R.id.navigation),
-                                        0)),
-                        1));
-        navigationMenuItemView2.perform(scrollTo(), click());
+        ViewInteraction navOption = onView(childAtPosition(allOf(withId(
+                R.id.design_navigation_view), childAtPosition(withId(R.id.navigation), 0)), 1));
+        navOption.perform(scrollTo(), click());
 
         try {
             Thread.sleep(6000);
@@ -263,15 +203,10 @@ public class CreateProfileTest {
         }
 
         // Open Navigation menu
-        ViewInteraction appCompatImageButton3 = onView(
-                allOf(childAtPosition(
-                                allOf(withId(R.id.toolbar),
-                                        childAtPosition(
-                                                withClassName(is("android.support.design.widget.AppBarLayout")),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        appCompatImageButton3.perform(click());
+        ViewInteraction navMenu = onView(allOf(childAtPosition(allOf(withId(
+                R.id.toolbar), childAtPosition(withClassName(
+                        is("android.support.design.widget.AppBarLayout")), 0)), 1), isDisplayed()));
+        navMenu.perform(click());
 
         try {
             Thread.sleep(2000);
@@ -280,14 +215,9 @@ public class CreateProfileTest {
         }
 
         // Select profile in navigation menu
-        ViewInteraction navigationMenuItemView3 = onView(
-                childAtPosition(
-                        allOf(withId(R.id.design_navigation_view),
-                                childAtPosition(
-                                        withId(R.id.navigation),
-                                        0)),
-                        5));
-        navigationMenuItemView3.perform(scrollTo(), click());
+        ViewInteraction profileOption = onView(childAtPosition(allOf(withId(
+                R.id.design_navigation_view), childAtPosition(withId(R.id.navigation), 0)), 5));
+        profileOption.perform(scrollTo(), click());
 
         try {
             Thread.sleep(7500);
@@ -296,54 +226,34 @@ public class CreateProfileTest {
         }
 
         // Check if email got saved into firebase and returned
-        ViewInteraction textView8 = onView(
-                allOf(withId(R.id.profile_email),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                        0),
-                                2)));
-        textView8.check(matches(withText("laxman@laxman.lax")));
+        ViewInteraction verifyEmail = onView(allOf(withId(R.id.profile_email), childAtPosition(
+                childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class), 0),
+                2)));
+        verifyEmail.check(matches(withText("laxman@laxman.lax")));
 
 	    // Check if nickname got saved into firebase and returned
-	    ViewInteraction editText = onView(
-                allOf(withId(R.id.profile_nickname),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                        0),
-                                4)));
-        editText.check(matches(withText("Lax")));
+	    ViewInteraction verifyNickname = onView(allOf(withId(R.id.profile_nickname), childAtPosition(
+	            childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class), 0),
+                4)));
+        verifyNickname.check(matches(withText("Lax")));
 
 	    // Check if first name got saved into firebase and returned
-	    ViewInteraction editText2 = onView(
-                allOf(withId(R.id.profile_first_name),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                        0),
-                                6)));
-        editText2.check(matches(withText("Laxman")));
+	    ViewInteraction verifyFirstName = onView(allOf(withId(R.id.profile_first_name), childAtPosition(
+	            childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class), 0),
+                6)));
+        verifyFirstName.check(matches(withText("Laxman")));
 
 	    // Check if last name got saved into firebase and returned
-	    ViewInteraction editText3 = onView(
-                allOf(withId(R.id.profile_last_name),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                        0),
-                                8)));
-        editText3.check(matches(withText("Velauthapillai")));
+	    ViewInteraction verifyLastName = onView(allOf(withId(R.id.profile_last_name), childAtPosition(
+	            childAtPosition(IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class), 0),
+                8)));
+        verifyLastName.check(matches(withText("Velauthapillai")));
 
 	    // Check if description got saved into firebase and returned
-	    ViewInteraction editText4 = onView(
-                allOf(withId(R.id.profile_description), withText("Testing creating profile."),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
-                                        0),
-                                10)));
-        editText4.check(matches(withText("Testing creating profile.")));
+	    ViewInteraction verifyDescription = onView(allOf(withId(R.id.profile_description),
+                withText("Testing creating profile."), childAtPosition(childAtPosition(
+                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class), 0), 10)));
+        verifyDescription.check(matches(withText("Testing creating profile.")));
     }
 
     private static Matcher<View> childAtPosition(

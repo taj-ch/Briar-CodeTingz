@@ -67,10 +67,10 @@ public class PrivateGroupTest {
 			}
 
 			// Select Log in instead
-			ViewInteraction appCompatButton = onView(allOf(withId(R.id.btn_log_in),
+			ViewInteraction selectLoginIn = onView(allOf(withId(R.id.btn_log_in),
 					childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")),
 							0), 5)));
-			appCompatButton.perform(scrollTo(), click());
+			selectLoginIn.perform(scrollTo(), click());
 
 			// Allow page to be redirected
 			try {
@@ -80,22 +80,19 @@ public class PrivateGroupTest {
 			}
 
 			// Enter email address
-			ViewInteraction textInputEditText2 = onView(allOf(withId(R.id.edit_email),
+			ViewInteraction emailAddress = onView(allOf(withId(R.id.edit_email),
 					childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0)));
-			textInputEditText2.perform(scrollTo(), replaceText("laxman@laxman.lax"), closeSoftKeyboard());
+			emailAddress.perform(scrollTo(), replaceText("laxman@laxman.lax"), closeSoftKeyboard());
 
 			// Enter password
-			ViewInteraction textInputEditText4 = onView(allOf(withId(R.id.edit_password),
+			ViewInteraction password = onView(allOf(withId(R.id.edit_password),
 					childAtPosition(childAtPosition(withId(R.id.password_layout), 0), 0)));
-			textInputEditText4.perform(scrollTo(), replaceText("onetwothree"), closeSoftKeyboard());
+			password.perform(scrollTo(), replaceText("onetwothree"), closeSoftKeyboard());
 
 			// Click log in
-			ViewInteraction appCompatButton2 = onView(allOf(withId(R.id.btn_sign_in),
-					childAtPosition(childAtPosition(withClassName(is("android.widget.ScrollView")),
-							0), 5)));
-			appCompatButton2.perform(scrollTo(), click());
-
-
+			ViewInteraction login = onView(allOf(withId(R.id.btn_sign_in), childAtPosition(
+					childAtPosition(withClassName(is("android.widget.ScrollView")), 0), 5)));
+			login.perform(scrollTo(), click());
 		}
 		try {
 			Thread.sleep(15000);
@@ -106,16 +103,16 @@ public class PrivateGroupTest {
 		// SECTION 2: Open Private Group in navigation for each test
 
 		// Click navigation menu
-		ViewInteraction appCompatImageButton = onView(allOf(childAtPosition(allOf(
+		ViewInteraction navigationMenu = onView(allOf(childAtPosition(allOf(
 				withId(R.id.toolbar), childAtPosition(withClassName(
 						is("android.support.design.widget.AppBarLayout")), 0)), 1)));
-		appCompatImageButton.perform(click());
+		navigationMenu.perform(click());
 
 		// Select the private group option in the navigation menu
-		ViewInteraction navigationMenuItemView3 = onView(childAtPosition(allOf(withId(
+		ViewInteraction navOption = onView(childAtPosition(allOf(withId(
 				R.id.design_navigation_view), childAtPosition(
 				withId(R.id.navigation), 0)), 2));
-		navigationMenuItemView3.perform(scrollTo(), click());
+		navOption.perform(scrollTo(), click());
 
 		try {
 			Thread.sleep(4000);
@@ -125,11 +122,10 @@ public class PrivateGroupTest {
 
 		// Assert that the title of the toolbar is "Private Groups"
 		ToolbarEspressoHelper.matchToolbarTitle("Private Groups").check(matches(isDisplayed()));
-
 	}
 
 	@Test
-	public void A_CreatePrivateGroup() {
+	public void a_createPrivateGroup() {
 		// wait to load page
 		try {
 			Thread.sleep(7500);
@@ -193,9 +189,9 @@ public class PrivateGroupTest {
 		ToolbarEspressoHelper.matchToolbarTitle("TestGroup").check(matches(isDisplayed()));
 
 		// Assert that the author name is correct in the newly created group
-		ViewInteraction textView5 = onView(allOf(withId(R.id.authorName),
+		ViewInteraction authorName = onView(allOf(withId(R.id.authorName),
 				withText("laxman@laxman.lax")));
-		textView5.check(matches(isDisplayed()));
+		authorName.check(matches(isDisplayed()));
 
 
 		// Assert that the back button is displayed
@@ -213,25 +209,25 @@ public class PrivateGroupTest {
 		}
 
 		// Assert that the group is in the list
-		ViewInteraction relativeLayout = onView(allOf(childAtPosition(allOf(
+		ViewInteraction groupCreated = onView(allOf(childAtPosition(allOf(
 				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
 						android.widget.RelativeLayout.class), 0)), 0), isDisplayed()));
-		relativeLayout.check(matches(isDisplayed()));
+		groupCreated.check(matches(isDisplayed()));
 
 		// Assert that the private group  name is correct in the list
-		ViewInteraction textView6 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+		ViewInteraction groupName = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
 				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1), isDisplayed()));
-		textView6.check(matches(withText("TestGroup")));
+		groupName.check(matches(withText("TestGroup")));
 
 		// Assert that the private group creator is correct in the list
-		ViewInteraction textView7 = onView(allOf(withId(R.id.creatorView),
+		ViewInteraction groupCreator = onView(allOf(withId(R.id.creatorView),
 				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
 						withId(R.id.recyclerView), 0), 2), isDisplayed()));
-		textView7.check(matches(withText("Created by laxman@laxman.lax")));
+		groupCreator.check(matches(withText("Created by laxman@laxman.lax")));
 	}
 
 	@Test
-	public void B_SendPrivateGroupMessage() {
+	public void b_sendPrivateGroupMessage() {
 		// Wait for the page to load
 		try {
 			Thread.sleep(7500);
@@ -240,27 +236,27 @@ public class PrivateGroupTest {
 		}
 
 		// Assert that the private group is in the list
-		ViewInteraction relativeLayout2 = onView(allOf(childAtPosition(allOf(
+		ViewInteraction group = onView(allOf(childAtPosition(allOf(
 				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
 						android.widget.RelativeLayout.class), 0)), 0), isDisplayed()));
-		relativeLayout2.check(matches(isDisplayed()));
+		group.check(matches(isDisplayed()));
 
 		// Assert that the private group name is correct
-		ViewInteraction textView8 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+		ViewInteraction groupName = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
 				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1), isDisplayed()));
-		textView8.check(matches(withText("TestGroup")));
+		groupName.check(matches(withText("TestGroup")));
 
 		// Assert that the private group creator is the same
-		ViewInteraction textView9 = onView(
+		ViewInteraction groupCreator = onView(
 				allOf(withId(R.id.creatorView), withText("Created by laxman@laxman.lax"),
 						childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 2),
 						isDisplayed()));
-		textView9.check(matches(withText("Created by laxman@laxman.lax")));
+		groupCreator.check(matches(withText("Created by laxman@laxman.lax")));
 
 		// Select the private group
-		ViewInteraction recyclerView = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+		ViewInteraction selectGroup = onView(allOf(withId(R.id.recyclerView), childAtPosition(
 				withClassName(is("android.widget.RelativeLayout")), 0)));
-		recyclerView.perform(actionOnItemAtPosition(0, click()));
+		selectGroup.perform(actionOnItemAtPosition(0, click()));
 
 		// Wait for the private group to load
 		try {
@@ -277,29 +273,28 @@ public class PrivateGroupTest {
 		backButtonThree.check(matches(isDisplayed()));
 
 		// Assert that the emoji button is displayed
-		ViewInteraction imageButton3 = onView(allOf(withId(R.id.emoji_toggle), childAtPosition(
+		ViewInteraction emojiButton = onView(allOf(withId(R.id.emoji_toggle), childAtPosition(
 				childAtPosition(withId(R.id.text_input_container), 1), 0), isDisplayed()));
-		imageButton3.check(matches(isDisplayed()));
+		emojiButton.check(matches(isDisplayed()));
 
 		// Assert that the input box is displayed
-		ViewInteraction editText2 = onView(allOf(withId(R.id.input_text)));
-		editText2.check(matches(isDisplayed()));
+		ViewInteraction inputBox = onView(allOf(withId(R.id.input_text)));
+		inputBox.check(matches(isDisplayed()));
 
 		// Assert that the send message button is displayed
-		ViewInteraction imageButton4 = onView(allOf(withId(R.id.btn_send),
+		ViewInteraction seneMessageButton = onView(allOf(withId(R.id.btn_send),
 				withContentDescription("Send")));
-		imageButton4.check(matches(isDisplayed()));
+		seneMessageButton.check(matches(isDisplayed()));
 
 		// Add a message
-		ViewInteraction emojiEditText = onView(allOf(withId(R.id.input_text), childAtPosition(
+		ViewInteraction messageInputBox = onView(allOf(withId(R.id.input_text), childAtPosition(
 				childAtPosition(withId(R.id.text_input_container), 1), 1), isDisplayed()));
-		emojiEditText.perform(replaceText("Test"), closeSoftKeyboard());
+		messageInputBox.perform(replaceText("Test"), closeSoftKeyboard());
 
 		// Send the message
-		ViewInteraction appCompatImageButton4 = onView(allOf(withId(R.id.btn_send),
+		ViewInteraction sendMessage = onView(allOf(withId(R.id.btn_send),
 				withContentDescription("Send"), isDisplayed()));
-		appCompatImageButton4.perform(click());
-
+		sendMessage.perform(click());
 
 		// Wait for the private group to load
 		try {
@@ -309,12 +304,12 @@ public class PrivateGroupTest {
 		}
 
 		// Assert that the message is correct
-		ViewInteraction textView11 = onView(allOf(withId(R.id.text), withText("Test")));
-		textView11.check(matches(isDisplayed()));
+		ViewInteraction verifyMessage = onView(allOf(withId(R.id.text), withText("Test")));
+		verifyMessage.check(matches(isDisplayed()));
 
 		// Assert that a reply button is available in the message
-		ViewInteraction textView13 = onView(allOf(withId(R.id.btn_reply), withText("Reply")));
-		textView13.check(matches(isDisplayed()));
+		ViewInteraction replyButton = onView(allOf(withId(R.id.btn_reply), withText("Reply")));
+		replyButton.check(matches(isDisplayed()));
 
 		// Assert that the back button is displayed
 		ViewInteraction backButtonFour = onView(allOf(withContentDescription("Navigate up")));
@@ -324,7 +319,7 @@ public class PrivateGroupTest {
 	}
 
 	@Test
-	public void C_ReplyPrivateGroupMessage() {
+	public void c_replyPrivateGroupMessage() {
 		// Wait for the private group to load
 		try {
 			Thread.sleep(7500);
@@ -332,27 +327,27 @@ public class PrivateGroupTest {
 			e.printStackTrace();
 		}
 
-		// Assert that message is displayed
-		ViewInteraction relativeLayout21 = onView(allOf(childAtPosition(allOf(withId(
+		// Assert that group exists
+		ViewInteraction group = onView(allOf(childAtPosition(allOf(withId(
 				R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
 				android.widget.RelativeLayout.class), 0)), 0), isDisplayed()));
-		relativeLayout21.check(matches(isDisplayed()));
+		group.check(matches(isDisplayed()));
 
 		// Assert that group is correct
-		ViewInteraction textView31 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+		ViewInteraction groupName = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
 				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1), isDisplayed()));
-		textView31.check(matches(withText("TestGroup")));
+		groupName.check(matches(withText("TestGroup")));
 
 		// Assert that creator is correct
-		ViewInteraction textView41 = onView(allOf(withId(R.id.creatorView),
+		ViewInteraction creator = onView(allOf(withId(R.id.creatorView),
 				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
 						withId(R.id.recyclerView), 0), 2), isDisplayed()));
-		textView41.check(matches(withText("Created by laxman@laxman.lax")));
+		creator.check(matches(withText("Created by laxman@laxman.lax")));
 
 		// Click group
-		ViewInteraction recyclerView21 = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+		ViewInteraction selectGroup = onView(allOf(withId(R.id.recyclerView), childAtPosition(
 				withClassName(is("android.widget.RelativeLayout")), 0)));
-		recyclerView21.perform(actionOnItemAtPosition(0, click()));
+		selectGroup.perform(actionOnItemAtPosition(0, click()));
 
 		// Wait for group to load
 		try {
@@ -362,48 +357,54 @@ public class PrivateGroupTest {
 		}
 
 		// Assert that the back button is displayed
-		ViewInteraction imageButton23 = onView(allOf(withContentDescription("Navigate up")));
-		imageButton23.check(matches(isDisplayed()));
+		ViewInteraction backButton = onView(allOf(withContentDescription("Navigate up")));
+		backButton.check(matches(isDisplayed()));
 
 		// Assert that the title of the page is "TestGroup"
 		ToolbarEspressoHelper.matchToolbarTitle("TestGroup").check(matches(isDisplayed()));
 
 		// Assert that emoji button is displayed
-		ViewInteraction imageButton24 = onView(allOf(withId(R.id.emoji_toggle), childAtPosition(
+		ViewInteraction emojiButton = onView(allOf(withId(R.id.emoji_toggle), childAtPosition(
 				childAtPosition(withId(R.id.text_input_container), 1), 0), isDisplayed()));
-		imageButton24.check(matches(isDisplayed()));
+		emojiButton.check(matches(isDisplayed()));
 
 		// Assert input box is displayed
-		ViewInteraction editText34 = onView(allOf(withId(R.id.input_text)));
-		editText34.check(matches(isDisplayed()));
+		ViewInteraction inputBox = onView(allOf(withId(R.id.input_text)));
+		inputBox.check(matches(isDisplayed()));
 
 		// Assert send button is displayed
-		ViewInteraction imageButton35 = onView(allOf(withId(R.id.btn_send),
+		ViewInteraction sendButton = onView(allOf(withId(R.id.btn_send),
 				withContentDescription("Send")));
-		imageButton35.check(matches(isDisplayed()));
+		sendButton.check(matches(isDisplayed()));
 
-		// Assert send button is displayed
-		ViewInteraction textView64 = onView(allOf(withId(R.id.btn_reply), withText("Reply")));
-		textView64.check(matches(isDisplayed()));
+		// Assert reply button is displayed
+		ViewInteraction replyButton = onView(allOf(withId(R.id.btn_reply), withText("Reply")));
+		replyButton.check(matches(isDisplayed()));
 
 		// Click reply button
-		ViewInteraction appCompatTextView56 = onView(allOf(withId(R.id.btn_reply),
+		ViewInteraction clickReply = onView(allOf(withId(R.id.btn_reply),
 				withText("Reply"), isDisplayed()));
-		appCompatTextView56.perform(click());
+		clickReply.perform(click());
 
 		// Write "Reply" into input
-		ViewInteraction emojiEditText27 = onView(allOf(withId(R.id.input_text), childAtPosition(
+		ViewInteraction message = onView(allOf(withId(R.id.input_text), childAtPosition(
 				childAtPosition(withId(R.id.text_input_container), 1), 1), isDisplayed()));
-		emojiEditText27.perform(replaceText("Reply"), closeSoftKeyboard());
+		message.perform(replaceText("Reply Message"), closeSoftKeyboard());
 
 		// Click send button
-		ViewInteraction appCompatImageButton64 = onView(allOf(withId(R.id.btn_send),
+		ViewInteraction sendMessage = onView(allOf(withId(R.id.btn_send),
 				withContentDescription("Send"), isDisplayed()));
-		appCompatImageButton64.perform(click());
+		sendMessage.perform(click());
+
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 		// Assert that the message sent is correct
-		ViewInteraction textView75 = onView(allOf(withId(R.id.text), withText("Reply")));
-		textView75.check(matches(isDisplayed()));
+		ViewInteraction verifyMessage = onView(allOf(withId(R.id.text), withText("Reply Message")));
+		verifyMessage.check(matches(isDisplayed()));
 
 		// Wait for the message to load
 		try {
@@ -413,13 +414,13 @@ public class PrivateGroupTest {
 		}
 
 		// Click go back to group list
-		ViewInteraction appCompatImageButton72 = onView(allOf(withContentDescription("Navigate up")));
-		appCompatImageButton72.perform(click());
+		ViewInteraction goBack = onView(allOf(withContentDescription("Navigate up")));
+		goBack.perform(click());
 
 	}
 
 	@Test
-	public void D_PrivateGroupMemberList() {
+	public void d_privateGroupMemberList() {
 		// Wait for the page to load
 		try {
 			Thread.sleep(7500);
@@ -427,27 +428,27 @@ public class PrivateGroupTest {
 			e.printStackTrace();
 		}
 
-		// Assert that the message exists
-		ViewInteraction relativeLayout3 = onView(allOf(childAtPosition(allOf(
+		// Assert that the group exists
+		ViewInteraction group = onView(allOf(childAtPosition(allOf(
 				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
 						android.widget.RelativeLayout.class), 0)), 0), isDisplayed()));
-		relativeLayout3.check(matches(isDisplayed()));
+		group.check(matches(isDisplayed()));
 
 		// Assert that the group is correct
-		ViewInteraction textView14 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+		ViewInteraction groupName = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
 				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1), isDisplayed()));
-		textView14.check(matches(withText("TestGroup")));
+		groupName.check(matches(withText("TestGroup")));
 
 		// Assert that the creator is correct
-		ViewInteraction textView15 = onView(allOf(withId(R.id.creatorView),
+		ViewInteraction creator = onView(allOf(withId(R.id.creatorView),
 				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
 						withId(R.id.recyclerView), 0), 2), isDisplayed()));
-		textView15.check(matches(withText("Created by laxman@laxman.lax")));
+		creator.check(matches(withText("Created by laxman@laxman.lax")));
 
 		// Click the group
-		ViewInteraction recyclerView2 = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+		ViewInteraction selectGroup = onView(allOf(withId(R.id.recyclerView), childAtPosition(
 				withClassName(is("android.widget.RelativeLayout")), 0)));
-		recyclerView2.perform(actionOnItemAtPosition(0, click()));
+		selectGroup.perform(actionOnItemAtPosition(0, click()));
 
 		// Wait for the group to load
 		try {
@@ -461,9 +462,9 @@ public class PrivateGroupTest {
 		backButtonFive.check(matches(isDisplayed()));
 
 		// Assert that the option button is displayed
-		ViewInteraction imageView = onView(allOf(withContentDescription("More options"),
+		ViewInteraction optionButton = onView(allOf(withContentDescription("More options"),
 				childAtPosition(childAtPosition(withId(R.id.toolbar), 3), 1), isDisplayed()));
-		imageView.check(matches(isDisplayed()));
+		optionButton.check(matches(isDisplayed()));
 
 		// Open options button
 		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
@@ -475,10 +476,10 @@ public class PrivateGroupTest {
 		}
 
 		// Assert that "Member List" is one of the options
-		ViewInteraction textView16 = onView(allOf(withId(R.id.title), withText("Member List"),
+		ViewInteraction option = onView(allOf(withId(R.id.title), withText("Member List"),
 				childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
 						android.widget.LinearLayout.class), 0), 0), isDisplayed()));
-		textView16.check(matches(withText("Member List")));
+		option.check(matches(withText("Member List")));
 
 		// Select the "Member List" option
 		ViewInteraction membListOption = onView(allOf(withId(R.id.title), withText("Member List"),
@@ -501,9 +502,9 @@ public class PrivateGroupTest {
 		ToolbarEspressoHelper.matchToolbarTitle("Member List").check(matches(isDisplayed()));
 
 		// Assert that we are the creator
-		ViewInteraction textView18 = onView(allOf(withId(R.id.authorName),
+		ViewInteraction verifyCreator = onView(allOf(withId(R.id.authorName),
 				withText("laxman@laxman.lax")));
-		textView18.check(matches(isDisplayed()));
+		verifyCreator.check(matches(isDisplayed()));
 
 		// Assert that the back button is displayed
 		ViewInteraction backButtonSeven = onView(allOf(withContentDescription("Navigate up")));
@@ -521,7 +522,7 @@ public class PrivateGroupTest {
 	}
 
 	@Test
-	public void E_DissolvePrivateGroup() {
+	public void e_dissolvePrivateGroup() {
 		// Wait for the page to load
 		try {
 			Thread.sleep(7500);
@@ -529,27 +530,27 @@ public class PrivateGroupTest {
 			e.printStackTrace();
 		}
 
-		// Assert that the message exists
-		ViewInteraction relativeLayout389 = onView(allOf(childAtPosition(allOf(
+		// Assert that the group exists
+		ViewInteraction group = onView(allOf(childAtPosition(allOf(
 				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
 						android.widget.RelativeLayout.class), 0)), 0), isDisplayed()));
-		relativeLayout389.check(matches(isDisplayed()));
+		group.check(matches(isDisplayed()));
 
 		// Assert that the group is correct
-		ViewInteraction textView1465 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+		ViewInteraction groupName = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
 				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1), isDisplayed()));
-		textView1465.check(matches(withText("TestGroup")));
+		groupName.check(matches(withText("TestGroup")));
 
 		// Assert tht the creator is correct
-		ViewInteraction textView1545 = onView(allOf(withId(R.id.creatorView),
+		ViewInteraction creator = onView(allOf(withId(R.id.creatorView),
 				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
 						withId(R.id.recyclerView), 0), 2), isDisplayed()));
-		textView1545.check(matches(withText("Created by laxman@laxman.lax")));
+		creator.check(matches(withText("Created by laxman@laxman.lax")));
 
 		// Select the group
-		ViewInteraction recyclerView4 = onView(allOf(withId(R.id.recyclerView), childAtPosition(
+		ViewInteraction selectGroup = onView(allOf(withId(R.id.recyclerView), childAtPosition(
 				withClassName(is("android.widget.RelativeLayout")), 0)));
-		recyclerView4.perform(actionOnItemAtPosition(0, click()));
+		selectGroup.perform(actionOnItemAtPosition(0, click()));
 
 		// Wait for the page to load
 		try {
@@ -566,18 +567,18 @@ public class PrivateGroupTest {
 		ToolbarEspressoHelper.matchToolbarTitle("TestGroup").check(matches(isDisplayed()));
 
 		// Assert that the options button is displayed
-		ViewInteraction imageView2 = onView(allOf(withContentDescription("More options"),
+		ViewInteraction optionButton = onView(allOf(withContentDescription("More options"),
 				childAtPosition(childAtPosition(withId(R.id.toolbar), 3), 1), isDisplayed()));
-		imageView2.check(matches(isDisplayed()));
+		optionButton.check(matches(isDisplayed()));
 
 		// Select the options menu
 		openActionBarOverflowOrOptionsMenu(getInstrumentation().getTargetContext());
 
 		// Assert that the dissolve group option is displayed
-		ViewInteraction textView24 = onView(allOf(withId(R.id.title), withText("Dissolve Group"),
+		ViewInteraction dissolveGroupOption = onView(allOf(withId(R.id.title), withText("Dissolve Group"),
 				childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
 						android.widget.LinearLayout.class), 0), 0), isDisplayed()));
-		textView24.check(matches(withText("Dissolve Group")));
+		dissolveGroupOption.check(matches(withText("Dissolve Group")));
 
 		// Select the dissolve group option
 		ViewInteraction dissolveGroup = onView(allOf(withId(R.id.title),
@@ -593,22 +594,22 @@ public class PrivateGroupTest {
 		}
 
 		// Assert that the dialog is displayed
-		ViewInteraction textView25 = onView(allOf(withId(R.id.alertTitle),
+		ViewInteraction dialog = onView(allOf(withId(R.id.alertTitle),
 				withText("Confirm Dissolving Group")));
-		textView25.check(matches(isDisplayed()));
+		dialog.check(matches(isDisplayed()));
 
 		// Assert the dissolve button is displayed
-		ViewInteraction button2 = onView(allOf(withId(android.R.id.button2), withText("Dissolve")));
-		button2.check(matches(isDisplayed()));
+		ViewInteraction dissolveButton = onView(allOf(withId(android.R.id.button2), withText("Dissolve")));
+		dissolveButton.check(matches(isDisplayed()));
 
 		// Assert that the cancel button is displayed
-		ViewInteraction button3 = onView(allOf(withId(android.R.id.button1), withText("Cancel")));
-		button3.check(matches(isDisplayed()));
+		ViewInteraction cancelButton = onView(allOf(withId(android.R.id.button1), withText("Cancel")));
+		cancelButton.check(matches(isDisplayed()));
 
 		// Select the dissolve group button
-		ViewInteraction appCompatButton5 = onView(allOf(withId(android.R.id.button2),
+		ViewInteraction selectDissolve = onView(allOf(withId(android.R.id.button2),
 				withText("Dissolve")));
-		appCompatButton5.perform(scrollTo(), click());
+		selectDissolve.perform(scrollTo(), click());
 
 		// Wait so that the dissolve can complete
 		try {
@@ -618,22 +619,21 @@ public class PrivateGroupTest {
 		}
 
 		// Assert that the group no longer exists
-		ViewInteraction relativeLayout4 = onView(allOf(childAtPosition(allOf(
+		ViewInteraction verifyRemoved = onView(allOf(childAtPosition(allOf(
 				withId(R.id.recyclerView), childAtPosition(IsInstanceOf.<View>instanceOf(
 						android.widget.RelativeLayout.class), 0)), 0)));
-		relativeLayout4.check(doesNotExist());
+		verifyRemoved.check(doesNotExist());
 
 		// Assert that the group no longer exists (Group name not there)
-		ViewInteraction textView21 = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
+		ViewInteraction verifyNameRemoved = onView(allOf(withId(R.id.nameView), withText("TestGroup"),
 				childAtPosition(childAtPosition(withId(R.id.recyclerView), 0), 1)));
-		textView21.check(doesNotExist());
+		verifyNameRemoved.check(doesNotExist());
 
 		// Assert the group no longer exists (creator not there)
-		ViewInteraction textView22 = onView(allOf(withId(R.id.creatorView),
+		ViewInteraction verifyCreatorRemoved = onView(allOf(withId(R.id.creatorView),
 				withText("Created by laxman@laxman.lax"), childAtPosition(childAtPosition(
 						withId(R.id.recyclerView), 0), 2)));
-		textView22.check(doesNotExist());
-
+		verifyCreatorRemoved.check(doesNotExist());
 	}
 
 	private static Matcher<View> childAtPosition(

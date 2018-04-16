@@ -130,7 +130,7 @@ public class ContactTest {
     }
 
     @Test
-    public void A_CreateContact() {
+    public void a_createContact() {
 
         try {
             Thread.sleep(7500);
@@ -246,7 +246,7 @@ public class ContactTest {
     }
 
     @Test
-    public void B_SendMessage() {
+    public void b_sendMessage() {
 
         // Wait for page to load
         try {
@@ -344,7 +344,7 @@ public class ContactTest {
     }
 
     @Test
-    public void C_DeleteMessage() {
+    public void c_deleteMessage() {
         try {
             Thread.sleep(7500);
         } catch (InterruptedException e) {
@@ -415,7 +415,7 @@ public class ContactTest {
     }
 
     @Test
-    public void D_SortAlphabeticallyTest() {
+    public void d_sortAlphabeticallyTest() {
         // Wait for the page to load
         try {
             Thread.sleep(7500);
@@ -464,7 +464,7 @@ public class ContactTest {
     }
 
     @Test
-    public void E_SortRecent() {
+    public void e_sortRecent() {
 
         try {
             Thread.sleep(7500);
@@ -506,7 +506,7 @@ public class ContactTest {
     }
 
     @Test
-    public void F_SearchContacts() {
+    public void f_searchContacts() {
 
         // Wait for page to load
         try {
@@ -552,7 +552,7 @@ public class ContactTest {
     }
 
     @Test
-    public void G_ViewProfile() {
+    public void g_viewProfile() {
 
         try {
             Thread.sleep(6000);
@@ -634,7 +634,7 @@ public class ContactTest {
     }
 
     @Test
-    public void H_DeleteContact() {
+    public void h_deleteContact() {
 
         try {
             Thread.sleep(7500);
