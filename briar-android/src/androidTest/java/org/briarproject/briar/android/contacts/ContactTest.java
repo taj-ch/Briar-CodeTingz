@@ -196,6 +196,13 @@ public class ContactTest {
         ViewInteraction emailToAdd = onView(withId(R.id.edit_email));
         emailToAdd.perform(scrollTo(), replaceText("tus@tus.tus"), closeSoftKeyboard());
 
+        // Wait a bit
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Click add contact
         ViewInteraction selectAddContact = onView(allOf(withId(R.id.btn_add_by_email),
                 withText("Add Contact")));
@@ -203,7 +210,7 @@ public class ContactTest {
 
         // Wait for the contact to be added
         try {
-            Thread.sleep(20000);
+            Thread.sleep(5*60*1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -229,6 +236,7 @@ public class ContactTest {
                 withText("Add By Email")));
         selectAddContactTwo.perform(scrollTo(), click());
 
+        // Wait a bit
         try {
             Thread.sleep(7500);
         } catch (InterruptedException e) {
@@ -239,14 +247,21 @@ public class ContactTest {
         ViewInteraction emailToAdd2 = onView(allOf(withId(R.id.edit_email), isDisplayed()));
         emailToAdd2.perform(scrollTo(), replaceText("taj@taj.taj"), closeSoftKeyboard());
 
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Click add contact
         ViewInteraction selectAddTwo = onView(allOf(withId(R.id.btn_add_by_email),
                 withText("Add Contact")));
         selectAddTwo.perform(scrollTo(), click());
 
         // Wait for contact to be added
+        // Wait for the contact to be added
         try {
-            Thread.sleep(20000);
+            Thread.sleep(5*60*1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -254,7 +269,6 @@ public class ContactTest {
         // Assert that the contact was added
         ViewInteraction verifyContactTwo = onView(allOf(withId(R.id.nameView), withText("taj@taj.taj")));
         verifyContactTwo.check(matches(isDisplayed()));
-
     }
 
     @Test
