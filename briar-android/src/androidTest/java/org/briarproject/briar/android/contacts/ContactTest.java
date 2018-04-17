@@ -130,7 +130,7 @@ public class ContactTest {
     }
 
     @Test
-    public void a_createContact() {
+    public void a1_createContact() {
 
         try {
             Thread.sleep(7500);
@@ -218,6 +218,16 @@ public class ContactTest {
         // Assert that the contact was added
         ViewInteraction verifyContact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus")));
         verifyContact.check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void a2_createContact() {
+
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // Click add again to add another contact
         ViewInteraction addButton2 = onView(allOf(withId(R.id.action_add_contact),
