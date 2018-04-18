@@ -203,15 +203,13 @@ public class ContactTest {
 
         // Wait for the contact to be added
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         // Assert that the contact was added
-        ViewInteraction contact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus"),
-                childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
-                        android.widget.RelativeLayout.class), 1), 0)));
+        ViewInteraction contact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus")));
         contact.check(matches(isDisplayed()));
     }
 
