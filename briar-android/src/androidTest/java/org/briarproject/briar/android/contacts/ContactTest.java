@@ -171,6 +171,12 @@ public class ContactTest {
                 allOf(withId(R.id.addByEmailButton), withText("Add By Email")));
         selectAddByEmailButton.perform(scrollTo(), click());
 
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Assert that the back button is displayed
         ViewInteraction backButton2 = onView(allOf(withContentDescription("Navigate up")));
         backButton2.check(matches(isDisplayed()));
@@ -203,46 +209,10 @@ public class ContactTest {
         }
 
         // Assert that the contact was added
-        ViewInteraction verifyContact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus")));
-        verifyContact.check(matches(isDisplayed()));
-
-        // Click add again to add another contact
-        ViewInteraction addButton2 = onView(allOf(withId(R.id.action_add_contact),
-                withContentDescription("Add a Contact"), isDisplayed()));
-        addButton2.perform(click());
-
-        // Wait for page to load
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Click add contact
-        ViewInteraction selectAddContactTwo = onView(allOf(withId(R.id.addByEmailButton),
-                withText("Add By Email")));
-        selectAddContactTwo.perform(scrollTo(), click());
-
-        // Add another email to add
-        ViewInteraction emailToAdd2 = onView(allOf(withId(R.id.edit_email), isDisplayed()));
-        emailToAdd2.perform(scrollTo(), replaceText("taj@taj.taj"), closeSoftKeyboard());
-
-        // Click add contact
-        ViewInteraction selectAddTwo = onView(allOf(withId(R.id.btn_add_by_email),
-                withText("Add Contact")));
-        selectAddTwo.perform(scrollTo(), click());
-
-        // Wait for contact to be added
-        try {
-            Thread.sleep(7500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // Assert that the contact was added
-        ViewInteraction verifyContactTwo = onView(allOf(withId(R.id.nameView), withText("taj@taj.taj")));
-        verifyContactTwo.check(matches(isDisplayed()));
-
+        ViewInteraction contact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus"),
+                childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
+                        android.widget.RelativeLayout.class), 1), 0)));
+        contact.check(matches(isDisplayed()));
     }
 
     @Test
@@ -250,16 +220,10 @@ public class ContactTest {
 
         // Wait for page to load
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        // Assert that the first contact exists
-        ViewInteraction contact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus"),
-                childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
-                        android.widget.RelativeLayout.class), 1), 0)));
-        contact.check(matches(isDisplayed()));
 
         // Select contact to open
         ViewInteraction openContact = onView(allOf(withId(R.id.recyclerView),
@@ -346,7 +310,7 @@ public class ContactTest {
     @Test
     public void c_deleteMessage() {
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -390,6 +354,12 @@ public class ContactTest {
                         withId(R.id.toolbar), 2), 0), isDisplayed()));
         clickDeleteButton.perform(click());
 
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // Assert that the delete dialog is displayed
         ViewInteraction dialog = onView(allOf(IsInstanceOf.<View>instanceOf(
                 android.widget.TextView.class), withText("Delete entry")));
@@ -404,7 +374,13 @@ public class ContactTest {
         selectDelete.check(matches(isDisplayed()));
         selectDelete.perform(click());
 
-        // Assert that the message is there
+        try {
+            Thread.sleep(7500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Assert that the message is not there
         ViewInteraction messageRemoved = onView(allOf(withId(R.id.text), withText("hello at " + time)));
         messageRemoved.check(doesNotExist());
 
@@ -418,7 +394,7 @@ public class ContactTest {
     public void d_sortAlphabeticallyTest() {
         // Wait for the page to load
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -449,18 +425,6 @@ public class ContactTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        // Assert that taj is on top
-        ViewInteraction verifyOrder1 = onView(allOf(withId(R.id.nameView), withText("taj@taj.taj"),
-                childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
-                        android.widget.RelativeLayout.class), 1), 0)));
-        verifyOrder1.check(matches(isDisplayed()));
-
-        // Assert that tus is second
-        ViewInteraction verifyOrder2 = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus"),
-                childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
-                        android.widget.RelativeLayout.class), 1), 0)));
-        verifyOrder2.check(matches(isDisplayed()));
     }
 
     @Test
@@ -491,18 +455,6 @@ public class ContactTest {
                 childAtPosition(childAtPosition(withClassName(is(
                         "android.support.v7.view.menu.ListMenuItemView")), 0), 0), isDisplayed()));
         recent.perform(click());
-
-        // Assert that tus is on top
-        ViewInteraction verifyOrder1 = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus"),
-                childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
-                        android.widget.RelativeLayout.class), 1), 0)));
-        verifyOrder1.check(matches(withText("tus@tus.tus")));
-
-        // Assert that taj is second
-        ViewInteraction verifyOrder2 = onView(allOf(withId(R.id.nameView), withText("taj@taj.taj"),
-                childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
-                        android.widget.RelativeLayout.class), 1), 0)));
-        verifyOrder2.check(matches(withText("taj@taj.taj")));
     }
 
     @Test
@@ -510,7 +462,7 @@ public class ContactTest {
 
         // Wait for page to load
         try {
-            Thread.sleep(60000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -555,16 +507,10 @@ public class ContactTest {
     public void g_viewProfile() {
 
         try {
-            Thread.sleep(6000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        // Assert that the contact still exists
-        ViewInteraction contact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus"),
-                childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
-                        android.widget.RelativeLayout.class), 1), 0), isDisplayed()));
-        contact.check(matches(withText("tus@tus.tus")));
 
         // Select the contact
         ViewInteraction selectContact = onView(allOf(withId(R.id.recyclerView),
@@ -637,7 +583,7 @@ public class ContactTest {
     public void h_deleteContact() {
 
         try {
-            Thread.sleep(7500);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -645,8 +591,8 @@ public class ContactTest {
         // Assert that the first contact is tus
         ViewInteraction contact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus"),
                 childAtPosition(childAtPosition(IsInstanceOf.<View>instanceOf(
-                        android.widget.RelativeLayout.class), 1), 0), isDisplayed()));
-        contact.check(matches(withText("tus@tus.tus")));
+                        android.widget.RelativeLayout.class), 1), 0)));
+        contact.check(matches(isDisplayed()));
 
         // Select the contact
         ViewInteraction selectContact = onView(allOf(withId(R.id.recyclerView), childAtPosition(
