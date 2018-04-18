@@ -207,10 +207,6 @@ public class ContactTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        // Assert that the contact was added
-        ViewInteraction contact = onView(allOf(withId(R.id.nameView), withText("tus@tus.tus")));
-        contact.check(matches(isDisplayed()));
     }
 
     @Test
